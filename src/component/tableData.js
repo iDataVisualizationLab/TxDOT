@@ -8,6 +8,8 @@ class Tabledata  extends Component {
         this.state = {
             visible:false
         }
+        var r = 12 * this.props.parameter.DesignLife - 1;
+        this.props.AnalysisPunchouts(this.props.rows[r][12]);
     }
     componentDidUpdate(prevProps) {
         if (this.props.rows!==prevProps.rows){
@@ -33,6 +35,8 @@ class Tabledata  extends Component {
                     .range(["#55f", "white", "#f55"]);
                 this.colorRedBlues.push(colorScale);
             }
+            var r = 12 * this.props.parameter.DesignLife - 1;
+            this.props.AnalysisPunchouts(this.props.rows[r][12]);
         }
     }
     titles = ["Age (Month)","Age (Year)", "Modulus of Rupture (psi)","Modulus of Elasticity (ksi)"
@@ -46,8 +50,8 @@ class Tabledata  extends Component {
         ,"Cumulative Damage"
         ,"Number of Punchouts per Mile"]
     render() {
+        var r = 12 * this.props.parameter.DesignLife - 1;
         if (this.colorRedBlues&&this.props.rows[r]) {
-            var r = 12 * this.props.parameter.C18 - 1;
             var color = this.props.colorgreenred(this.props.rows[r][12]);
             return (<div>
                 <div id="div_CRCP_PERFORMANCE"><b>CRCP PERFORMANCE</b><br/>

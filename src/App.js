@@ -4,6 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import {AppBar,IconButton,Typography,Button,Toolbar,Grid,Slide} from '@material-ui/core';
 import coverPic from './image/cover.jpg';
 import CRCP from './component/CRCP'
+import Report from "./component/report";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -31,7 +32,10 @@ const useStyles = makeStyles((theme) => ({
 
 function App() {
   const [page, setPage] = React.useState('home');
+  const [reportData, setReportData] = React.useState({});
+  const [AnalysisPunchouts, setAnalysisPunchouts] = React.useState(0);
   const classes = useStyles();
+  const AnalysisPunchoutsFunc = (d)=>d===undefined?AnalysisPunchouts:setAnalysisPunchouts(d);
   return (
     <div >
       <div className={classes.cover}></div>
@@ -66,8 +70,18 @@ function App() {
         <Slide direction="up" in={page==='CRCP'} mountOnEnter unmountOnExit>
           <CRCP
               toMenu={()=>setPage('home')}
+              // print={(d)=>{setReportData(d);setPage('Print')}}
+              AnalysisPunchouts={AnalysisPunchoutsFunc}
           />
         </Slide>
+        {/*<Slide direction="up" in={page==='Print'} mountOnEnter unmountOnExit>*/}
+        {/*  <Report*/}
+        {/*      data={reportData}*/}
+        {/*      toMenu={()=>setPage('home')}*/}
+        {/*      toCRCP={()=>setPage('CRCP')}*/}
+        {/*      AnalysisPunchouts={AnalysisPunchoutsFunc()}*/}
+        {/*  />*/}
+        {/*</Slide>*/}
       </div>
     </div>
   );

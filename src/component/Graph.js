@@ -102,25 +102,25 @@ class Graph extends Component{
         let rowIndexStress = 9;
         let row1 = [];
         const rows = [];
-
+    debugger
         row1.push( 1 );
         row1.push( row1[0]/ 12 );
-        row1.push( this.props.parameter.F8);
+        row1.push( this.props.parameter.ModulusOfRupture);
         row1.push( 57000 / 7.5 * row1[2] / 1000 );
         row1.push( +data[rowIndexStress-2]["STR (T)"] );
         row1.push( data[rowIndexStress-2]["STR (E)"] * row1[3] / 5000 )
         row1.push( row1[4] + row1[5] )
         row1.push( row1[6] / row1[2] )
-        row1.push( 11800 * Math.pow(row1[7],fatigue(this.props.parameter.F19) ))
-        row1.push( lane(this.props.parameter.C24)
-            * this.props.parameter.C25 * 1000000 / 12 / this.props.parameter.C18 )
+        row1.push( 11800 * Math.pow(row1[7],fatigue(this.props.parameter.CompositeK) ))
+        row1.push( lane(this.props.parameter.LanesOneDirection)
+            * this.props.parameter.TrafficOneDirection * 1000000 / 12 / this.props.parameter.DesignLife )
         row1.push( row1[9] / row1[8] )
         row1.push( row1[10] )
         row1.push( 18.985 / (1 + 5 * Math.pow(row1[11],-1.1)) )
         rows.push(row1);    // Add to the array
 
-        //console.log(+document.getElementById("C18").value);
-        for (var i=0; i<this.props.parameter.C18;i++){
+        //console.log(+document.getElementById("DesignLife").value);
+        for (var i=0; i<this.props.parameter.DesignLife;i++){
             //debugger;
             if (i!=0)
                 rowIndexStress = 8;
@@ -135,7 +135,7 @@ class Graph extends Component{
                     row2.push( row1[0] + 1 )
                     row2.push( row2[0]/ 12 );
                     // Cells(rowIndex, 2) = Cells(rowIndex, 1).Value / 12
-                    row2.push( this.props.parameter.F8
+                    row2.push( this.props.parameter.ModulusOfRupture
                         * Math.pow((30 * row2[0] / (4 + 0.85 * 30 * row2[0])), 0.5) );
                     // Cells(rowIndex, 3) = Sheets("Input").Range("F8").Value * ((30 * Cells(rowIndex, 1).Value / (4 + 0.85 * 30 * Cells(rowIndex, 1).Value))) ^ 0.5
                     row2.push( 57000 / 7.5 * row2[2] / 1000 );
@@ -148,8 +148,8 @@ class Graph extends Component{
                     // Cells(rowIndex, 7) = Cells(rowIndex, 5).Value + Cells(rowIndex, 6).Value
                     row2.push( row2[6] / row2[2] );
                     // Cells(rowIndex, 8) = Cells(rowIndex, 7).Value / Cells(rowIndex, 3).Value
-                    row2.push( 11800 * Math.pow(row2[7],fatigue(this.props.parameter.F19)) );
-                    // Cells(rowIndex, 9) = 11800 * Cells(rowIndex, 8).Value ^ fatigue(Sheets("Input").Range("F19").Value)
+                    row2.push( 11800 * Math.pow(row2[7],fatigue(this.props.parameter.CompositeK)) );
+                    // Cells(rowIndex, 9) = 11800 * Cells(rowIndex, 8).Value ^ fatigue(Sheets("Input").Range("CompositeK").Value)
                     row2.push( row1[9] );
                     // Cells(rowIndex, 10) = Cells(rowIndex - 1, 10).Value
                     row2.push( row2[9] / row2[8] );
@@ -247,7 +247,7 @@ class Graph extends Component{
                                         cy={this.state.yScale(d.y)} fill={this.colorGreenRed(d.y)}
                 strokeWidth={0.5} stroke={"#000"}></circle>)}
             </g>
-        </svg></Grid><Grid item xs={11}><Tabledata parameter={this.props.parameter} colorgreenred={this.colorGreenRed} rows={this.state.rows}/></Grid></Grid>:'');
+        </svg></Grid><Grid item xs={11}><Tabledata AnalysisPunchouts={this.props.AnalysisPunchouts} parameter={this.props.parameter} colorgreenred={this.colorGreenRed} rows={this.state.rows}/></Grid></Grid>:'');
     }
 }
 export default withStyles(styles) (Graph);
