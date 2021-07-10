@@ -160,8 +160,7 @@ class Report extends Component {
                         </Grid>
 
                         <Grid item xs={12}>
-                            <Typography variant={'h6'} className={classes.subHeader}> C. Subgrade and Subbase Layer
-                                Information</Typography>
+                            <Typography variant={'h6'} className={classes.subHeader}> C. Subgrade and Treatment Information & subtitles</Typography>
                         </Grid>
                         <Grid item xs={8}>
                             Soil Classification System
@@ -248,8 +247,7 @@ class Report extends Component {
                             <Typography variant={'h5'} className={classes.header}>ANALYSIS RESULT</Typography>
                         </Grid>
                         <Grid item xs={12}>
-                            <Typography variant={'h6'} className={classes.subHeader}> F. Design Slab Thickness &
-                                Performance</Typography>
+                            <Typography variant={'h6'} className={classes.subHeader}> F. Design Slab Thickness & Performance</Typography>
                         </Grid>
                         <Grid item xs={8} className={classes.underline}>
                             Design Slab Thickness
@@ -260,7 +258,7 @@ class Report extends Component {
                         <Grid item xs={8} className={classes.underline}>
                             Number of Punchouts per Mile
                         </Grid>
-                        <Grid item xs={4} className={classes.underline}>
+                        <Grid item xs={4} className={classes.underline} style={{color:(this.props.AnalysisPunchouts>this.props.data.PunchoutsPerMile)?'red':null}}>
                             {this.props.AnalysisPunchouts ? this.props.AnalysisPunchouts.toFixed(2) : ''}
                         </Grid>
                         <Grid item xs={12}>

@@ -34,8 +34,10 @@ function App() {
   const [page, setPage] = React.useState('home');
   const [reportData, setReportData] = React.useState({});
   const [AnalysisPunchouts, setAnalysisPunchouts] = React.useState(0);
+  const [AnalysisSlabThickness, setAnalysisSlabThickness] = React.useState(0);
   const classes = useStyles();
   const AnalysisPunchoutsFunc = (d)=>d===undefined?AnalysisPunchouts:setAnalysisPunchouts(d);
+  const AnalysisSlabThicknessFunc = (d)=>d===undefined?AnalysisSlabThickness:setAnalysisSlabThickness(d);
   return (
     <div >
       <div className={classes.cover}></div>
@@ -72,6 +74,7 @@ function App() {
               toMenu={()=>setPage('home')}
               // print={(d)=>{setReportData(d);setPage('Print')}}
               AnalysisPunchouts={AnalysisPunchoutsFunc}
+              AnalysisSlabThickness={AnalysisSlabThicknessFunc}
           />
         </Slide>
         {/*<Slide direction="up" in={page==='Print'} mountOnEnter unmountOnExit>*/}

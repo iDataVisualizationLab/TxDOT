@@ -40,8 +40,10 @@ import Dialog from "@material-ui/core/Dialog";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
 import * as d3 from "d3";
-import stress from "./data/stress.csv";
+import sTable from "./data/sTable.csv";
+// import stress from "./data/stress.csv";
 import kTable from "./data/kTable.csv";
+import temperature from "./data/temperature.csv";
 import Card from "@material-ui/core/Card";
 
 const districts = {
@@ -70,6 +72,7 @@ const districts = {
     "WICHITA FALLS": ["ARCHER", "BAYLOR", "CLAY", "COOKE", "MONTAGUE", "THROCKMORTON", "WICHITA", "WILBARGER", "YOUNG"],
     "YOKUM": ["AUSTIN", "CALHOUN", "COLORADO", "DEWITT", "FAYETTE", "GONZALES", "JACKSON", "LAVACA", "MATAGORDA", "VICTORIA", "WHARTON"]
 };
+const districtCode = {"ABILENE":"ABL","AMARILLO":"AMA","ATLANTA":"ATL","AUSTIN":"AUS","BEAUMONT":"BMT","BRYAN":"BRY","BROWNWOOD":"BWD","CORPUS CHRISTI":"CRP","DALLAS":"DAL","EL PASO":"ELP","FORT WORTH":"FTW","HOUSTON":"HOU","LUBBOCK":"LBB","LUFKIN":"LFK","LAREDO":"LRD","ODESA":"ODA","PARIS":"PAR","PHARR":"PHR","SAN ANTONIO":"SAT","SAN ANGELO":"SJT","TYLER":"TYL","WACO":"WAC","WICHITA FALLS":"WFS","YOKUM":"YKM"};
 const counties = {};
 Object.keys(districts).forEach(key => {
     districts[key].forEach(c => counties[c] ? counties[c].push(key) : counties[c] = [key])
@@ -87,6 +90,9 @@ const styles = theme => ({
         '& input': {
             width: '100%',
         },
+        '& input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button':{
+            opacity: 1
+        }
     },
     button: {
         marginTop: theme.spacing(1),
@@ -131,49 +137,51 @@ const DialogTitle = withStyles(styles)((props) => {
         </MuiDialogTitle>
     );
 });
-
+const init = {
+    activeStep: 0,
+    stepsLength: 3,
+    finished: false,
+    DesignLife: 30,
+    PunchoutsPerMile: 10,
+    LanesOneDirection: 2,
+    TrafficOneDirection: 100,
+    ModulusOfRupture: 570,
+    ElasticModulue: 5,
+    SoilClassificationSystem:'USCS',
+    SoilSub:"CH",
+    PlasticityIndex:8,
+    SubbaseType:"LTS",
+    SubbaseThickness:12,
+    BaseType:'',
+    BaseThickness: 6,
+    BaseThicknessMin: 6,
+    ModulusBase : 400,
+    CompositeK: 539,
+    District: null,
+    County: null,
+    Highway: null,
+    ProjectScope: null,
+    StationBegin: null,
+    StationEnd: null,
+    currentDistricts: Object.keys(districts),
+    currentCounties: Object.keys(counties),
+    SubbaseThicknessThreshHold:-1,
+    SubbaseTypeOpt:['Cement treated subgrade',
+        'Lime treated subgrade',
+        'Lime-cement treated subgrade',
+        'Lime-fly ash treated subgrade',
+        'Fly ash treated subgrade',
+        'N/A'
+    ],
+    baseTypeOpt:["CTB", "HMA Base"],
+    ksTable:new Map(),
+    ssTable:[],
+    temperature:[],
+}
 class CRCP extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            activeStep: 0,
-            stepsLength: 3,
-            finished: false,
-            DesignLife: 30,
-            PunchoutsPerMile: 10,
-            LanesOneDirection: 2,
-            TrafficOneDirection: 100,
-            ModulusOfRupture: 570,
-            ElasticModulue: 5,
-            SoilClassificationSystem:'USCS',
-            SoilSub:"CH",
-            PlasticityIndex:8,
-            SubbaseType:"LTS",
-            SubbaseThickness:12,
-            BaseType:'',
-            BaseThickness: 6,
-            BaseThicknessMin: 6,
-            ModulusBase : 400,
-            CompositeK: 539,
-            District: null,
-            County: null,
-            Highway: null,
-            ProjectScope: null,
-            StationBegin: null,
-            StationEnd: null,
-            currentDistricts: Object.keys(districts),
-            currentCounties: Object.keys(counties),
-            SubbaseThicknessThreshHold:-1,
-            SubbaseTypeOpt:['Cement treated subgrade',
-                'Lime treated subgrade',
-                'Lime-cement treated subgrade',
-                'Lime-fly ash treated subgrade',
-                'Fly ash treated subgrade',
-                'N/A'
-            ],
-            baseTypeOpt:["CTB", "HMA Base"],
-            ksTable:new Map()
-        };
+        this.state = {...init};
     }
     componentDidUpdate(prevProps, prevState, snapshot) {
         if ((prevState.ModulusBase!==this.state.ModulusBase)||(prevState.SoilSub!==this.state.SoilSub)||(prevState.BaseThickness!==this.state.BaseThickness)){
@@ -182,9 +190,9 @@ class CRCP extends Component {
     }
 
     componentDidMount() {
-        d3.tsv(stress).then(data_=> {
-            this.setState({data: data_});
-        });
+        // d3.tsv(stress).then(data_=> {
+        //     this.setState({data: data_});
+        // });
         d3.csv(kTable).then(_data=>{
             let ksTable = new Map();
             _data.forEach(r=>{
@@ -192,79 +200,210 @@ class CRCP extends Component {
             })
             this.setState({ksTable})
         })
+        d3.csv(sTable).then(_data=>{
+            this.setState({ssTable:_data})
+        })
+        d3.csv(temperature).then(_data=>{
+            this.setState({temperature:_data})
+        })
         this.handlePlasticityIndex(this.state.PlasticityIndex);
     }
+    computeStress = (SlabThickness)=>{ // F7
+        let input = {
+            H: {Input:SlabThickness,"L Bound":0, "U Bound":0},
+            K: {Input:this.state.CompositeK,"L Bound":0, "U Bound":0}
+        }
+        input.H["L Bound"] = (input.H.Input>=15.5)?15.5:((input.H.Input<6.5)?6:Math.floor(input.H.Input*2)/2);
+        input.H["U Bound"] = (input.H.Input>=15.5)?16:((input.H.Input<6.5)?6.5:Math.ceil(input.H.Input*2+1)/2);
+        const B3 = input.K.Input;
+        input.K["L Bound"] = (B3<100?50:(B3<300?100:(B3<500?300:(B3<700?500:(B3<1000?700:(B3<1300?1000:(B3>=1300?1300:0)))))));
+        input.K["U Bound"] = (B3<100?100:(B3<300?300:(B3<500?500:(B3<700?700:(B3<1000?1000:(B3<1300?1300:(B3>=1300?1600:0)))))));
+        const mapd2 = {};
+        let lastd2 = {index:1,DT:0,H:0,K:0,STR_T:0,STR_E:0};
+        this.state.ssTable.forEach(s=>{
+            const B2 = +s["Thickness of Concrete Layer (in.)"];
+            const A2 = +s["Temperature Change (F)"];
+            const C2 = +s["Composite K (psi/in.)"];
+            const D2 = +s["Concrete Stress (T) (psi)"];
+            const E2 = +s["Concrete Stress (E) (psi)"];
 
+            const DT = ((B2-input.H["L Bound"])*(B2-input.H["U Bound"]))===0?((C2-input.K["L Bound"])*(C2-input.K["U Bound"])===0?A2:0):0;
+            const H = ((B2-input.H["L Bound"])*(B2-input.H["U Bound"]))===0?((C2-input.K["L Bound"])*(C2-input.K["U Bound"])===0?B2:0):0;
+            const K = ((B2-input.H["L Bound"])*(B2-input.H["U Bound"]))===0?((C2-input.K["L Bound"])*(C2-input.K["U Bound"])===0?C2:0):0;
+            const STR_T = ((B2-input.H["L Bound"])*(B2-input.H["U Bound"]))===0?((C2-input.K["L Bound"])*(C2-input.K["U Bound"])===0?D2:0):0;
+            const STR_E = ((B2-input.H["L Bound"])*(B2-input.H["U Bound"]))===0?((C2-input.K["L Bound"])*(C2-input.K["U Bound"])===0?E2:0):0;
+            const index = DT===0?(lastd2.DT===0?lastd2.index:lastd2.index+1):(lastd2.DT===0?lastd2.index:lastd2.index+1);
+            mapd2[index] = {index,DT,H,K,STR_T,STR_E};
+            lastd2 = {index,DT,H,K,STR_T,STR_E};
+        });
+
+        const data3 = [];
+        for (let i = 1;i<25;i++) {
+            const index = Math.floor((i-1)/4)*4 + 1;
+            const DT = mapd2[index].DT;
+            const H = mapd2[Math.floor((i-1)/2)*2 + 1].H;
+            const {K,STR_T,STR_E} = mapd2[i];
+            data3.push({DT,H,K,STR_T,STR_E})
+        }
+        const data4 = [];
+        for (let i = 0;i<12;i++) {
+            const Q2 = data3[i*2].STR_T;
+            const Q3 = data3[i*2+1].STR_T;
+            const R2 = data3[i*2].STR_E;
+            const R3 = data3[i*2+1].STR_E;
+            const STR_T = ((Q3-Q2)*input.K.Input+(Q2*input.K['U Bound']-Q3*input.K['L Bound']))/(input.K['U Bound']-input.K['L Bound']);
+            const STR_E = ((R3-R2)*input.K.Input+(R2*input.K['U Bound']-R3*input.K['L Bound']))/(input.K['U Bound']-input.K['L Bound']);
+            data4.push({STR_T,STR_E})
+        }
+        const data5 = [];
+        for (let i = 0;i<6;i++) {
+            const W2 = data4[i*2].STR_T;
+            const W4 = data4[i*2+1].STR_T;
+            const X2 = data4[i*2].STR_E;
+            const X4 = data4[i*2+1].STR_E;
+            const STR_T = ((W4-W2)*input.H.Input+(W2*input.H['U Bound']-W4*input.H['L Bound']))/(input.H['U Bound']-input.H['L Bound']);
+            const STR_E = ((X4-X2)*input.H.Input+(X2*input.H['U Bound']-X4*input.H['L Bound']))/(input.H['U Bound']-input.H['L Bound']);
+            data5.push({STR_T,STR_E})
+        }
+        const districtemp = this.state.temperature.filter(d=>d.District===districtCode[this.state.District]);
+        const stress = districtemp.map((t,ti)=>{
+            const AveragetTemperature = +t['Average Temperature (F)'];
+            const DT = 120-AveragetTemperature;
+            const H = input.H.Input;
+            const K = input.K.Input;
+            const STR_T = getSTR_T(DT);
+            const STR_E = getSTR_E(DT);
+            if(ti===3)
+                debugger
+            return {'District':this.state.District,'Month':ti+1,'Average Temperature':AveragetTemperature,
+                DT,H,K,'STR (T)':STR_T,'STR (E)':STR_E}
+        });
+
+        function getSTR_T(DT){
+            if (DT>=95)
+                return (data5[5].STR_T-data5[4].STR_T)/(data3[20].DT-data3[16].DT)*(DT-data3[20].DT)+data5[5].STR_T;
+            if ((DT>=65)&&(DT<95))
+                return (data5[5].STR_T-data5[4].STR_T)/(data3[20].DT-data3[16].DT)*(DT-data3[16].DT)+data5[4].STR_T;
+            if ((DT>=35)&&(DT<65))
+                return (data5[4].STR_T-data5[3].STR_T)/(data3[16].DT-data3[12].DT)*(DT-data3[12].DT)+data5[3].STR_T;
+            if ((DT>=5)&&(DT<35))
+                return (data5[3].STR_T-data5[2].STR_T)/(data3[12].DT-data3[8].DT)*(DT-data3[8].DT)+data5[2].STR_T;
+            if((DT>=-25) && (DT<5))
+                return (data5[2].STR_T-data5[1].STR_T)/(data3[8].DT-data3[4].DT)*(DT-data3[4].DT)+data5[1].STR_T;
+            if((DT>=-55)&& (DT<-25))
+                return (data5[1].STR_T-data5[0].STR_T)/(data3[4].DT-data3[0].DT)*(DT-data3[0].DT)+data5[0].STR_T;
+            return (data5[1].STR_T-data5[0].STR_T)/(data3[4].DT-data3[0].DT)*(DT-data3[0].DT)+data5[0].STR_T;
+        }
+        function getSTR_E(DT){
+            if (DT>=95)
+                return (data5[5].STR_E-data5[4].STR_E)/(data3[20].DT-data3[16].DT)*(DT-data3[20].DT)+data5[5].STR_E;
+            if ((DT>=65)&&(DT<95))
+                return (data5[5].STR_E-data5[4].STR_E)/(data3[20].DT-data3[16].DT)*(DT-data3[16].DT)+data5[4].STR_E;
+            if ((DT>=35)&&(DT<65))
+                return (data5[4].STR_E-data5[3].STR_E)/(data3[16].DT-data3[12].DT)*(DT-data3[12].DT)+data5[3].STR_E;
+            if ((DT>=5)&&(DT<35))
+                return (data5[3].STR_E-data5[2].STR_E)/(data3[12].DT-data3[8].DT)*(DT-data3[8].DT)+data5[2].STR_E;
+            if((DT>=-25) && (DT<5))
+                return (data5[2].STR_E-data5[1].STR_E)/(data3[8].DT-data3[4].DT)*(DT-data3[4].DT)+data5[1].STR_E;
+            if((DT>=-55)&& (DT<-25))
+                return (data5[1].STR_E-data5[0].STR_E)/(data3[4].DT-data3[0].DT)*(DT-data3[0].DT)+data5[0].STR_E;
+            return (data5[1].STR_E-data5[0].STR_E)/(data3[4].DT-data3[0].DT)*(DT-data3[0].DT)+data5[0].STR_E;
+        }
+        // for (let i = 0;i<12;i++) {
+        //     const item = {'District'	'Month'	'Average' 'Temperature'	DT	H	K	STR (T)	STR (E)}
+        // }
+        // this.setState({data: stress});
+        return stress;
+    }
     recompute = ()=>{
-        const data = this.state.data;
-        let rowIndexStress = 9;
+        let __ret = {};
+        let i = 7;
+        for (i=7;i<14;i++) {
+            __ret = this.analysis(i);
+            console.log(__ret.rows[__ret.r][12])
+            if(__ret.rows[__ret.r][12]<=this.state.PunchoutsPerMile)
+                break;
+        }
+        let rowIndexStress = __ret.rowIndexStress;
+        let row1 = __ret.row1;
+        const rows = __ret.rows;
+        var r = __ret.r;
+        this.props.AnalysisPunchouts(rows[r][12]);
+        this.props.AnalysisSlabThickness(Math.min(13,i));
+        this.setState({row1,rows,rowIndexStress})
+    };
+
+    analysis(slabthickness) {
+        const data = this.computeStress(slabthickness);
+        console.log(data)
+        let rowIndexStress = 8;
         let row1 = [];
         const rows = [];
-        row1.push( 1 );
-        row1.push( row1[0]/ 12 );
-        row1.push( this.state.ModulusOfRupture);
-        row1.push( 57000 / 7.5 * row1[2] / 1000 );
-        row1.push( +data[rowIndexStress-2]["STR (T)"] );
-        row1.push( data[rowIndexStress-2]["STR (E)"] * row1[3] / 5000 )
-        row1.push( row1[4] + row1[5] )
-        row1.push( row1[6] / row1[2] )
-        row1.push( 11800 * Math.pow(row1[7],fatigue(this.state.CompositeK) ))
-        row1.push( lane(this.state.LanesOneDirection)
-            * this.state.TrafficOneDirection * 1000000 / 12 / this.state.DesignLife )
-        row1.push( row1[9] / row1[8] )
-        row1.push( row1[10] )
-        row1.push( 18.985 / (1 + 5 * Math.pow(row1[11],-1.1)) )
+        row1.push(1);
+        row1.push(row1[0] / 12);
+        row1.push(this.state.ModulusOfRupture);
+        row1.push(57000 / 7.5 * row1[2] / 1000);
+        row1.push(+data[rowIndexStress - 2]["STR (T)"]);
+        row1.push(data[rowIndexStress - 2]["STR (E)"] * row1[3] / 5000)
+        row1.push(row1[4] + row1[5])
+        row1.push(row1[6] / row1[2])
+        row1.push(11800 * Math.pow(row1[7], fatigue(this.state.CompositeK)))
+        row1.push(lane(this.state.LanesOneDirection)
+            * this.state.TrafficOneDirection * 1000000 / 12 / this.state.DesignLife)
+        row1.push(row1[9] / row1[8])
+        row1.push(row1[10])
+        row1.push(18.985 / (1 + 5 * Math.pow(row1[11], -1.1)))
         rows.push(row1);    // Add to the array
 
         //console.log(+document.getElementById("DesignLife").value);
-        for (var i=0; i<this.state.DesignLife;i++){
+        for (var i = 1; i <= this.state.DesignLife; i++) {
             //debugger;
-            if (i!=0)
-                rowIndexStress = 8;
-            for (var j=0;j<12; j++){
-                if (i==0 && j==0)
+            if (i !== 1)
+                rowIndexStress = 7;
+            for (var j = 0; j < 12; j++) {
+                if (i == 1 && j == 0)
                     ;
                     //If counterYear = 1 And counterMonth = 1 Then
                 //      'If First Year than Omit Calculation of First Month, Already Done
                 else {
                     rowIndexStress = rowIndexStress + 1
                     let row2 = [];
-                    row2.push( row1[0] + 1 )
-                    row2.push( row2[0]/ 12 );
+                    row2.push(row1[0] + 1)
+                    row2.push(row2[0] / 12);
                     // Cells(rowIndex, 2) = Cells(rowIndex, 1).Value / 12
-                    row2.push( this.state.ModulusOfRupture
-                        * Math.pow((30 * row2[0] / (4 + 0.85 * 30 * row2[0])), 0.5) );
+                    row2.push(this.state.ModulusOfRupture
+                        * Math.pow((30 * row2[0] / (4 + 0.85 * 30 * row2[0])), 0.5));
                     // Cells(rowIndex, 3) = Sheets("Input").Range("F8").Value * ((30 * Cells(rowIndex, 1).Value / (4 + 0.85 * 30 * Cells(rowIndex, 1).Value))) ^ 0.5
-                    row2.push( 57000 / 7.5 * row2[2] / 1000 );
+                    row2.push(57000 / 7.5 * row2[2] / 1000);
                     // Cells(rowIndex, 4) = 57000 / 7.5 * Cells(rowIndex, 3) / 1000
-                    row2.push( +data[rowIndexStress-2]["STR (T)"] );
+                    row2.push(+data[rowIndexStress - 2]["STR (T)"]);
                     // Cells(rowIndex, 5) = Sheets("Stress").Cells(rowIndexStress, 38).Value
-                    row2.push( data[rowIndexStress-2]["STR (E)"] * row2[3] / 5000 );
+                    row2.push(data[rowIndexStress - 2]["STR (E)"] * row2[3] / 5000);
                     // Cells(rowIndex, 6) = Sheets("Stress").Cells(rowIndexStress, 39).Value * Cells(rowIndex, 4) / 5000
-                    row2.push( row2[4] + row2[5] );
+                    row2.push(row2[4] + row2[5]);
                     // Cells(rowIndex, 7) = Cells(rowIndex, 5).Value + Cells(rowIndex, 6).Value
-                    row2.push( row2[6] / row2[2] );
+                    row2.push(row2[6] / row2[2]);
                     // Cells(rowIndex, 8) = Cells(rowIndex, 7).Value / Cells(rowIndex, 3).Value
-                    row2.push( 11800 * Math.pow(row2[7],fatigue(this.state.CompositeK)) );
+                    row2.push(11800 * Math.pow(row2[7], fatigue(this.state.CompositeK)));
                     // Cells(rowIndex, 9) = 11800 * Cells(rowIndex, 8).Value ^ fatigue(Sheets("Input").Range("CompositeK").Value)
-                    row2.push( row1[9] );
+                    row2.push(row1[9]);
                     // Cells(rowIndex, 10) = Cells(rowIndex - 1, 10).Value
-                    row2.push( row2[9] / row2[8] );
+                    row2.push(row2[9] / row2[8]);
                     // Cells(rowIndex, 11) = Cells(rowIndex, 10).Value / Cells(rowIndex, 9).Value
-                    row2.push( row1[11] + row2[10] )
+                    row2.push(row1[11] + row2[10])
                     // Cells(rowIndex, 12) = Cells(rowIndex - 1, 12).Value + Cells(rowIndex, 11).Value
-                    row2.push( 18.985 / (1 + 5 * Math.pow(row2[11],-1.1)) )
+                    row2.push(18.985 / (1 + 5 * Math.pow(row2[11], -1.1)))
                     // Cells(rowIndex, 13) = 18.985 / (1 + 5 * Cells(rowIndex, 12).Value ^ -1.1)
                     if (rowIndexStress == 13)
                         rowIndexStress = 1
                     rows.push(row2);
-                    row1=row2;
+                    row1 = row2;
                 }
             }
         }
         var r = 12 * this.state.DesignLife - 1;
-        this.props.AnalysisPunchouts(rows[r][12]);
-        this.setState({row1,rows,rowIndexStress})
+        console.log(rows)
+        return {rowIndexStress, row1, rows, r};
         function lane(n) {
             if (n <= 2)
                 return 1;
@@ -286,7 +425,8 @@ class CRCP extends Component {
             else
                 return k * 0.00071 - 9.69;
         }
-    };
+    }
+
     errorFunc={
         Step3:{
             'SubbaseThickness': ()=>this.state.SubbaseThickness<this.state.SubbaseThicknessThreshHold?`Must greater than ${this.state.SubbaseThicknessThreshHold}`:(this.state.SubbaseThickness===''?'Required':null),
@@ -302,8 +442,12 @@ class CRCP extends Component {
         this.setState({activeStep: this.state.activeStep - 1});
     };
 
-    handleReset = () => {
+    handleModify = () => {
         this.setState({activeStep: 0, finished:false});
+    };
+
+    handleReset = () => {
+        this.setState({...init});
     };
 
     handleOpenHelper = (content) => (event) => {
@@ -663,7 +807,7 @@ class CRCP extends Component {
                             <Grid container spacing={4}>
                                 <Grid container item xs={12} spacing={1} alignItems="flex-end" justify="center">
                                     <Grid item xs={12} justify="flex-start">
-                                        <Typography variant={'h6'}>Basic design information</Typography>
+                                        <Typography variant={'h6'}>Basic Design Information</Typography>
                                     </Grid>
                                     <Grid container item xs={11} md={10} lg={8} spacing={1} justify="center"
                                           alignItems="flex-end">
@@ -678,7 +822,7 @@ class CRCP extends Component {
                                                 value={this.state.DesignLife}
                                                 onChange={(event, newValue) => this.setState({DesignLife: newValue})}
                                                 defaultValue={30}
-                                                min={1} max={100}
+                                                min={1} max={50}
                                                 id="DesignLife"
                                             />
                                         </Grid>
@@ -694,7 +838,7 @@ class CRCP extends Component {
                                                     }}
                                                     inputProps={{
                                                         min: 1,
-                                                        max: 100,
+                                                        max: 50,
                                                         type: 'number',
                                                     }}
                                                 />
@@ -750,7 +894,7 @@ class CRCP extends Component {
                                                 value={this.state.TrafficOneDirection}
                                                 onChange={(event, newValue) => this.setState({TrafficOneDirection: newValue})}
                                                 defaultValue={100}
-                                                min={10} max={1000}
+                                                min={1} max={500}
                                                 id="TrafficOneDirection"
                                             />
                                         </Grid>
@@ -765,8 +909,8 @@ class CRCP extends Component {
                                                         shrink: true,
                                                     }}
                                                     inputProps={{
-                                                        min: 10,
-                                                        max: 1000,
+                                                        min: 1,
+                                                        max: 500,
                                                         type: 'number',
                                                     }}
                                                 />
@@ -788,7 +932,7 @@ class CRCP extends Component {
                                           alignItems="flex-end">
                                         <Grid item xs={8} justify="flex-start">
                                             <Grid container xs={12} justify="flex-start">
-                                                <span>Acceptable number of punchouts per mile</span>
+                                                <span>Acceptable punchout per mile</span>
                                                 <IconButton aria-label="info" className={classes.margin} size="small">
                                                     <InfoIcon fontSize="small"
                                                               onMouseEnter={this.handleOpenHelper({src: AcceptableNumberofPunchoutPic})}
@@ -802,8 +946,8 @@ class CRCP extends Component {
                                             <Slider
                                                 value={this.state.PunchoutsPerMile}
                                                 onChange={(event, newValue) => this.setState({PunchoutsPerMile: newValue})}
-                                                defaultValue={10}
-                                                min={1} max={100}
+                                                defaultValue={5}
+                                                min={1} max={20}
                                                 id="PunchoutsPerMile"
                                                 disabled
                                             />
@@ -819,8 +963,8 @@ class CRCP extends Component {
                                                         shrink: true,
                                                     }}
                                                     inputProps={{
-                                                        min: 1,
-                                                        max: 100,
+                                                        min: 5,
+                                                        max: 20,
                                                         type: 'number',
                                                     }}
                                                     disabled
@@ -843,7 +987,7 @@ class CRCP extends Component {
                                           alignItems="flex-end">
                                         <Grid item xs={8} justify="flex-start">
                                             <Grid container xs={12} justify="flex-start">
-                                                <span>28-Day Modulus of Rupture (psi)</span>
+                                                <span>28-day modulus of tupture (psi)</span>
                                                 <span className={classes.dot} style={{flexGrow: 1}}/>
                                             </Grid>
                                         </Grid>
@@ -879,7 +1023,7 @@ class CRCP extends Component {
 
                                         <Grid item xs={8} justify="flex-start">
                                             <Grid container xs={12} justify="flex-start">
-                                                <span>Concrete Elasticity of Modulus (million psi)</span>
+                                                <span>Concrete elastic modulus (million psi)</span>
                                                 <span className={classes.dot} style={{flexGrow: 1}}/>
                                             </Grid>
                                         </Grid>
@@ -926,7 +1070,7 @@ class CRCP extends Component {
                             <Grid container spacing={4}>
                                 <Grid container item xs={12} spacing={1} alignItems="flex-end" justify="center">
                                     <Grid item xs={12} justify="flex-start">
-                                        <Typography variant={'h6'}>Subgrade and Subbase Information</Typography>
+                                        <Typography variant={'h6'}>Subgrade and Treatment Information</Typography>
                                     </Grid>
                                     <Grid container item xs={11} md={10} lg={8} spacing={1} justify="center"
                                           alignItems="flex-end">
@@ -976,7 +1120,7 @@ class CRCP extends Component {
                                         </Grid>
                                         <Grid item xs={8} justify="flex-start">
                                             <Grid container xs={12} justify="flex-start">
-                                                <span> Subbase Type</span>
+                                                <span>Subgrade treatment</span>
                                                 <IconButton aria-label="info" className={classes.margin} size="small">
                                                     <InfoIcon fontSize="small"
                                                               onMouseEnter={this.handleOpenHelper({src: subbasePic})}
@@ -1000,7 +1144,7 @@ class CRCP extends Component {
                                         </Grid>
                                         <Grid item xs={8} justify="flex-start">
                                             <Grid container xs={12} justify="flex-start">
-                                                <span>Subbase Layer Thickness (in.)</span>
+                                                <span>Subgrade treatment thickness (in.)</span>
                                                 <IconButton aria-label="info" className={classes.margin} size="small">
                                                     <InfoIcon fontSize="small"
                                                               onMouseEnter={this.handleOpenHelper({src: subbasePic})}
@@ -1138,6 +1282,12 @@ class CRCP extends Component {
             {this.state.activeStep === this.state.stepsLength && (
                 <>
                     <Paper square elevation={0} className={classes.resetContainer}>
+                        <Button onClick={this.handleModify} className={classes.button}
+                                size="small"
+                                startIcon={<RefreshIcon/>}
+                        >
+                            Modify
+                        </Button>
                         <Button onClick={this.handleReset} className={classes.button}
                                 size="small"
                                 startIcon={<RefreshIcon/>}
@@ -1183,6 +1333,7 @@ class CRCP extends Component {
                     <Report
                         data={this.state}
                         AnalysisPunchouts={this.props.AnalysisPunchouts()}
+                        AnalysisSlabThickness={this.props.AnalysisSlabThickness()}
                     />
                 </Grid>:''}
             </Grid>
@@ -1225,6 +1376,7 @@ class CRCP extends Component {
                 <DialogTitle id="responsive-dialog-title" onClose={()=>this.setState({openAnalytics:false})}>Analysis</DialogTitle>
                 <DialogContent>
                 {this.state.finished ? <Graph
+                    rows={this.state.rows}
                     AnalysisPunchouts={this.props.AnalysisPunchouts}
                     init={this.state.activeStep === this.state.stepsLength}
                     parameter={{...this.state}}/> : ''}

@@ -8,37 +8,43 @@ class Tabledata  extends Component {
         this.state = {
             visible:false
         }
-        var r = 12 * this.props.parameter.DesignLife - 1;
-        this.props.AnalysisPunchouts(this.props.rows[r][12]);
+        this.handleInput();
+        // var r = 12 * this.props.parameter.DesignLife - 1;
+        // this.props.AnalysisPunchouts(this.props.rows[r][12]);
     }
     componentDidUpdate(prevProps) {
         if (this.props.rows!==prevProps.rows){
-            const rows = this.props.rows;
-            var minArray = [];
-            var maxArray = [];
-            for (var j=0; j<rows[0].length; j++){
-                minArray.push(1000000000);
-                maxArray.push(0);
-            }
-            for (var i=0;i<rows.length;i++){
-                for (var j=0;j<rows[i].length;j++){
-                    if (rows[i][j]>maxArray[j])
-                        maxArray[j] = rows[i][j];
-                    if (rows[i][j]<minArray[j])
-                        minArray[j] = rows[i][j];
-                }
-            }
-            this.colorRedBlues = [];
-            for (var j=0; j<rows[0].length; j++){
-                var colorScale = d3.scaleLinear()
-                    .domain([minArray[j], (minArray[j]+maxArray[j])/2, maxArray[j]])
-                    .range(["#55f", "white", "#f55"]);
-                this.colorRedBlues.push(colorScale);
-            }
-            var r = 12 * this.props.parameter.DesignLife - 1;
-            this.props.AnalysisPunchouts(this.props.rows[r][12]);
+            this.handleInput();
+            // var r = 12 * this.props.parameter.DesignLife - 1;
+            // this.props.AnalysisPunchouts(this.props.rows[r][12]);
         }
     }
+
+    handleInput() {
+        const rows = this.props.rows;
+        var minArray = [];
+        var maxArray = [];
+        for (var j = 0; j < rows[0].length; j++) {
+            minArray.push(1000000000);
+            maxArray.push(0);
+        }
+        for (var i = 0; i < rows.length; i++) {
+            for (var j = 0; j < rows[i].length; j++) {
+                if (rows[i][j] > maxArray[j])
+                    maxArray[j] = rows[i][j];
+                if (rows[i][j] < minArray[j])
+                    minArray[j] = rows[i][j];
+            }
+        }
+        this.colorRedBlues = [];
+        for (var j = 0; j < rows[0].length; j++) {
+            var colorScale = d3.scaleLinear()
+                .domain([minArray[j], (minArray[j] + maxArray[j]) / 2, maxArray[j]])
+                .range(["#55f", "white", "#f55"]);
+            this.colorRedBlues.push(colorScale);
+        }
+    }
+
     titles = ["Age (Month)","Age (Year)", "Modulus of Rupture (psi)","Modulus of Elasticity (ksi)"
         ,"Concrete Stress (T) (psi)"
         ,"Concrete Stress (E) (psi)"
@@ -50,6 +56,7 @@ class Tabledata  extends Component {
         ,"Cumulative Damage"
         ,"Number of Punchouts per Mile"]
     render() {
+        debugger
         var r = 12 * this.props.parameter.DesignLife - 1;
         if (this.colorRedBlues&&this.props.rows[r]) {
             var color = this.props.colorgreenred(this.props.rows[r][12]);
