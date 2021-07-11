@@ -1,6 +1,6 @@
 {
   "name": "txdot",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.11.2",
@@ -16,6 +16,7 @@
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-scripts": "4.0.1",
+    "react-zoom-pan-pinch": "^2.1.1",
     "web-vitals": "^0.2.4"
   },
   "scripts": {

@@ -20,6 +20,9 @@ import Graph from './Graph'
 import HomeIcon from '@material-ui/icons/Home';
 import PrintIcon from '@material-ui/icons/Print';
 import RefreshIcon from '@material-ui/icons/Refresh';
+import EditIcon from '@material-ui/icons/Edit';
+import SaveIcon from '@material-ui/icons/Save';
+import PublishIcon from '@material-ui/icons/Publish';
 import MenuItem from "@material-ui/core/MenuItem";
 import Popper from "@material-ui/core/Popper";
 import Image from 'material-ui-image';
@@ -40,11 +43,13 @@ import Dialog from "@material-ui/core/Dialog";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
 import * as d3 from "d3";
+import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import sTable from "./data/sTable.csv";
 // import stress from "./data/stress.csv";
 import kTable from "./data/kTable.csv";
 import temperature from "./data/temperature.csv";
 import Card from "@material-ui/core/Card";
+import Divider from "@material-ui/core/Divider/Divider";
 
 const districts = {
     "ABILENE": ["BORDEN", "CALLAHAN", "FISHER", "HASKELL", "HOWARD", "JONES", "KENT", "MITCHELL", "NOLAN", "SCURRY", "SHACKELFORD", "STONEWALL", "TAYLOR"],
@@ -121,7 +126,8 @@ const styles = theme => ({
         right: theme.spacing(1),
         top: theme.spacing(1),
         color: theme.palette.grey[500],
-    },
+        zIndex:2
+    }
 });
 
 const DialogTitle = withStyles(styles)((props) => {
@@ -449,12 +455,84 @@ class CRCP extends Component {
     handleReset = () => {
         this.setState({...init});
     };
+    onLoadInput = (event) =>{
+        const self = this;
+        var reader = new FileReader();
+        reader.addEventListener("load", parseFile, false);
+        if (event.target.files[0]) {
+            debugger
+            reader.readAsText(event.target.files[0]);
+        }
 
-    handleOpenHelper = (content) => (event) => {
-        this.setState({helperEl: {el: event.currentTarget, content}})
+        function parseFile(){
+            let loaded = false;
+            var data = JSON.parse(reader.result);
+            loaded = true;
+            const currentState = JSON.stringify(self.state);
+            try{
+                self.setState(data);
+                event.target.value = ''
+            }catch(e){
+                window.alert("Can't read file. Please check format!")
+                if(loaded)
+                    self.setState(JSON.parse(currentState))
+                event.target.value = ''
+            }
+        }
+    }
+    onSaveInput = () => {
+        let filename = `txDoT_${this.state.District}_${new Date().toISOString().replace('.','|')}`;
+        let saveDataKey = ['DesignLife', 'PunchoutsPerMile', 'LanesOneDirection', 'TrafficOneDirection', 'ModulusOfRupture',
+            'ElasticModulue', 'SoilClassificationSystem', 'SoilSub', 'PlasticityIndex', 'SubbaseType',
+            'SubbaseThickness', 'BaseType', 'BaseThickness', 'BaseThicknessMin', 'ModulusBase',
+            'CompositeK', 'District', 'County', 'Highway', 'ProjectScope', 'StationBegin', 'StationEnd',
+            'currentDistricts', 'currentCounties', 'SubbaseThicknessThreshHold', 'SubbaseTypeOpt', 'baseTypeOpt'];
+        const saveData = {};
+        saveDataKey.forEach(k=>saveData[k]=this.state[k]);
+        const jsonse = JSON.stringify(saveData);
+        let blob = new Blob([jsonse], {type: "application/json"});
+
+        // Specify link url
+        let url = URL.createObjectURL(blob);
+        // Specify file name
+        filename = filename?filename+'.json':'txDot.json';
+
+        // Create download link element
+        let downloadLink = document.createElement("a");
+
+        document.body.appendChild(downloadLink);
+
+        if(navigator.msSaveOrOpenBlob ){
+            navigator.msSaveOrOpenBlob(blob, filename);
+        }else{
+            // Create a link to the file
+            downloadLink.href = url;
+
+            // Setting the file name
+            downloadLink.download = filename;
+
+            //triggering the function
+            downloadLink.click();
+        }
+
+        document.body.removeChild(downloadLink);
+    }
+
+    handleOpenHelper = (content,freeze) => (event) => {
+        if (this.state.helperEl) {
+            if (this.state.helperEl.el === event.currentTarget && freeze && this.state.helperEl.freeze) // same target
+                this.handleCloseHelper(event);
+            else {
+                if (freeze || this.state.helperEl.el !== event.currentTarget && freeze)
+                    this.setState({helperEl: {el: event.currentTarget, content, freeze}})
+            }
+        }else{
+            this.setState({helperEl: {el: event.currentTarget, content, freeze}})
+        }
     };
 
-    handleCloseHelper = () => {
+    handleCloseHelper = (source) => {
+        if(source.type!=='mouseleave' || source.type==='mouseleave'&&this.state.helperEl&& (!this.state.helperEl.freeze))
         this.setState({helperEl: undefined})
     };
 
@@ -595,6 +673,7 @@ class CRCP extends Component {
                         Back
                     </Button>
                     <Button
+                        disabled={!this.state.District}
                         variant="contained"
                         color="primary"
                         onClick={this.handleNext}
@@ -616,6 +695,31 @@ class CRCP extends Component {
                 <Step>
                     <StepLabel>Step 1</StepLabel>
                     <StepContent displayPrint="block">
+                        <Grid container spacing={4} justify="center">
+                            <Grid item>
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    size="small"
+                                    className={classes.button}
+                                    startIcon={<PublishIcon/>}
+                                    component="label"
+                                >
+                                    Load data input
+                                    <input
+                                        accept="application/JSON"
+                                        type="file"
+                                        hidden
+                                        onChange={this.onLoadInput}
+                                    />
+                                </Button>
+                            </Grid>
+                            <Grid item xs={12} container>
+                                <Grid item style={{flexGrow:1}}><Divider variant="middle" /></Grid>
+                                <Grid item style={{transform:'translateY(-50%)'}}>Or</Grid>
+                                <Grid item style={{flexGrow:1}}><Divider variant="middle" /></Grid>
+                            </Grid>
+                        </Grid>
                         <form className={classes.root} noValidate autoComplete="off">
                             <Grid container spacing={4}>
                                 <Grid container item xs={12} spacing={1} justify="center">
@@ -643,11 +747,14 @@ class CRCP extends Component {
                                             }}
                                             renderInput={(params) => <TextField dense {...params} variant="filled"
                                                                                 className={classes.inputWithHelper}
+                                                                                required
+                                                                                error={!this.state.District}
                                                                                 label={<>DISTRICT<IconButton
                                                                                     aria-label="info"
                                                                                     className={classes.margin}
                                                                                     size="small">
                                                                                     <InfoIcon fontSize="small"
+                                                                                              onClick={this.handleOpenHelper({src: DistrictPic},true)}
                                                                                               onMouseEnter={this.handleOpenHelper({src: DistrictPic})}
                                                                                               onMouseLeave={this.handleCloseHelper}
                                                                                     /></IconButton></>}
@@ -677,6 +784,7 @@ class CRCP extends Component {
                                                                                     className={classes.margin}
                                                                                     size="small">
                                                                                     <InfoIcon fontSize="small"
+                                                                                              onClick={this.handleOpenHelper({src: CountyPic},true)}
                                                                                               onMouseEnter={this.handleOpenHelper({src: CountyPic})}
                                                                                               onMouseLeave={this.handleCloseHelper}
                                                                                     /></IconButton></>}
@@ -739,6 +847,7 @@ class CRCP extends Component {
                                             label={<>Project Scope <IconButton aria-label="info"
                                                                                className={classes.margin} size="small">
                                                 <InfoIcon fontSize="small"
+                                                          onClick={this.handleOpenHelper({text: "Will be provided later."},true)}
                                                           onMouseEnter={this.handleOpenHelper({text: "Will be provided later."})}
                                                           onMouseLeave={this.handleCloseHelper}
                                                 />
@@ -882,6 +991,7 @@ class CRCP extends Component {
                                                 <span>Total design traffic in one direction (million ESAL)</span>
                                                 <IconButton aria-label="info" className={classes.margin} size="small">
                                                     <InfoIcon fontSize="small"
+                                                              onClick={this.handleOpenHelper({src: TrafficOneDirectionPic},true)}
                                                               onMouseEnter={this.handleOpenHelper({src: TrafficOneDirectionPic})}
                                                               onMouseLeave={this.handleCloseHelper}
                                                     />
@@ -923,6 +1033,7 @@ class CRCP extends Component {
                                         <Typography variant={'h6'}>Structural design criteria</Typography>
                                         <IconButton aria-label="info" className={classes.margin} size="small">
                                             <InfoIcon fontSize="small"
+                                                      onClick={this.handleOpenHelper({src: StructureDesignCriteriaPic},true)}
                                                       onMouseEnter={this.handleOpenHelper({src: StructureDesignCriteriaPic})}
                                                       onMouseLeave={this.handleCloseHelper}
                                             />
@@ -935,6 +1046,7 @@ class CRCP extends Component {
                                                 <span>Acceptable punchout per mile</span>
                                                 <IconButton aria-label="info" className={classes.margin} size="small">
                                                     <InfoIcon fontSize="small"
+                                                              onClick={this.handleOpenHelper({src: AcceptableNumberofPunchoutPic},true)}
                                                               onMouseEnter={this.handleOpenHelper({src: AcceptableNumberofPunchoutPic})}
                                                               onMouseLeave={this.handleCloseHelper}
                                                     />
@@ -978,6 +1090,7 @@ class CRCP extends Component {
                                         <Typography variant={'h6'}>Concrete Layer/Material information</Typography>
                                         <IconButton aria-label="info" className={classes.margin} size="small">
                                             <InfoIcon fontSize="small"
+                                                      onClick={this.handleOpenHelper({src: ConcreteLayerPic},true)}
                                                       onMouseEnter={this.handleOpenHelper({src: ConcreteLayerPic})}
                                                       onMouseLeave={this.handleCloseHelper}
                                             />
@@ -1079,6 +1192,7 @@ class CRCP extends Component {
                                                 <span>Soil classification system</span>
                                                 <IconButton aria-label="info" className={classes.margin} size="small">
                                                     <InfoIcon fontSize="small"
+                                                              onClick={this.handleOpenHelper({src: soilSystermPic},true)}
                                                               onMouseEnter={this.handleOpenHelper({src: soilSystermPic})}
                                                               onMouseLeave={this.handleCloseHelper}
                                                     />
@@ -1123,6 +1237,7 @@ class CRCP extends Component {
                                                 <span>Subgrade treatment</span>
                                                 <IconButton aria-label="info" className={classes.margin} size="small">
                                                     <InfoIcon fontSize="small"
+                                                              onClick={this.handleOpenHelper({src: subbasePic},true)}
                                                               onMouseEnter={this.handleOpenHelper({src: subbasePic})}
                                                               onMouseLeave={this.handleCloseHelper}
                                                     />
@@ -1147,6 +1262,7 @@ class CRCP extends Component {
                                                 <span>Subgrade treatment thickness (in.)</span>
                                                 <IconButton aria-label="info" className={classes.margin} size="small">
                                                     <InfoIcon fontSize="small"
+                                                              onClick={this.handleOpenHelper({src: subbasePic},true)}
                                                               onMouseEnter={this.handleOpenHelper({src: subbasePic})}
                                                               onMouseLeave={this.handleCloseHelper}
                                                     />
@@ -1284,7 +1400,7 @@ class CRCP extends Component {
                     <Paper square elevation={0} className={classes.resetContainer}>
                         <Button onClick={this.handleModify} className={classes.button}
                                 size="small"
-                                startIcon={<RefreshIcon/>}
+                                startIcon={<EditIcon/>}
                         >
                             Modify
                         </Button>
@@ -1304,6 +1420,17 @@ class CRCP extends Component {
                             onClick={()=>window.print()}
                         >
                             Print
+                        </Button>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            size="small"
+                            className={classes.button}
+                            startIcon={<SaveIcon/>}
+                            // onClick={()=>this.props.print(this.state)}
+                            onClick={this.onSaveInput}
+                        >
+                            Save input
                         </Button>
                         <Button
                             variant="contained"
@@ -1342,7 +1469,8 @@ class CRCP extends Component {
                 <Popper
                     placement="right"
                     disablePortal={false}
-                    open={true} anchorEl={this.state.helperEl.el}
+                    open={true}
+                    anchorEl={this.state.helperEl.el}
                     modifiers={{
                         flip: {
                             enabled: true,
@@ -1358,11 +1486,20 @@ class CRCP extends Component {
                     style={{zIndex: 4}}
                 >
                     <Card className={classes.helpHolder}>
+                        {this.state.helperEl.freeze?<IconButton aria-label="close" className={classes.closeButton} onClick={this.handleCloseHelper}>
+                            <CloseIcon />
+                        </IconButton>:''}
                         {this.state.helperEl.content.src ?
+                            <TransformWrapper
+                                defaultScale={1}
+                                defaultPositionX={1}
+                                defaultPositionY={1}
+                            >
+                                <TransformComponent>
                             <img
                                 src={this.state.helperEl.content.src}
                                 style={{maxWidth: 600, height: 'auto'}}
-                            /> :
+                            /></TransformComponent></TransformWrapper> :
                             this.state.helperEl.content.text
                         }
                     </Card>
