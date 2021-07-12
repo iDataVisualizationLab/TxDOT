@@ -50,6 +50,7 @@ import kTable from "./data/kTable.csv";
 import temperature from "./data/temperature.csv";
 import Card from "@material-ui/core/Card";
 import Divider from "@material-ui/core/Divider/Divider";
+import County from "./County";
 
 const districts = {
     "ABILENE": ["BORDEN", "CALLAHAN", "FISHER", "HASKELL", "HOWARD", "JONES", "KENT", "MITCHELL", "NOLAN", "SCURRY", "SHACKELFORD", "STONEWALL", "TAYLOR"],
@@ -57,21 +58,21 @@ const districts = {
     "ATLANTA": ["BOWIE", "CAMP", "CASS", "HARRISON", "MARION", "MORRIS", "PANOLA", "TITUS", "UPSHUR"],
     "AUSTIN": ["BASTROP", "BLANCO", "BURNET", "CALDWELL", "GILLESPIE", "HAYS", "LEE", "LLANO", "MASON", "TRAVIS", "WILLIAMSON"],
     "BEAUMONT": ["CHAMBERS", "HARDIN", "JASPER", "JEFFERSON", "LIBERTY", "NEWTON", "ORANGE", "TYLER"],
-    "BRYAN": ["BRAZOS", "BURLESON", "FREESTONE", "GRIMES", "LEON", "MADISON", "MILAM", "ROBERTSON", "WALKER", "WASHINGTON"],
     "BROWNWOOD": ["BROWN", "COLEMAN", "COMANCHE", "EASTLAND", "LAMPASAS", "MCCULLOCH", "MILLS", "SAN SABA", "STEPHENS", "BRISCOE", "CHILDRESS", "COLLINGSWORTH", "COTTLE", "DICKENS", "DONLEY", "FOARD", "HALL", "HARDEMAN", "KING", "KNOX", "MOTLEY", "WHEELER"],
+    "BRYAN": ["BRAZOS", "BURLESON", "FREESTONE", "GRIMES", "LEON", "MADISON", "MILAM", "ROBERTSON", "WALKER", "WASHINGTON"],
     "CORPUS CHRISTI": ["ARANSAS", "BEE", "GOLIAD", "JIM WELLS", "KARNES", "KLEBERG", "LIVE OAK", "NUECES", "REFUGIO", "SAN PATRICIO"],
     "DALLAS": ["COLLIN", "DALLAS", "DENTON", "ELLIS", "KAUFMAN", "NAVARRO", "ROCKWALL"],
     "EL PASO": ["BREWSTER", "CULBERSON", "EL PASO", "HUDSPETH", "JEFF DAVIS", "PRESIDIO"],
     "FORT WORTH": ["ERATH", "HOOD", "JACK", "JOHNSON", "PALO PINTO", "PARKER", "SOMERVELL", "TARRANT", "WISE"],
     "HOUSTON": ["BRAZORIA", "FORT BEND", "GALVESTON", "HARRIS", "MONTGOMERY", "WALLER"],
+    "LAREDO": ["DIMMITT", "DUVAL", "KINNEY", "LA SALLE", "MAVERICK", "VAL VERDE", "WEBB", "ZAVALA"],
     "LUBBOCK": ["BAILEY", "CASTRO", "COCHRAN", "CROSBY", "DAWSON", "FLOYD", "GAINES", "GARZA", "HALE", "HOCKLEY", "LAMB", "LUBBOCK", "LYNN", "PARMER", "SWISHER", "TERRY", "YOAKUM"],
     "LUFKIN": ["ANGELINA", "HOUSTON", "NACOGDOCHES", "POLK", "SABINE", "SAN AUGUSTINE", "SAN JACINTO", "SHELBY", "TRINITY"],
-    "LAREDO": ["DIMMITT", "DUVAL", "KINNEY", "LA SALLE", "MAVERICK", "VAL VERDE", "WEBB", "ZAVALA"],
     "ODESA": ["ANDREWS", "CRANE", "ECTOR", "LOVING", "MARTIN", "MIDLAND", "PECOS", "REEVES", "TERRELL", "UPTON", "WARD", "WINKLER"],
     "PARIS": ["DELTA", "FANNIN", "FRANKLIN", "GRAYSON", "HOPKINS", "HUNT", "LAMAR", "RAINS", "RED RIVER"],
     "PHARR": ["BROOKS", "CAMERON", "HIDALGO", "JIM HOGG", "KENEDY", "STARR", "WILLACY", "ZAPATA"],
-    "SAN ANTONIO": ["ATASCOSA", "BANDERA", "BEXAR", "COMAL", "FRIO", "GUADALUPE", "KENDALL", "KERR", "MCMULLEN", "MEDINA", "UVALDE", "WILSON"],
     "SAN ANGELO": ["COKE", "CONCHO", "CROCKETT", "EDWARDS", "GLASSCOCK", "IRION", "KIMBLE", "MENARD", "REAGAN", "REAL", "RUNNELS", "SCHLEICHER", "STERLING", "SUTTON", "TOM GREEN"],
+    "SAN ANTONIO": ["ATASCOSA", "BANDERA", "BEXAR", "COMAL", "FRIO", "GUADALUPE", "KENDALL", "KERR", "MCMULLEN", "MEDINA", "UVALDE", "WILSON"],
     "TYLER": ["ANDERSON", "CHEROKEE", "GREGG", "HENDERSON", "RUSK", "SMITH", "VAN ZANDT", "WOOD"],
     "WACO": ["BELL", "BOSQUE", "CORYELL", "FALLS", "HAMILTON", "HILL", "LIMESTONE", "MCLENNAN"],
     "WICHITA FALLS": ["ARCHER", "BAYLOR", "CLAY", "COOKE", "MONTAGUE", "THROCKMORTON", "WICHITA", "WILBARGER", "YOUNG"],
@@ -784,8 +785,8 @@ class CRCP extends Component {
                                                                                     className={classes.margin}
                                                                                     size="small">
                                                                                     <InfoIcon fontSize="small"
-                                                                                              onClick={this.handleOpenHelper({src: CountyPic},true)}
-                                                                                              onMouseEnter={this.handleOpenHelper({src: CountyPic})}
+                                                                                              onClick={this.handleOpenHelper({map: 'county'},true)}
+                                                                                              onMouseEnter={this.handleOpenHelper({map: 'county'})}
                                                                                               onMouseLeave={this.handleCloseHelper}
                                                                                     /></IconButton></>}
                                                                                 variant="filled"/>}/>
@@ -1465,7 +1466,7 @@ class CRCP extends Component {
                 </Grid>:''}
             </Grid>
         </Paper>
-            {this.state.helperEl ?
+            {(this.state.helperEl&& this.state.helperEl.content && !this.state.helperEl.content.map) ?
                 <Popper
                     placement="right"
                     disablePortal={false}
@@ -1519,6 +1520,43 @@ class CRCP extends Component {
                     parameter={{...this.state}}/> : ''}
                 </DialogContent>
             </Dialog>
+            <Popper
+                placement="right"
+                disablePortal={false}
+                open={(this.state.helperEl&& this.state.helperEl.content&& this.state.helperEl.content.map)}
+                anchorEl={this.state.helperEl&&this.state.helperEl.el}
+                modifiers={{
+                    flip: {
+                        enabled: true,
+                    },
+                    preventOverflow: {
+                        enabled: true,
+                        boundariesElement: 'window',
+                    },
+                    arrow: {
+                        enabled: true,
+                    },
+                }}
+                style={{zIndex: 4}}
+            >
+                <Card style={{width:800}}>
+                    {this.state.helperEl&&this.state.helperEl.freeze?<IconButton aria-label="close" className={classes.closeButton} onClick={this.handleCloseHelper}>
+                        <CloseIcon />
+                    </IconButton>:''}
+
+                <County highlight={this.state.currentCounties}
+                        target={this.state.County}
+                        selected={(value)=>{
+                    if (value)
+                        this.setState({
+                            County: value,
+                            District: counties[value].length === 1 ? counties[value][0] : null
+                        });
+                    else
+                        this.setState({County: value})
+                }}/>
+                </Card>
+            </Popper>
         </Container>);
     }
 }
