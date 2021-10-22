@@ -140,47 +140,56 @@ const styles = theme => ({
 class County extends Component {
     svgRef = React.createRef();
     zoom = {k:1,x:0,y:0};
+    map_width=600;
+    map_height=450;
+
+    projection = geoMercator()
+        .center([ -99.43,31.47 ])
+        .translate([ this.map_width/2, this.map_height/2 ])
+        .scale([ 2000 ]);
     constructor() {
         super();
         this.state = {
             geographies: [],
-            Name:undefined
+            Name:undefined,
+            highlighto:{}
         };
     }
 
     componentDidMount() {
-            this.setState({geographies: topojson.feature(county, county.objects['texas-counties']).features});
-            if (this.svgRef){
-                let svg = d3.select(this.svgRef.current);
-                    // .select('g.content')
-                svg.call(d3.zoom().scaleExtent([1, 10]).on('zoom',(event)=>{
-                    svg.select('g.content').attr('transform', event.transform);
-                    this.zoom = event.transform
-                    }))
-            }
+        const geographies = topojson.feature(county, county.objects['texas-counties']).features;
+        geographies.forEach(d=>{
+            d.path = geoPath().projection(this.projection)(d);
+            d.centroid = geoPath().projection(this.projection).centroid(d);
+        });
+        const highlighto = {};
+        this.props.highlight.forEach(d=>highlighto[d]=1);
+        this.setState({geographies,highlighto});
+        if (this.svgRef){
+            let svg = d3.select(this.svgRef.current);
+                // .select('g.content')
+            svg.call(d3.zoom().scaleExtent([1, 10]).on('zoom',(event)=>{
+                svg.select('g.content').attr('transform', event.transform);
+                this.zoom = event.transform
+                }))
+        }
     }
 
     componentDidUpdate(prevProps) {
         if(prevProps.highlight!==this.props.highlight){
-            this.setState({highlight:this.props.highlight})
+            const highlighto = {};
+            this.props.highlight.forEach(d=>highlighto[d]=1);
+            this.setState({highlight:this.props.highlight,highlighto})
         }
         if(prevProps.target!==this.props.target){
-            this.setState({target:(this.props.target??'').toLowerCase()})
+            this.setState({target:(this.props.target??'')})
         }
     }
     render(){
-        const {classes,highlight} = this.props;
-        const {target} = this.state;
-       const highlighto = {};
-       highlight.forEach(d=>highlighto[d.toLowerCase()]=1);
+        const {classes} = this.props;
+        const {target,highlighto} = this.state;
         const {geographies} = this.state;
-        const map_width=800;
-        const map_height=450;
-
-        const projection = geoMercator()
-            .center([ -99.43,31.47 ])
-            .translate([ map_width/2, map_height/2 ])
-            .scale([ 2000 ]);
+        const {map_width,map_height,projection} = this;
         return <div className={classes.root}>
             <svg width={ map_width } height={ map_height } viewBox={`0 0 ${map_width} ${map_height}`} ref={this.svgRef}>
                 <g className="content">
@@ -189,19 +198,34 @@ class County extends Component {
                             geographies.map((d,i) => (
                                 <path
                                     key={ `path-${ i }` }
-                                    d={ geoPath().projection(projection)(d) }
+                                    d={ d.path }
                                     className="country"
                                     // fill={ `rgba(38,50,56,${ 1 / geographies.length * i})` }
-                                    fill={(d.properties.NAME.toLowerCase()===target) ?'#17dd75':(highlighto[d.properties.NAME.toLowerCase()]?(this.state.Name===d.properties.NAME?'#3adddd':'steelBlue'):`rgba(38,50,56,1)` )}
+                                    fill={(d.properties.NAME===target) ?'#17dd75':(highlighto[d.properties.NAME]?(this.state.Name===d.properties.NAME?'#3adddd':'steelBlue'):`rgba(38,50,56,1)` )}
                                     stroke="#FFFFFF"
                                     strokeWidth={ 0.5 }
-                                    onMouseEnter={(event)=>{this.setState({Name:d.properties.NAME,x:(d3.pointer(event)[0]-this.zoom.x)/this.zoom.k,y:(d3.pointer(event)[1]/this.zoom.y)/this.zoom.k});}}
-                                    style={{pointerEvents:highlighto[d.properties.NAME.toLowerCase()]?'all':'none'}}
+                                    onMouseOver={(event)=>{this.setState({Name:d.properties.NAME,x:(d3.pointer(event)[0]-this.zoom.x)/this.zoom.k,y:(d3.pointer(event)[1]/this.zoom.y)/this.zoom.k});}}
+                                    style={{pointerEvents:highlighto[d.properties.NAME]?'all':'none'}}
                                     onMouseOut={()=>{this.setState({Name:undefined})}}
                                     onClick={()=>{this.props.selected(d.properties.NAME)}}
                                 />
                             ))
                         }
+                        {/*{*/}
+                        {/*    <path*/}
+                        {/*        key={'hovered'}*/}
+                        {/*        d={ geoPath().projection(projection)(d) }*/}
+                        {/*        className="country"*/}
+                        {/*        // fill={ `rgba(38,50,56,${ 1 / geographies.length * i})` }*/}
+                        {/*        fill={(d.properties.NAME===target) ?'#17dd75':(highlighto[d.properties.NAME]?(this.state.Name===d.properties.NAME?'#3adddd':'steelBlue'):`rgba(38,50,56,1)` )}*/}
+                        {/*        stroke="#FFFFFF"*/}
+                        {/*        strokeWidth={ 0.5 }*/}
+                        {/*        onMouseEnter={(event)=>{this.setState({Name:d.properties.NAME,x:(d3.pointer(event)[0]-this.zoom.x)/this.zoom.k,y:(d3.pointer(event)[1]/this.zoom.y)/this.zoom.k});}}*/}
+                        {/*        onMouseOut={()=>{this.setState({Name:undefined})}}*/}
+                        {/*        onClick={()=>{this.props.selected(d.properties.NAME)}}*/}
+                        {/*        style={{pointerEvents:'none'}}*/}
+                        {/*    />*/}
+                        {/*}*/}
                     </g>
                     <g className="label">
                         {
@@ -209,9 +233,9 @@ class County extends Component {
                                 <text
                                     key={`path-${i}`}
                                     // fill={ `rgba(38,50,56,${ 1 / geographies.length * i})` }
-                                    x={geoPath().projection(projection).centroid(d)[0]}
-                                    y={geoPath().projection(projection).centroid(d)[1]}
-                                    fill={(d.properties.NAME.toLowerCase() === target) ? 'black' : (highlighto[d.properties.NAME.toLowerCase()] ? (this.state.Name === d.properties.NAME ? 'black' : 'black') : `gray`)}
+                                    x={d.centroid[0]}
+                                    y={d.centroid[1]}
+                                    fill={(d.properties.NAME === target) ? 'black' : (highlighto[d.properties.NAME] ? (this.state.Name === d.properties.NAME ? 'black' : 'black') : `gray`)}
                                     style={{pointerEvents: 'none'}}
                                 >
                                     {d.properties.NAME}
