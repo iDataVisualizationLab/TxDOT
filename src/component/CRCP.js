@@ -23,6 +23,7 @@ import RefreshIcon from '@material-ui/icons/Refresh';
 import EditIcon from '@material-ui/icons/Edit';
 import SaveIcon from '@material-ui/icons/Save';
 import PublishIcon from '@material-ui/icons/Publish';
+import ShowChartIcon from '@material-ui/icons/ShowChart';
 import MenuItem from "@material-ui/core/MenuItem";
 import Popper from "@material-ui/core/Popper";
 import Image from 'material-ui-image';
@@ -110,6 +111,7 @@ const styles = theme => ({
     },
     resetContainer: {
         padding: theme.spacing(3),
+        paddingTop: theme.spacing(8)
     },
     dot: {
         borderBottom: '2px dotted',
@@ -694,7 +696,7 @@ class CRCP extends Component {
         }
         return (<Container maxWidth="lg"> <Paper elevation={3}>
             <Grid container>
-            <Grid item xs={this.state.finished?2:12}>
+            <Grid item style={{maxWidth: this.state.finished?'250px':'100%'}}>
             <Stepper activeStep={this.state.activeStep} orientation="vertical">
                 <Step>
                     <StepLabel>Step 1</StepLabel>
@@ -1446,7 +1448,7 @@ class CRCP extends Component {
                             color="primary"
                             size="small"
                             className={classes.button}
-                            // startIcon={<PrintIcon/>}
+                            startIcon={<ShowChartIcon/>}
                             // onClick={()=>this.props.print(this.state)}
                             onClick={()=>this.setState({openAnalytics:true})}
                         >
@@ -1465,7 +1467,7 @@ class CRCP extends Component {
                 </>
             )}
             </Grid>
-                {this.state.finished ?<Grid xs={10} item>
+                {this.state.finished ?<Grid item style={{width: 'calc(100% - 250px)'}}>
                     <Report
                         data={this.state}
                         AnalysisPunchouts={this.props.AnalysisPunchouts()}
