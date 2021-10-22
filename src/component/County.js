@@ -198,7 +198,7 @@ class County extends Component {
                                     onMouseEnter={(event)=>{this.setState({Name:d.properties.NAME,x:(d3.pointer(event)[0]-this.zoom.x)/this.zoom.k,y:(d3.pointer(event)[1]/this.zoom.y)/this.zoom.k});}}
                                     style={{pointerEvents:highlighto[d.properties.NAME.toLowerCase()]?'all':'none'}}
                                     onMouseOut={()=>{this.setState({Name:undefined})}}
-                                    onClick={()=>{this.props.selected(d.properties.NAME.toUpperCase())}}
+                                    onClick={()=>{this.props.selected(d.properties.NAME)}}
                                 />
                             ))
                         }
@@ -214,7 +214,7 @@ class County extends Component {
                                     fill={(d.properties.NAME.toLowerCase() === target) ? 'black' : (highlighto[d.properties.NAME.toLowerCase()] ? (this.state.Name === d.properties.NAME ? 'black' : 'black') : `gray`)}
                                     style={{pointerEvents: 'none'}}
                                 >
-                                    {d.properties.NAME.toUpperCase()}
+                                    {d.properties.NAME}
                                 </text>
                             ))
                         }

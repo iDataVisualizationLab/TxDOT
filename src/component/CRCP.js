@@ -78,34 +78,8 @@ import County from "./County";
 //     "WICHITA FALLS": ["ARCHER", "BAYLOR", "CLAY", "COOKE", "MONTAGUE", "THROCKMORTON", "WICHITA", "WILBARGER", "YOUNG"],
 //     "YOKUM": ["AUSTIN", "CALHOUN", "COLORADO", "DEWITT", "FAYETTE", "GONZALES", "JACKSON", "LAVACA", "MATAGORDA", "VICTORIA", "WHARTON"]
 // };
-const districts = {
-    "ABILENE": ["BORDEN", "CALLAHAN", "FISHER", "HASKELL", "HOWARD", "JONES", "KENT", "MITCHELL", "NOLAN", "SCURRY", "SHACKELFORD", "STONEWALL", "TAYLOR"],
-    "AMARILLO": ["ARMSTRONG", "CARSON", "DALLAM", "DEAF SMITH", "GRAY", "HANSFORD", "HARTLEY", "HEMPHILL", "HUTCHINSON", "LIPSCOMB", "MOORE", "OCHILTREE", "OLDHAM", "POTTER", "RANDALL", "ROBERTS", "SHERMAN"],
-    "ATLANTA": ["BOWIE", "CAMP", "CASS", "HARRISON", "MARION", "MORRIS", "PANOLA", "TITUS", "UPSHUR"],
-    "AUSTIN": ["BASTROP", "BLANCO", "BURNET", "CALDWELL", "GILLESPIE", "HAYS", "LEE", "LLANO", "MASON", "TRAVIS", "WILLIAMSON"],
-    "BEAUMONT": ["CHAMBERS", "HARDIN", "JASPER", "JEFFERSON", "LIBERTY", "NEWTON", "ORANGE", "TYLER"],
-    "BROWNWOOD": ["BROWN", "COLEMAN", "COMANCHE", "EASTLAND", "LAMPASAS", "MCCULLOCH", "MILLS", "SAN SABA", "STEPHENS"],
-    "BRYAN": ["BRAZOS", "BURLESON", "FREESTONE", "GRIMES", "LEON", "MADISON", "MILAM", "ROBERTSON", "WALKER", "WASHINGTON"],
-    "CHILDRESS":["BRISCOE","CHILDRESS","COLLINGSWORTH","COTTLE", "DICKENS","DONLEY","FOARD", "HARDEMAN","HALL","KING", "KNOX", "MOTLEY","WHEELER"],
-    "CORPUS CHRISTI": ["ARANSAS", "BEE", "GOLIAD", "JIM WELLS", "KARNES", "KLEBERG", "LIVE OAK", "NUECES", "REFUGIO", "SAN PATRICIO"],
-    "DALLAS": ["COLLIN", "DALLAS", "DENTON", "ELLIS", "KAUFMAN", "NAVARRO", "ROCKWALL"],
-    "EL PASO": ["BREWSTER", "CULBERSON", "EL PASO", "HUDSPETH", "JEFF DAVIS", "PRESIDIO"],
-    "FORT WORTH": ["ERATH", "HOOD", "JACK", "JOHNSON", "PALO PINTO", "PARKER", "SOMERVELL", "TARRANT", "WISE"],
-    "HOUSTON": ["BRAZORIA", "FORT BEND", "GALVESTON", "HARRIS", "MONTGOMERY", "WALLER"],
-    "LAREDO": ["DIMMITT", "DUVAL", "KINNEY", "LA SALLE", "MAVERICK", "VAL VERDE", "WEBB", "ZAVALA"],
-    "LUBBOCK": ["BAILEY", "CASTRO", "COCHRAN", "CROSBY", "DAWSON", "FLOYD", "GAINES", "GARZA", "HALE", "HOCKLEY", "LAMB", "LUBBOCK", "LYNN", "PARMER", "SWISHER", "TERRY", "YOAKUM"],
-    "LUFKIN": ["ANGELINA", "HOUSTON", "NACOGDOCHES", "POLK", "SABINE", "SAN AUGUSTINE", "SAN JACINTO", "SHELBY", "TRINITY"],
-    "ODESA": ["ANDREWS", "CRANE", "ECTOR", "LOVING", "MARTIN", "MIDLAND", "PECOS", "REEVES", "TERRELL", "UPTON", "WARD", "WINKLER"],
-    "PARIS": ["DELTA", "FANNIN", "FRANKLIN", "GRAYSON", "HOPKINS", "HUNT", "LAMAR", "RAINS", "RED RIVER"],
-    "PHARR": ["BROOKS", "CAMERON", "HIDALGO", "JIM HOGG", "KENEDY", "STARR", "WILLACY", "ZAPATA"],
-    "SAN ANGELO": ["COKE", "CONCHO", "CROCKETT", "EDWARDS", "GLASSCOCK", "IRION", "KIMBLE", "MENARD", "REAGAN", "REAL", "RUNNELS", "SCHLEICHER", "STERLING", "SUTTON", "TOM GREEN"],
-    "SAN ANTONIO": ["ATASCOSA", "BANDERA", "BEXAR", "COMAL", "FRIO", "GUADALUPE", "KENDALL", "KERR", "MCMULLEN", "MEDINA", "UVALDE", "WILSON"],
-    "TYLER": ["ANDERSON", "CHEROKEE", "GREGG", "HENDERSON", "RUSK", "SMITH", "VAN ZANDT", "WOOD"],
-    "WACO": ["BELL", "BOSQUE", "CORYELL", "FALLS", "HAMILTON", "HILL", "LIMESTONE", "MCLENNAN"],
-    "WICHITA FALLS": ["ARCHER", "BAYLOR", "CLAY", "COOKE", "MONTAGUE", "THROCKMORTON", "WICHITA", "WILBARGER", "YOUNG"],
-    "YOKUM": ["AUSTIN", "CALHOUN", "COLORADO", "DEWITT", "FAYETTE", "GONZALES", "JACKSON", "LAVACA", "MATAGORDA", "VICTORIA", "WHARTON"]
-};
-const districtCode = {"ABILENE":"ABL","AMARILLO":"AMA","ATLANTA":"ATL","AUSTIN":"AUS","BEAUMONT":"BMT","BRYAN":"BRY","BROWNWOOD":"BWD","CORPUS CHRISTI":"CRP","CHILDRESS":"CHS","DALLAS":"DAL","EL PASO":"ELP","FORT WORTH":"FTW","HOUSTON":"HOU","LUBBOCK":"LBB","LUFKIN":"LFK","LAREDO":"LRD","ODESA":"ODA","PARIS":"PAR","PHARR":"PHR","SAN ANTONIO":"SAT","SAN ANGELO":"SJT","TYLER":"TYL","WACO":"WAC","WICHITA FALLS":"WFS","YOKUM":"YKM"};
+const districts = {"Abilene":["Borden","Callahan","Fisher","Haskell","Howard","Jones","Kent","Mitchell","Nolan","Scurry","Shackelford","Stonewall","Taylor"],"Amarillo":["Armstrong","Carson","Dallam","Deaf Smith","Gray","Hansford","Hartley","Hemphill","Hutchinson","Lipscomb","Moore","Ochiltree","Oldham","Potter","Randall","Roberts","Sherman"],"Atlanta":["Bowie","Camp","Cass","Harrison","Marion","Morris","Panola","Titus","Upshur"],"Austin":["Bastrop","Blanco","Burnet","Caldwell","Gillespie","Hays","Lee","Llano","Mason","Travis","Williamson"],"Beaumont":["Chambers","Hardin","Jasper","Jefferson","Liberty","Newton","Orange","Tyler"],"Brownwood":["Brown","Coleman","Comanche","Eastland","Lampasas","Mcculloch","Mills","San Saba","Stephens"],"Bryan":["Brazos","Burleson","Freestone","Grimes","Leon","Madison","Milam","Robertson","Walker","Washington"],"Childress":["Briscoe","Childress","Collingsworth","Cottle","Dickens","Donley","Foard","Hardeman","Hall","King","Knox","Motley","Wheeler"],"Corpus Christi":["Aransas","Bee","Goliad","Jim Wells","Karnes","Kleberg","Live Oak","Nueces","Refugio","San Patricio"],"Dallas":["Collin","Dallas","Denton","Ellis","Kaufman","Navarro","Rockwall"],"El Paso":["Brewster","Culberson","El Paso","Hudspeth","Jeff Davis","Presidio"],"Fort Worth":["Erath","Hood","Jack","Johnson","Palo Pinto","Parker","Somervell","Tarrant","Wise"],"Houston":["Brazoria","Fort Bend","Galveston","Harris","Montgomery","Waller"],"Laredo":["Dimmitt","Duval","Kinney","La Salle","Maverick","Val Verde","Webb","Zavala"],"Lubbock":["Bailey","Castro","Cochran","Crosby","Dawson","Floyd","Gaines","Garza","Hale","Hockley","Lamb","Lubbock","Lynn","Parmer","Swisher","Terry","Yoakum"],"Lufkin":["Angelina","Houston","Nacogdoches","Polk","Sabine","San Augustine","San Jacinto","Shelby","Trinity"],"Odesa":["Andrews","Crane","Ector","Loving","Martin","Midland","Pecos","Reeves","Terrell","Upton","Ward","Winkler"],"Paris":["Delta","Fannin","Franklin","Grayson","Hopkins","Hunt","Lamar","Rains","Red River"],"Pharr":["Brooks","Cameron","Hidalgo","Jim Hogg","Kenedy","Starr","Willacy","Zapata"],"San Angelo":["Coke","Concho","Crockett","Edwards","Glasscock","Irion","Kimble","Menard","Reagan","Real","Runnels","Schleicher","Sterling","Sutton","Tom Green"],"San Antonio":["Atascosa","Bandera","Bexar","Comal","Frio","Guadalupe","Kendall","Kerr","Mcmullen","Medina","Uvalde","Wilson"],"Tyler":["Anderson","Cherokee","Gregg","Henderson","Rusk","Smith","Van Zandt","Wood"],"Waco":["Bell","Bosque","Coryell","Falls","Hamilton","Hill","Limestone","Mclennan"],"Wichita Falls":["Archer","Baylor","Clay","Cooke","Montague","Throckmorton","Wichita","Wilbarger","Young"],"Yokum":["Austin","Calhoun","Colorado","Dewitt","Fayette","Gonzales","Jackson","Lavaca","Matagorda","Victoria","Wharton"]};
+const districtCode = {"Abilene":"ABL","Amarillo":"AMA","Atlanta":"ATL","Austin":"AUS","Beaumont":"BMT","Bryan":"BRY","Brownwood":"BWD","Corpus christi":"CRP","Childress":"CHS","Dallas":"DAL","El paso":"ELP","Fort worth":"FTW","Houston":"HOU","Lubbock":"LBB","Lufkin":"LFK","Laredo":"LRD","Odesa":"ODA","Paris":"PAR","Pharr":"PHR","San antonio":"SAT","San angelo":"SJT","Tyler":"TYL","Waco":"WAC","Wichita falls":"WFS","Yokum":"YKM"};
 const counties = {};
 Object.keys(districts).forEach(key => {
     districts[key].forEach(c => counties[c] ? counties[c].push(key) : counties[c] = [key])
@@ -155,6 +129,9 @@ const styles = theme => ({
         top: theme.spacing(1),
         color: theme.palette.grey[500],
         zIndex:2
+    },
+    capitalize: {
+        textTransform: 'capitalize'
     }
 });
 
