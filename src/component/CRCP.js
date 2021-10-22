@@ -52,14 +52,41 @@ import Card from "@material-ui/core/Card";
 import Divider from "@material-ui/core/Divider/Divider";
 import County from "./County";
 
+// const districts = {
+//     "ABILENE": ["BORDEN", "CALLAHAN", "FISHER", "HASKELL", "HOWARD", "JONES", "KENT", "MITCHELL", "NOLAN", "SCURRY", "SHACKELFORD", "STONEWALL", "TAYLOR"],
+//     "AMARILLO": ["ARMSTRONG", "CARSON", "DALLAM", "DEAF SMITH", "GRAY", "HANSFORD", "HARTLEY", "HEMPHILL", "HUTCHINSON", "LIPSCOMB", "MOORE", "OCHILTREE", "OLDHAM", "POTTER", "RANDALL", "ROBERTS", "SHERMAN"],
+//     "ATLANTA": ["BOWIE", "CAMP", "CASS", "HARRISON", "MARION", "MORRIS", "PANOLA", "TITUS", "UPSHUR"],
+//     "AUSTIN": ["BASTROP", "BLANCO", "BURNET", "CALDWELL", "GILLESPIE", "HAYS", "LEE", "LLANO", "MASON", "TRAVIS", "WILLIAMSON"],
+//     "BEAUMONT": ["CHAMBERS", "HARDIN", "JASPER", "JEFFERSON", "LIBERTY", "NEWTON", "ORANGE", "TYLER"],
+//     "BROWNWOOD": ["BROWN", "COLEMAN", "COMANCHE", "EASTLAND", "LAMPASAS", "MCCULLOCH", "MILLS", "SAN SABA", "STEPHENS", "BRISCOE", "CHILDRESS", "COLLINGSWORTH", "COTTLE", "DICKENS", "DONLEY", "FOARD", "HALL", "HARDEMAN", "KING", "KNOX", "MOTLEY", "WHEELER"],
+//     "BRYAN": ["BRAZOS", "BURLESON", "FREESTONE", "GRIMES", "LEON", "MADISON", "MILAM", "ROBERTSON", "WALKER", "WASHINGTON"],
+//     "CORPUS CHRISTI": ["ARANSAS", "BEE", "GOLIAD", "JIM WELLS", "KARNES", "KLEBERG", "LIVE OAK", "NUECES", "REFUGIO", "SAN PATRICIO"],
+//     "DALLAS": ["COLLIN", "DALLAS", "DENTON", "ELLIS", "KAUFMAN", "NAVARRO", "ROCKWALL"],
+//     "EL PASO": ["BREWSTER", "CULBERSON", "EL PASO", "HUDSPETH", "JEFF DAVIS", "PRESIDIO"],
+//     "FORT WORTH": ["ERATH", "HOOD", "JACK", "JOHNSON", "PALO PINTO", "PARKER", "SOMERVELL", "TARRANT", "WISE"],
+//     "HOUSTON": ["BRAZORIA", "FORT BEND", "GALVESTON", "HARRIS", "MONTGOMERY", "WALLER"],
+//     "LAREDO": ["DIMMITT", "DUVAL", "KINNEY", "LA SALLE", "MAVERICK", "VAL VERDE", "WEBB", "ZAVALA"],
+//     "LUBBOCK": ["BAILEY", "CASTRO", "COCHRAN", "CROSBY", "DAWSON", "FLOYD", "GAINES", "GARZA", "HALE", "HOCKLEY", "LAMB", "LUBBOCK", "LYNN", "PARMER", "SWISHER", "TERRY", "YOAKUM"],
+//     "LUFKIN": ["ANGELINA", "HOUSTON", "NACOGDOCHES", "POLK", "SABINE", "SAN AUGUSTINE", "SAN JACINTO", "SHELBY", "TRINITY"],
+//     "ODESA": ["ANDREWS", "CRANE", "ECTOR", "LOVING", "MARTIN", "MIDLAND", "PECOS", "REEVES", "TERRELL", "UPTON", "WARD", "WINKLER"],
+//     "PARIS": ["DELTA", "FANNIN", "FRANKLIN", "GRAYSON", "HOPKINS", "HUNT", "LAMAR", "RAINS", "RED RIVER"],
+//     "PHARR": ["BROOKS", "CAMERON", "HIDALGO", "JIM HOGG", "KENEDY", "STARR", "WILLACY", "ZAPATA"],
+//     "SAN ANGELO": ["COKE", "CONCHO", "CROCKETT", "EDWARDS", "GLASSCOCK", "IRION", "KIMBLE", "MENARD", "REAGAN", "REAL", "RUNNELS", "SCHLEICHER", "STERLING", "SUTTON", "TOM GREEN"],
+//     "SAN ANTONIO": ["ATASCOSA", "BANDERA", "BEXAR", "COMAL", "FRIO", "GUADALUPE", "KENDALL", "KERR", "MCMULLEN", "MEDINA", "UVALDE", "WILSON"],
+//     "TYLER": ["ANDERSON", "CHEROKEE", "GREGG", "HENDERSON", "RUSK", "SMITH", "VAN ZANDT", "WOOD"],
+//     "WACO": ["BELL", "BOSQUE", "CORYELL", "FALLS", "HAMILTON", "HILL", "LIMESTONE", "MCLENNAN"],
+//     "WICHITA FALLS": ["ARCHER", "BAYLOR", "CLAY", "COOKE", "MONTAGUE", "THROCKMORTON", "WICHITA", "WILBARGER", "YOUNG"],
+//     "YOKUM": ["AUSTIN", "CALHOUN", "COLORADO", "DEWITT", "FAYETTE", "GONZALES", "JACKSON", "LAVACA", "MATAGORDA", "VICTORIA", "WHARTON"]
+// };
 const districts = {
     "ABILENE": ["BORDEN", "CALLAHAN", "FISHER", "HASKELL", "HOWARD", "JONES", "KENT", "MITCHELL", "NOLAN", "SCURRY", "SHACKELFORD", "STONEWALL", "TAYLOR"],
     "AMARILLO": ["ARMSTRONG", "CARSON", "DALLAM", "DEAF SMITH", "GRAY", "HANSFORD", "HARTLEY", "HEMPHILL", "HUTCHINSON", "LIPSCOMB", "MOORE", "OCHILTREE", "OLDHAM", "POTTER", "RANDALL", "ROBERTS", "SHERMAN"],
     "ATLANTA": ["BOWIE", "CAMP", "CASS", "HARRISON", "MARION", "MORRIS", "PANOLA", "TITUS", "UPSHUR"],
     "AUSTIN": ["BASTROP", "BLANCO", "BURNET", "CALDWELL", "GILLESPIE", "HAYS", "LEE", "LLANO", "MASON", "TRAVIS", "WILLIAMSON"],
     "BEAUMONT": ["CHAMBERS", "HARDIN", "JASPER", "JEFFERSON", "LIBERTY", "NEWTON", "ORANGE", "TYLER"],
-    "BROWNWOOD": ["BROWN", "COLEMAN", "COMANCHE", "EASTLAND", "LAMPASAS", "MCCULLOCH", "MILLS", "SAN SABA", "STEPHENS", "BRISCOE", "CHILDRESS", "COLLINGSWORTH", "COTTLE", "DICKENS", "DONLEY", "FOARD", "HALL", "HARDEMAN", "KING", "KNOX", "MOTLEY", "WHEELER"],
+    "BROWNWOOD": ["BROWN", "COLEMAN", "COMANCHE", "EASTLAND", "LAMPASAS", "MCCULLOCH", "MILLS", "SAN SABA", "STEPHENS"],
     "BRYAN": ["BRAZOS", "BURLESON", "FREESTONE", "GRIMES", "LEON", "MADISON", "MILAM", "ROBERTSON", "WALKER", "WASHINGTON"],
+    "CHILDRESS":["BRISCOE","CHILDRESS","COLLINGSWORTH","COTTLE", "DICKENS","DONLEY","FOARD", "HARDEMAN","HALL","KING", "KNOX", "MOTLEY","WHEELER"],
     "CORPUS CHRISTI": ["ARANSAS", "BEE", "GOLIAD", "JIM WELLS", "KARNES", "KLEBERG", "LIVE OAK", "NUECES", "REFUGIO", "SAN PATRICIO"],
     "DALLAS": ["COLLIN", "DALLAS", "DENTON", "ELLIS", "KAUFMAN", "NAVARRO", "ROCKWALL"],
     "EL PASO": ["BREWSTER", "CULBERSON", "EL PASO", "HUDSPETH", "JEFF DAVIS", "PRESIDIO"],
@@ -78,7 +105,7 @@ const districts = {
     "WICHITA FALLS": ["ARCHER", "BAYLOR", "CLAY", "COOKE", "MONTAGUE", "THROCKMORTON", "WICHITA", "WILBARGER", "YOUNG"],
     "YOKUM": ["AUSTIN", "CALHOUN", "COLORADO", "DEWITT", "FAYETTE", "GONZALES", "JACKSON", "LAVACA", "MATAGORDA", "VICTORIA", "WHARTON"]
 };
-const districtCode = {"ABILENE":"ABL","AMARILLO":"AMA","ATLANTA":"ATL","AUSTIN":"AUS","BEAUMONT":"BMT","BRYAN":"BRY","BROWNWOOD":"BWD","CORPUS CHRISTI":"CRP","DALLAS":"DAL","EL PASO":"ELP","FORT WORTH":"FTW","HOUSTON":"HOU","LUBBOCK":"LBB","LUFKIN":"LFK","LAREDO":"LRD","ODESA":"ODA","PARIS":"PAR","PHARR":"PHR","SAN ANTONIO":"SAT","SAN ANGELO":"SJT","TYLER":"TYL","WACO":"WAC","WICHITA FALLS":"WFS","YOKUM":"YKM"};
+const districtCode = {"ABILENE":"ABL","AMARILLO":"AMA","ATLANTA":"ATL","AUSTIN":"AUS","BEAUMONT":"BMT","BRYAN":"BRY","BROWNWOOD":"BWD","CORPUS CHRISTI":"CRP","CHILDRESS":"CHS","DALLAS":"DAL","EL PASO":"ELP","FORT WORTH":"FTW","HOUSTON":"HOU","LUBBOCK":"LBB","LUFKIN":"LFK","LAREDO":"LRD","ODESA":"ODA","PARIS":"PAR","PHARR":"PHR","SAN ANTONIO":"SAT","SAN ANGELO":"SJT","TYLER":"TYL","WACO":"WAC","WICHITA FALLS":"WFS","YOKUM":"YKM"};
 const counties = {};
 Object.keys(districts).forEach(key => {
     districts[key].forEach(c => counties[c] ? counties[c].push(key) : counties[c] = [key])
@@ -197,14 +224,14 @@ class CRCP extends Component {
     }
 
     componentDidMount() {
-        // d3.tsv(stress).then(data_=> {
-        //     this.setState({data: data_});
-        // });
+        this.initFunc();
+    }
+    initFunc (){
         d3.csv(kTable).then(_data=>{
             let ksTable = new Map();
             _data.forEach(r=>{
                 ksTable.set(''+r['Subgrade K-Value (psi/in.)']+' '+r['Base Thickness (in.)']+' '+r['Modulus of Base Layer (ksi)'],+r['Composite K (psi/in.)']);
-            })
+            });
             this.setState({ksTable})
         })
         d3.csv(sTable).then(_data=>{
@@ -243,7 +270,7 @@ class CRCP extends Component {
             mapd2[index] = {index,DT,H,K,STR_T,STR_E};
             lastd2 = {index,DT,H,K,STR_T,STR_E};
         });
-
+        debugger
         const data3 = [];
         for (let i = 1;i<25;i++) {
             const index = Math.floor((i-1)/4)*4 + 1;
@@ -325,9 +352,8 @@ class CRCP extends Component {
     recompute = ()=>{
         let __ret = {};
         let i = 7;
-        for (i=7;i<14;i++) {
+        for (i=7;i<16;i++) {
             __ret = this.analysis(i);
-            console.log(__ret.rows[__ret.r][12])
             if(__ret.rows[__ret.r][12]<=this.state.PunchoutsPerMile)
                 break;
         }
@@ -336,13 +362,13 @@ class CRCP extends Component {
         const rows = __ret.rows;
         var r = __ret.r;
         this.props.AnalysisPunchouts(rows[r][12]);
-        this.props.AnalysisSlabThickness(Math.min(13,i));
+        // this.props.AnalysisSlabThickness(Math.min(13,i));
+        this.props.AnalysisSlabThickness(Math.min(i,15));
         this.setState({row1,rows,rowIndexStress})
     };
 
     analysis(slabthickness) {
         const data = this.computeStress(slabthickness);
-        console.log(data)
         let rowIndexStress = 8;
         let row1 = [];
         const rows = [];
@@ -409,7 +435,6 @@ class CRCP extends Component {
             }
         }
         var r = 12 * this.state.DesignLife - 1;
-        console.log(rows)
         return {rowIndexStress, row1, rows, r};
         function lane(n) {
             if (n <= 2)
@@ -455,6 +480,7 @@ class CRCP extends Component {
 
     handleReset = () => {
         this.setState({...init});
+        this.initFunc();
     };
     onLoadInput = (event) =>{
         const self = this;
@@ -1031,7 +1057,7 @@ class CRCP extends Component {
                                 </Grid>
                                 <Grid container item xs={12} spacing={1} alignItems="flex-end" justify="center">
                                     <Grid item xs={12} container justify="flex-start">
-                                        <Typography variant={'h6'}>Structural design criteria</Typography>
+                                        <Typography variant={'h6'}>Structural Design Criteria</Typography>
                                         <IconButton aria-label="info" className={classes.margin} size="small">
                                             <InfoIcon fontSize="small"
                                                       onClick={this.handleOpenHelper({src: StructureDesignCriteriaPic},true)}
@@ -1088,7 +1114,7 @@ class CRCP extends Component {
                                 </Grid>
                                 <Grid container item xs={12} spacing={1} alignItems="flex-end" justify="center">
                                     <Grid item xs={12} container justify="flex-start">
-                                        <Typography variant={'h6'}>Concrete Layer/Material information</Typography>
+                                        <Typography variant={'h6'}>Concrete Layer/Material Information</Typography>
                                         <IconButton aria-label="info" className={classes.margin} size="small">
                                             <InfoIcon fontSize="small"
                                                       onClick={this.handleOpenHelper({src: ConcreteLayerPic},true)}
@@ -1101,7 +1127,7 @@ class CRCP extends Component {
                                           alignItems="flex-end">
                                         <Grid item xs={8} justify="flex-start">
                                             <Grid container xs={12} justify="flex-start">
-                                                <span>28-day modulus of tupture (psi)</span>
+                                                <span>28-day modulus of rupture (psi)</span>
                                                 <span className={classes.dot} style={{flexGrow: 1}}/>
                                             </Grid>
                                         </Grid>
@@ -1395,6 +1421,11 @@ class CRCP extends Component {
                         {getGroupControl()}
                     </StepContent>
                 </Step>
+                <Step>
+                    <StepLabel>Result</StepLabel>
+                    <StepContent displayPrint="block">
+                    </StepContent>
+                </Step>
             </Stepper>
             {this.state.activeStep === this.state.stepsLength && (
                 <>
@@ -1509,7 +1540,7 @@ class CRCP extends Component {
             <Dialog
                 fullWidth={true}
                 maxWidth={"lg"}
-                open={this.state.openAnalytics}
+                open={!!this.state.openAnalytics}
                 onClose={()=>this.setState({openAnalytics:false})}>
                 <DialogTitle id="responsive-dialog-title" onClose={()=>this.setState({openAnalytics:false})}>Analysis</DialogTitle>
                 <DialogContent>
@@ -1523,7 +1554,7 @@ class CRCP extends Component {
             <Popper
                 placement="right"
                 disablePortal={false}
-                open={(this.state.helperEl&& this.state.helperEl.content&& this.state.helperEl.content.map)}
+                open={!!(this.state.helperEl&& this.state.helperEl.content&& this.state.helperEl.content.map)}
                 anchorEl={this.state.helperEl&&this.state.helperEl.el}
                 modifiers={{
                     flip: {

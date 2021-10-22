@@ -252,7 +252,7 @@ class Report extends Component {
                         <Grid item xs={8} className={classes.underline}>
                             Design Slab Thickness
                         </Grid>
-                        <Grid item xs={4} className={classes.underline}>
+                        <Grid item xs={4} className={classes.underline} style={{color:(this.props.AnalysisSlabThickness>13)?'red':null}}>
                             {this.props.AnalysisSlabThickness}
                         </Grid>
                         <Grid item xs={8} className={classes.underline}>
@@ -269,7 +269,8 @@ class Report extends Component {
                                   style={{flexGrow: this.state.CRCP, backgroundColor: '#F2F2F2'}}>
                                 <Grid xs item>CRCP</Grid>
                                 <Grid xs item>Thickness</Grid>
-                                <Grid xs item>{this.state.CRCP}''</Grid>
+                                {/*<Grid xs item>{this.state.CRCP}''</Grid>*/}
+                                <Grid xs item>{this.props.AnalysisSlabThickness}''</Grid>
                             </Grid>
                            {this.props.data.BaseType==='CTB'?<Grid className={classes.layerHolder} container alignContent={"center"}
                                   style={{flexGrow: this.state.BondBreaker, backgroundColor: '#404040', color:'white'}}>
