@@ -244,7 +244,7 @@ class County extends Component {
                         }
                     </g>
                 </g>
-                <g id={'legend'} transform={`translate(${map_width-200},${map_height-80})`}>
+                <g id={'legend'} transform={`translate(${map_width-165},${map_height-80})`} style={{fontSize:14}}>
                     <g transform={`translate(${10},${-17})`}>
                         <text x={-40} y={0} dy={10} fill={'#8a8a8a'}>Click on map to select County</text>
                     </g>
