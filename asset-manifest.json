@@ -1,8 +1,8 @@
 {
   "files": {
-    "main.css": "/txDoT/static/css/main.f4e3110d.chunk.css",
-    "main.js": "/txDoT/static/js/main.b93ecac3.chunk.js",
-    "main.js.map": "/txDoT/static/js/main.b93ecac3.chunk.js.map",
+    "main.css": "/txDoT/static/css/main.7ebe38a0.chunk.css",
+    "main.js": "/txDoT/static/js/main.33faa399.chunk.js",
+    "main.js.map": "/txDoT/static/js/main.33faa399.chunk.js.map",
     "runtime-main.js": "/txDoT/static/js/runtime-main.fe1250f8.js",
     "runtime-main.js.map": "/txDoT/static/js/runtime-main.fe1250f8.js.map",
     "static/js/2.525c6e9f.chunk.js": "/txDoT/static/js/2.525c6e9f.chunk.js",
@@ -10,15 +10,16 @@
     "static/js/3.c7d9b5c4.chunk.js": "/txDoT/static/js/3.c7d9b5c4.chunk.js",
     "static/js/3.c7d9b5c4.chunk.js.map": "/txDoT/static/js/3.c7d9b5c4.chunk.js.map",
     "index.html": "/txDoT/index.html",
-    "static/css/main.f4e3110d.chunk.css.map": "/txDoT/static/css/main.f4e3110d.chunk.css.map",
+    "static/css/main.7ebe38a0.chunk.css.map": "/txDoT/static/css/main.7ebe38a0.chunk.css.map",
     "static/js/2.525c6e9f.chunk.js.LICENSE.txt": "/txDoT/static/js/2.525c6e9f.chunk.js.LICENSE.txt",
-    "static/media/01062021 TxCRCP-ME Analysis Result Sheet.e5eb16db.xlsx": "/txDoT/static/media/01062021 TxCRCP-ME Analysis Result Sheet.e5eb16db.xlsx",
+    "static/media/01062021 TxCRCP-ME Analysis Result Sheet.84497d3b.xlsx": "/txDoT/static/media/01062021 TxCRCP-ME Analysis Result Sheet.84497d3b.xlsx",
     "static/media/AcceptableNumberofPunchout.f191431d.png": "/txDoT/static/media/AcceptableNumberofPunchout.f191431d.png",
     "static/media/BasetypePic.8298e57a.png": "/txDoT/static/media/BasetypePic.8298e57a.png",
     "static/media/ConcreteLayer.45d36da4.png": "/txDoT/static/media/ConcreteLayer.45d36da4.png",
     "static/media/StructureDesignCriteria.4f123ed0.png": "/txDoT/static/media/StructureDesignCriteria.4f123ed0.png",
     "static/media/TotalDesign Traffic.948031ff.png": "/txDoT/static/media/TotalDesign Traffic.948031ff.png",
     "static/media/cover.43610a00.jpg": "/txDoT/static/media/cover.43610a00.jpg",
+    "static/media/footer.ec17135b.png": "/txDoT/static/media/footer.ec17135b.png",
     "static/media/soilSystermPic.c6e7e75d.png": "/txDoT/static/media/soilSystermPic.c6e7e75d.png",
     "static/media/subbase.a3bc3c69.png": "/txDoT/static/media/subbase.a3bc3c69.png",
     "static/media/txcrcp-me-v07b.5be1ece2.xlsm": "/txDoT/static/media/txcrcp-me-v07b.5be1ece2.xlsm"
@@ -26,7 +27,7 @@
   "entrypoints": [
     "static/js/runtime-main.fe1250f8.js",
     "static/js/2.525c6e9f.chunk.js",
-    "static/css/main.f4e3110d.chunk.css",
-    "static/js/main.b93ecac3.chunk.js"
+    "static/css/main.7ebe38a0.chunk.css",
+    "static/js/main.33faa399.chunk.js"
   ]
 }
