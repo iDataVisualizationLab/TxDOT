@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/txDoT/static/css/main.1fa6ef78.chunk.css",
-    "main.js": "/txDoT/static/js/main.70d0414f.chunk.js",
-    "main.js.map": "/txDoT/static/js/main.70d0414f.chunk.js.map",
+    "main.js": "/txDoT/static/js/main.4d3d3880.chunk.js",
+    "main.js.map": "/txDoT/static/js/main.4d3d3880.chunk.js.map",
     "runtime-main.js": "/txDoT/static/js/runtime-main.fe1250f8.js",
     "runtime-main.js.map": "/txDoT/static/js/runtime-main.fe1250f8.js.map",
     "static/js/2.525c6e9f.chunk.js": "/txDoT/static/js/2.525c6e9f.chunk.js",
@@ -20,6 +20,7 @@
     "static/media/TotalDesign Traffic.948031ff.png": "/txDoT/static/media/TotalDesign Traffic.948031ff.png",
     "static/media/cover.43610a00.jpg": "/txDoT/static/media/cover.43610a00.jpg",
     "static/media/footer.ec17135b.png": "/txDoT/static/media/footer.ec17135b.png",
+    "static/media/logo_g.595f6b5c.png": "/txDoT/static/media/logo_g.595f6b5c.png",
     "static/media/soilSystermPic.c6e7e75d.png": "/txDoT/static/media/soilSystermPic.c6e7e75d.png",
     "static/media/subbase.a3bc3c69.png": "/txDoT/static/media/subbase.a3bc3c69.png",
     "static/media/txcrcp-me-v07b.5be1ece2.xlsm": "/txDoT/static/media/txcrcp-me-v07b.5be1ece2.xlsm"
@@ -28,6 +29,6 @@
     "static/js/runtime-main.fe1250f8.js",
     "static/js/2.525c6e9f.chunk.js",
     "static/css/main.1fa6ef78.chunk.css",
-    "static/js/main.70d0414f.chunk.js"
+    "static/js/main.4d3d3880.chunk.js"
   ]
 }
