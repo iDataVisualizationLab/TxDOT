@@ -147,9 +147,10 @@ class County extends Component {
         .center([ -99.43,31.47 ])
         .translate([ this.map_width/2, this.map_height/2 ])
         .scale([ 2000 ]);
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
+            target:props.target,
             geographies: [],
             Name:undefined,
             highlighto:{}

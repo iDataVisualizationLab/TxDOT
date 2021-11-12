@@ -6,11 +6,14 @@ import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import PrintIcon from "@material-ui/icons/Print";
+import logo from "../image/logo.png";
+import footer from "../image/footer.png";
 
 const styles = theme => ({
     root: {
         width: '100%',
-        padding: theme.spacing(2)
+        padding: theme.spacing(2),
+        color:'#141E36',
     },
     button: {
         marginTop: theme.spacing(1),
@@ -20,13 +23,27 @@ const styles = theme => ({
         borderBottom: '1px solid black'
     },
     subHeader: {
-        paddingTop: theme.spacing(2)
+        paddingTop: theme.spacing(2),
+        fontWeight: 200
     },
     header:{
-        backgroundColor: theme.palette.secondary.light
+        paddingLeft: 10,
+        fontWeight: 'bold'
     },
     layerHolder:{
-        '& div:first-child':{
+        display: 'flex',
+        position:'relative',
+        '& svg':{
+          position: 'absolute',
+          top:0,
+          left:0,
+          width:'100%',
+          height:'100%'
+        },
+        '& div, & h5':{
+          zIndex:1
+        },
+        '& .MuiGrid-item:first-child':{
             paddingLeft: 10
         }
     }
@@ -40,7 +57,7 @@ class Report extends Component {
             BondBreaker: 1,
             Base: 6,
             Subbase: 12,
-            NaturalSoil: 6,
+            NaturalSoil: 5,
         }
     }
 
@@ -75,13 +92,14 @@ class Report extends Component {
                         Print
                     </Button>
                 </Grid> : ''}
-                <Grid container item xs={11} justify={"start"} spacing={1} className={["section-to-print", classes.root]}>
+                <Grid container item xs={12} justify={"start"} spacing={1} className={["section-to-print","root-print", classes.root]}>
 
                     <Grid item xs={6} container justify="flex-start"
                           alignItems="flex-start"
                     >
-                        <Grid item xs={12}>
+                        <Grid item xs={12} className={classes.layerHolder}>
                             <Typography variant={'h5'} className={classes.header}>INPUT DATA</Typography>
+                            <svg><rect width={'100%'} height={'100%'} fill={'#cecece'}/></svg>
                         </Grid>
                         <Grid item xs={12}>
                             <Typography variant={'h6'} className={classes.subHeader}>A. Project
@@ -109,7 +127,7 @@ class Report extends Component {
                             CSJ
                         </Grid>
                         <Grid item xs={4}>
-                            {this.props.data.CSJ}
+                            {[this.props.data.Control??'',this.props.data.Section??'',this.props.data.Job??''].join('-')}
                         </Grid>
                         <Grid item xs={8}>
                             Project Scope
@@ -129,7 +147,18 @@ class Report extends Component {
                         <Grid item xs={4}>
                             {this.props.data.StationEnd}
                         </Grid>
-
+                        <Grid item xs={8}>
+                            Date
+                        </Grid>
+                        <Grid item xs={4}>
+                            {this.props.data.Date}
+                        </Grid>
+                        <Grid item xs={8}>
+                            Comment
+                        </Grid>
+                        <Grid item xs={4}>
+                            {this.props.data.Comment}
+                        </Grid>
                         <Grid item xs={12}>
                             <Typography variant={'h6'} className={classes.subHeader}> B. Design Parameters &
                                 Traffic</Typography>
@@ -153,14 +182,14 @@ class Report extends Component {
                             {this.props.data.LanesOneDirection}
                         </Grid>
                         <Grid item xs={8}>
-                            Total Design Traffic in One Direction (million ESALs)
+                            Total Design Traffic in One Direction <div style={{display:'inline-block'}}>(million ESALs)</div>
                         </Grid>
                         <Grid item xs={4}>
                             {this.props.data.TrafficOneDirection}
                         </Grid>
 
                         <Grid item xs={12}>
-                            <Typography variant={'h6'} className={classes.subHeader}> C. Subgrade and Treatment Information & subtitles</Typography>
+                            <Typography variant={'h6'} className={classes.subHeader}> C. Subgrade and Treatment Information</Typography>
                         </Grid>
                         <Grid item xs={8}>
                             Soil Classification System
@@ -181,13 +210,13 @@ class Report extends Component {
                             {this.props.data.PlasticityIndex}
                         </Grid>
                         <Grid item xs={8}>
-                            Subbase Type
+                            Subgrade Type
                         </Grid>
                         <Grid item xs={4}>
                             {this.props.data.SubbaseType}
                         </Grid>
                         <Grid item xs={8}>
-                            Subbase Thickness (in.)
+                            Subgrade Thickness (in.)
                         </Grid>
                         <Grid item xs={4}>
                             {this.props.data.SubbaseThickness}
@@ -215,12 +244,12 @@ class Report extends Component {
                         <Grid item xs={4}>
                             {this.props.data.ModulusBase}
                         </Grid>
-                        <Grid item xs={8}>
-                            Composite K (psi/in.)
-                        </Grid>
-                        <Grid item xs={4}>
-                            {this.props.data.CompositeK}
-                        </Grid>
+                        {/*<Grid item xs={8}>*/}
+                        {/*    Composite K (psi/in.)*/}
+                        {/*</Grid>*/}
+                        {/*<Grid item xs={4}>*/}
+                        {/*    {this.props.data.CompositeK}*/}
+                        {/*</Grid>*/}
 
                         <Grid item xs={12}>
                             <Typography variant={'h6'} className={classes.subHeader}> E. Concrete Material
@@ -243,8 +272,9 @@ class Report extends Component {
                           direction="row"
                           alignContent="flex-start"
                     >
-                        <Grid item xs={12}>
+                        <Grid item xs={12} className={classes.layerHolder}>
                             <Typography variant={'h5'} className={classes.header}>ANALYSIS RESULT</Typography>
+                            <svg><rect width={'100%'} height={'100%'} fill={'#cecece'}/></svg>
                         </Grid>
                         <Grid item xs={12}>
                             <Typography variant={'h6'} className={classes.subHeader}> F. Design Slab Thickness & Performance</Typography>
@@ -264,22 +294,24 @@ class Report extends Component {
                         <Grid item xs={12}>
                             <Typography variant={'h6'} className={classes.subHeader}> G. Layer Information</Typography>
                         </Grid>
-                        <Grid item xs={12} container justify="center" direction="column" style={{minHeight: 500}}>
+                        <Grid item xs={12} container justify="center" direction="column" style={{minHeight: 450, '-webkitPrintColorAdjust':'exact'}}>
                             <Grid className={classes.layerHolder} container alignContent={"center"}
                                   style={{flexGrow: this.state.CRCP, backgroundColor: '#F2F2F2'}}>
                                 <Grid xs item>CRCP</Grid>
                                 <Grid xs item>Thickness</Grid>
                                 {/*<Grid xs item>{this.state.CRCP}''</Grid>*/}
                                 <Grid xs item>{this.props.AnalysisSlabThickness}''</Grid>
+                                <svg><rect width={'100%'} height={'100%'} fill={'#F2F2F2'}/></svg>
                             </Grid>
                            {this.props.data.BaseType==='CTB'?<Grid className={classes.layerHolder} container alignContent={"center"}
                                   style={{flexGrow: this.state.BondBreaker, backgroundColor: '#404040', color:'white'}}>
                                 <Grid xs item>Bond Breaker</Grid>
                                 <Grid xs item>Thickness</Grid>
                                 <Grid xs item>≥{this.state.BondBreaker}''</Grid>
+                               <svg><rect width={'100%'} height={'100%'} fill={'#404040'}/></svg>
                             </Grid>:''}
-                            <Grid container alignContent={"center"}
-                                  style={{flexGrow: this.props.data.BaseThickness, backgroundColor: '#D9D9D9'}}>
+                            <Grid container alignContent={"center"} className={classes.layerHolder}
+                                  style={{flexGrow: this.props.data.BaseThickness, backgroundColor: this.props.data.BaseType==='HMA'?'#b5b5b5':'#D9D9D9'}}>
                                 <Grid className={classes.layerHolder} container>
                                     <Grid xs item>Base</Grid>
                                     <Grid xs item>Type</Grid>
@@ -290,16 +322,12 @@ class Report extends Component {
                                     <Grid xs item>Thickness</Grid>
                                     <Grid xs item>{this.props.data.BaseThickness}''</Grid>
                                 </Grid>
-                                <Grid className={classes.layerHolder} container>
-                                    <Grid xs item></Grid>
-                                    <Grid xs item>Item 276</Grid>
-                                    <Grid xs item>Class L</Grid>
-                                </Grid>
+                                <svg><rect width={'100%'} height={'100%'} fill={this.props.data.BaseType==='HMA'?'#b5b5b5':'#D9D9D9'}/></svg>
                             </Grid>
-                            <Grid container alignContent={"center"}
+                            <Grid container alignContent={"center"} className={classes.layerHolder}
                                   style={{flexGrow: this.props.data.SubbaseThickness, backgroundColor: '#F2F2F2'}}>
                                 <Grid className={classes.layerHolder} container>
-                                    <Grid xs item>Subbase</Grid>
+                                    <Grid xs item>Subgrade</Grid>
                                     <Grid xs item>Type</Grid>
                                     <Grid xs item>{this.props.data.SubbaseType}</Grid>
                                 </Grid>
@@ -308,8 +336,9 @@ class Report extends Component {
                                     <Grid xs item>Thickness</Grid>
                                     <Grid xs item>{this.props.data.SubbaseThickness}''</Grid>
                                 </Grid>
+                                <svg><rect width={'100%'} height={'100%'} fill={'#F2F2F2'}/></svg>
                             </Grid>
-                            <Grid container alignContent={"center"}
+                            <Grid container alignContent={"center"} className={classes.layerHolder}
                                   style={{flexGrow: this.state.NaturalSoil, backgroundColor: '#FFC000'}}>
                                 <Grid className={classes.layerHolder} container>
                                     <Grid xs item>Natural Soil</Grid>
@@ -321,14 +350,19 @@ class Report extends Component {
                                     <Grid xs item>PI</Grid>
                                     <Grid xs item>{this.props.data.PlasticityIndex}</Grid>
                                 </Grid>
+                                <svg><rect width={'100%'} height={'100%'} fill={'#FFC000'}/></svg>
                             </Grid>
                         </Grid>
                         <Grid item xs={12} container>
                             <ul>
-                                <li>"The minimum thickness for CRCP is 7 in., and the maximum thickness is 13 in.</li>
-                                <li>Use 13 in. for slab thicknesses greater than 13 in.</li>
-                                 <li>Districts should use 13-in. slab as a design slab thickness. Districts wanting to use thicker pavements should submit design greater than 13-in. to the district engineer for approval along with their justification for doing so.</li>
+                                <li>The minimum thickness for CRCP is 7 in., and the maximum thickness is 13 in.</li>
+                                <li>When the design slab thickness from this program is greater than 13-in, use 13-in slab. If a thickness greater than 13-in is desired, a request with justifications needs to be submitted to the District Engineer for approval.</li>
                             </ul>
+                        </Grid>
+                        <Grid item xs={12} container>
+                            <Grid item xs={12}><img src={footer} style={{width:'100%',height:20,transform:'scale(-1)'}}/></Grid>
+                            <Grid item xs={8} style={{textAlign:'center'}}><h3>TxCRCP-ME Analysis Report</h3></Grid><Grid item xs={4}><img src={logo} style={{width:'100%',maxWidth:80,float:'right'}}/></Grid>
+                            {/*<Grid item xs={12}><img src={footer} style={{width:'100%',height:20}}/></Grid>*/}
                         </Grid>
                     </Grid>
 

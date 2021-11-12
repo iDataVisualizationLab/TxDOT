@@ -6,6 +6,11 @@
   height: 40vmin;
   pointer-events: none;
 }
+.MuiFormHelperText-root.Mui-error {
+  position: absolute;
+  bottom: -15px;
+  font-size: 0.65rem;
+}
 
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
@@ -38,8 +43,12 @@
 }
 
 @media print {
+  body{ zoom: 90%; font-size: 15px; font-family: system-ui}
   body * {
     visibility: hidden;
+  }
+  .root-print{
+    padding-bottom: 0;
   }
   .section-to-print, .section-to-print * {
     visibility: visible;
@@ -48,5 +57,25 @@
     position: absolute;
     left: 0;
     top: 0;
+    padding:0 !important;
+  }
+  h6 {
+    padding-top: 10px!important;
+    font-weight: 500;
+    font-family: system-ui;
+  }
+}
+@-moz-document url-prefix(){
+  @media print {
+    body {
+      font-size: 80%;
+      font-family: system-ui;
+    }
+    h6 {
+      font-size: 80%;
+      padding-top: 0!important;
+      font-weight: 500;
+      font-family: system-ui;
+    }
   }
 }

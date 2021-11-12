@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import {AppBar,IconButton,Typography,Button,Toolbar,Grid,Slide} from '@material-ui/core';
 import coverPic from './image/cover.jpg';
 import CRCP from './component/CRCP'
-import Report from "./component/report";
+import logo from "./image/logo_g.png";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -15,6 +15,8 @@ const useStyles = makeStyles((theme) => ({
   },
   titleNav: {
     flexGrow: 1,
+    paddingLeft:5,
+    paddingTop:2
   },
   title: {
     color: 'white'
@@ -43,8 +45,9 @@ function App() {
       <div className={classes.cover}></div>
       <AppBar position="static">
         <Toolbar>
+          <img src={logo} style={{width:50}}/>
           <Typography variant="h6" className={classes.titleNav}>
-            TxCRCP-ME
+            TxCRCP-ME Analysis
           </Typography>
         </Toolbar>
       </AppBar>
