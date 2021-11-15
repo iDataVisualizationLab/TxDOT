@@ -154,7 +154,7 @@ const init = {
     currentCounties: Object.keys(counties),
     SubbaseThicknessThreshHold: -1,
     SubbaseTypeOpt: ["Cement treated subgrade","Lime treated subgrade","Lime-cement treated subgrade","Lime-fly ash treated subgrade","Fly ash treated subgrade","Select Fill","No treatment"],
-    baseTypeOpt: ["CTB", "HMA"],
+    baseTypeOpt: ["CTB", "HMA","ASB"],
     ksTable: new Map(),
     ssTable: [],
     temperature: [],
@@ -663,7 +663,7 @@ class CRCP extends Component {
         this.setState(obj);
     };
     handleSoilSub = (value) => {
-        let baseTypeOpt = ["CTB", "HMA"];
+        let baseTypeOpt = ["CTB", "HMA","ASB"];
         let BaseType = this.state.BaseType;
         if (this.state.PlasticityIndex >= 15) {
             if (["ML", "CL", "OL", "MH", "CH", "OH"].indexOf(value) !== -1) {
@@ -682,8 +682,7 @@ class CRCP extends Component {
             if (value === 'CTB') {
                 BaseThicknessMin = 6;
                 ModulusBase = 500;
-            }
-            if (value === 'HMA') {
+            }else {
                 BaseThicknessMax = 4;
             }
             if (BaseThickness < BaseThicknessMin)
@@ -775,6 +774,7 @@ class CRCP extends Component {
             return <div className={classes.actionsContainer}>
                 <div>
                     <Button
+                        color="secondary"
                         variant="contained"
                         onClick={this.props.toMenu}
                         className={classes.button}
@@ -1436,6 +1436,7 @@ class CRCP extends Component {
                                                                               <div>Minimum Cap.</div>
                                                                               <div>CTB ≥ 6.0 in.</div>
                                                                               <div>HMA ≥ 4.0 in</div>
+                                                                              <div>ASB ≥ 4.0 in</div>
                                                                           </>
                                                                       })}
                                                                       onMouseLeave={this.handleCloseHelper}
@@ -1473,6 +1474,7 @@ class CRCP extends Component {
                                                                           text: <>
                                                                               <div>CTB = 500 ksi</div>
                                                                               <div>HMA = 400 ksi</div>
+                                                                              <div>ASB = 400 ksi</div>
                                                                           </>
                                                                       })}
                                                                       onMouseLeave={this.handleCloseHelper}
@@ -1593,6 +1595,7 @@ class CRCP extends Component {
                                     ANALYSIS RESULT
                                 </Button>
                                 <Button
+                                    color="secondary"
                                     size="small"
                                     variant="contained"
                                     onClick={this.props.toMenu}

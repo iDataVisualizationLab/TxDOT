@@ -5,6 +5,25 @@ import {AppBar,IconButton,Typography,Button,Toolbar,Grid,Slide} from '@material-
 import coverPic from './image/cover.jpg';
 import CRCP from './component/CRCP'
 import logo from "./image/logo_g.png";
+import {ThemeProvider} from "@material-ui/styles";
+import {createMuiTheme} from "@material-ui/core/styles";
+
+let theme = createMuiTheme({
+  palette: {
+    primary: {main:'#14375A'},
+    secondary: {main: '#CC7B29'},
+    // grey: 500,
+
+    text: {primary: '#000000'}
+  },
+  typography: {
+    // fontSize: 16,
+    fontFamily: [
+      'Franklin Gothic Book','Franklin Gothic Demi Cond',
+      'arial'
+    ].join(','),
+  },
+});
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -41,6 +60,7 @@ function App() {
   const AnalysisPunchoutsFunc = (d)=>d===undefined?AnalysisPunchouts:setAnalysisPunchouts(d);
   const AnalysisSlabThicknessFunc = (d)=>d===undefined?AnalysisSlabThickness:setAnalysisSlabThickness(d);
   return (
+      <ThemeProvider theme={theme}>
     <div >
       <div className={classes.cover}></div>
       <AppBar position="static">
@@ -90,6 +110,7 @@ function App() {
         {/*</Slide>*/}
       </div>
     </div>
+      </ThemeProvider>
   );
 }
 

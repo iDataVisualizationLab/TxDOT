@@ -24,7 +24,7 @@ const styles = theme => ({
     },
     subHeader: {
         paddingTop: theme.spacing(2),
-        fontWeight: 200
+        fontWeight: 'bold'
     },
     header:{
         paddingLeft: 10,
@@ -93,13 +93,18 @@ class Report extends Component {
                     </Button>
                 </Grid> : ''}
                 <Grid container item xs={12} justify={"start"} spacing={1} className={["section-to-print","root-print", classes.root]}>
-
+                    <Grid item xs={12} container>
+                        <Grid item xs={12}><img src={footer} style={{width:'100%',height:20,transform:'scale(-1)'}}/></Grid>
+                        <Grid item><img src={logo} style={{width:80}}/></Grid>
+                        <Grid item xs><h2>TxCRCP-ME Analysis</h2></Grid>
+                        {/*<Grid item xs={12}><img src={footer} style={{width:'100%',height:20}}/></Grid>*/}
+                    </Grid>
                     <Grid item xs={6} container justify="flex-start"
                           alignItems="flex-start"
                     >
                         <Grid item xs={12} className={classes.layerHolder}>
                             <Typography variant={'h5'} className={classes.header}>INPUT DATA</Typography>
-                            <svg><rect width={'100%'} height={'100%'} fill={'#cecece'}/></svg>
+                            <svg><rect width={'100%'} height={'100%'} fill={'#F2F2F2'}/></svg>
                         </Grid>
                         <Grid item xs={12}>
                             <Typography variant={'h6'} className={classes.subHeader}>A. Project
@@ -274,7 +279,7 @@ class Report extends Component {
                     >
                         <Grid item xs={12} className={classes.layerHolder}>
                             <Typography variant={'h5'} className={classes.header}>ANALYSIS RESULT</Typography>
-                            <svg><rect width={'100%'} height={'100%'} fill={'#cecece'}/></svg>
+                            <svg><rect width={'100%'} height={'100%'} fill={'#F2F2F2'}/></svg>
                         </Grid>
                         <Grid item xs={12}>
                             <Typography variant={'h6'} className={classes.subHeader}> F. Design Slab Thickness & Performance</Typography>
@@ -311,7 +316,7 @@ class Report extends Component {
                                <svg><rect width={'100%'} height={'100%'} fill={'#404040'}/></svg>
                             </Grid>:''}
                             <Grid container alignContent={"center"} className={classes.layerHolder}
-                                  style={{flexGrow: this.props.data.BaseThickness, backgroundColor: this.props.data.BaseType==='HMA'?'#b5b5b5':'#D9D9D9'}}>
+                                  style={{flexGrow: this.props.data.BaseThickness, backgroundColor: this.props.data.BaseType!=='CTB'?'#b5b5b5':'#D9D9D9'}}>
                                 <Grid className={classes.layerHolder} container>
                                     <Grid xs item>Base</Grid>
                                     <Grid xs item>Type</Grid>
@@ -322,7 +327,7 @@ class Report extends Component {
                                     <Grid xs item>Thickness</Grid>
                                     <Grid xs item>{this.props.data.BaseThickness}''</Grid>
                                 </Grid>
-                                <svg><rect width={'100%'} height={'100%'} fill={this.props.data.BaseType==='HMA'?'#b5b5b5':'#D9D9D9'}/></svg>
+                                <svg><rect width={'100%'} height={'100%'} fill={this.props.data.BaseType!=='CTB'?'#b5b5b5':'#D9D9D9'}/></svg>
                             </Grid>
                             <Grid container alignContent={"center"} className={classes.layerHolder}
                                   style={{flexGrow: this.props.data.SubbaseThickness, backgroundColor: '#F2F2F2'}}>
@@ -358,11 +363,6 @@ class Report extends Component {
                                 <li>The minimum thickness for CRCP is 7 in., and the maximum thickness is 13 in.</li>
                                 <li>When the design slab thickness from this program is greater than 13-in, use 13-in slab. If a thickness greater than 13-in is desired, a request with justifications needs to be submitted to the District Engineer for approval.</li>
                             </ul>
-                        </Grid>
-                        <Grid item xs={12} container>
-                            <Grid item xs={12}><img src={footer} style={{width:'100%',height:20,transform:'scale(-1)'}}/></Grid>
-                            <Grid item xs={8} style={{textAlign:'center'}}><h3>TxCRCP-ME Analysis Report</h3></Grid><Grid item xs={4}><img src={logo} style={{width:'100%',maxWidth:80,float:'right'}}/></Grid>
-                            {/*<Grid item xs={12}><img src={footer} style={{width:'100%',height:20}}/></Grid>*/}
                         </Grid>
                     </Grid>
 
