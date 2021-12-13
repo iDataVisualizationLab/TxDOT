@@ -49,6 +49,9 @@
 }
 
 @media print {
+  /*@page {*/
+  /*  size: landscape;*/
+  /*}*/
   body{ zoom: 90%; font-size: 14px}
   body * {
     visibility: hidden;
@@ -72,11 +75,20 @@
 }
 @-moz-document url-prefix(){
   @media print {
+    /*@page {*/
+    /*  size: landscape;*/
+    /*}*/
     body {
       font-size: 80%;
     }
+    .layerDetail{
+      min-height: 350px!important;
+    }
+    ul {
+      padding-left:20px;
+    }
     h6 {
-      font-size: 80%;
+      font-size: 60%;
       padding-top: 0!important;
       font-weight: 500;
     }

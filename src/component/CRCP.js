@@ -13,7 +13,13 @@ import {
     TextField,
     Container,
     Input,
-    Hidden
+    Hidden,
+    Table,
+    TableRow,
+    TableHead,
+    TableBody,
+    TableCell,
+    Tooltip
 } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import Graph from './Graph'
@@ -27,13 +33,13 @@ import PublishIcon from '@material-ui/icons/Publish';
 import ShowChartIcon from '@material-ui/icons/ShowChart';
 import MenuItem from "@material-ui/core/MenuItem";
 import Popper from "@material-ui/core/Popper";
-import TrafficOneDirectionPic from '../././image/TotalDesign Traffic.png';
+import TrafficOneDirectionPic from '../././image/TotalDesign Traffic_pic.png';
 import StructureDesignCriteriaPic from '../././image/StructureDesignCriteria.png';
 import AcceptableNumberofPunchoutPic from '../././image/AcceptableNumberofPunchout.png';
 import ConcreteLayerPic from '../././image/ConcreteLayer.png';
 import soilSystermPic from '../././image/soilSystermPic.png';
-import subbasePic from '../././image/subbase.png';
-import BasetypePic from '../././image/BasetypePic.png';
+import subbasePic from '../././image/subbase.svg';
+import BasetypePic from '../././image/BasetypePic.svg';
 import IconButton from "@material-ui/core/IconButton";
 import InfoIcon from '@material-ui/icons/Info';
 import CloseIcon from '@material-ui/icons/Close';
@@ -148,8 +154,12 @@ const init = {
     Job: '',
     Date: null,
     Comment: '',
+    From: '',
+    To: '',
     StationBegin: '',
     StationEnd: '',
+    RMBegin: '',
+    RMEnd: '',
     currentDistricts: Object.keys(districts),
     currentCounties: Object.keys(counties),
     SubbaseThicknessThreshHold: -1,
@@ -160,11 +170,84 @@ const init = {
     temperature: [],
 }
 
-const Acceptable_punchout_Popup = <>
-    <h5>B. Design parameter</h5>
-    <p style={{maxWidth: 500}}>Provide the design period in years and the design acceptable number of punchouts per
-        mile. Currently, 10 punchouts per mile is a nationally accepted value for the terminal condition of CRCP, even though a designer could select a more appropriate value depending on the importance of the highway system under analysis. The design acceptability will be based on those design parameters; if the predicted number of punchouts at the end of the design period is more than the design value, modification of input(s) is required.</p>
+const Total_design_trafic = <>
+    <h5>* Use Form 2124 for traffic data request</h5>
+    <p style={{maxWidth: 500, fontSize:'0.8rem'}}>: Transportation Planning and Programming Division
+        Traffic Analysis for Highway Design</p>
+
+    <h5>Design Traffic</h5>
+
+    <p style={{maxWidth: 500, fontSize:'0.8rem'}}>The traffic projections for a highway project (in terms of ADT and one-way total 18-kip ESALs) are obtained from the traffic analysis report provided by the Transportation Planning and Programming Division (TPP). This report is requested during the design phase of a project and, upon receipt, should be evaluated for reasonableness.
+        Local conditions may cause the directional distribution of heavy vehicles to be unequal. An example is a location near a major quarry adjacent to a highway with otherwise modest levels of truck traffic. If the designer is aware of local conditions that may result in unequal distributions of heavy trucks, TPP should be informed of this condition when requesting traffic projections, and the reported 18-kip ESALS for pavement design should be adjusted.</p>
+    <TransformWrapper
+        defaultPositionX={1}
+        defaultPositionY={1}
+    >
+        <TransformComponent>
+            <img
+                src={TrafficOneDirectionPic}
+                style={{maxWidth: 500, height: 'auto'}}
+            /></TransformComponent></TransformWrapper>
 </>
+const Acceptable_punchout_Popup = <>
+    <h5>Number of Punchouts per Mile</h5>
+    <p style={{maxWidth: 500}}>Provide a number of punchouts per mile that is considered the terminal condition of CRCP you are designing. Traditionally, 10 per mile has been the number used for CRCP design. For a higher class of highway where the number of punchouts may be minimized, contact MNT – Pavement Analysis & Design Branch.</p>
+</>
+
+const _28_Day_Modulus_of_Rupture = <>
+    <h5>28-Day Modulus of Rupture</h5>
+    <p style={{maxWidth: 500}}>The Modulus of Rupture (Mr) of concrete is a measure of the flexural strength of the concrete as determined by breaking concrete beam test specimens. Use a 28-day Mr of 570 psi. If the engineer selects an alternate value for Mr, it must be documented with an explanation. Also, if a higher Mr is used, it should be required in the plan to use a higher concrete strength than what is required in Item 360.</p>
+</>
+
+const Concrete_elastic_modulus = <>
+    <h5>Concrete elastic modulus</h5>
+    <p style={{maxWidth: 500}}>Elastic modulus of concrete is an indication of concrete stiffness. It varies depending on the coarse aggregate type used in the concrete. Although the value selected for pavement design could be different from the actual values, the elastic modulus does not have a significant effect on the computed slab thickness. A modulus of 5,000,000 psi should be used for pavement design. The use of a different value must be documented with an explanation.</p>
+</>
+const StyledTableCell = withStyles((theme) => ({
+    head: {
+        backgroundColor: theme.palette.common.black,
+        color: theme.palette.common.white,
+    },
+    body: {
+        fontSize: 14,
+    },
+}))(TableCell);
+
+const StyledTableRow = withStyles((theme) => ({
+    root: {
+        '&:nth-of-type(odd)': {
+            backgroundColor: theme.palette.action.hover,
+        },
+    },
+}))(TableRow);
+
+const Soil_classification_system = <>
+    <h5>Subgrade layer information</h5>
+    <p style={{maxWidth: 500}}>Provide the soil classfication per AASHTO or Unified Classification System as follows.</p>
+    <h5 style={{textAlign:'center'}} >Classification of soil</h5>
+    <Table size="small" >
+        <TableHead><TableRow><StyledTableCell>Description</StyledTableCell><StyledTableCell>AASHTO</StyledTableCell><StyledTableCell>Unified</StyledTableCell></TableRow></TableHead>
+        <TableBody>
+            <StyledTableRow><StyledTableCell>Gravel</StyledTableCell><StyledTableCell>A-1-a</StyledTableCell><StyledTableCell>GW or GP</StyledTableCell></StyledTableRow>
+            <StyledTableRow><StyledTableCell>Coarse Sand</StyledTableCell><StyledTableCell>A-1-b</StyledTableCell><StyledTableCell>SW</StyledTableCell></StyledTableRow>
+            <StyledTableRow><StyledTableCell>Fine Sand</StyledTableCell><StyledTableCell>A-3</StyledTableCell><StyledTableCell>SP</StyledTableCell></StyledTableRow>
+            <StyledTableRow><StyledTableCell>Silty Gravel or Sand</StyledTableCell><StyledTableCell>A-2-4 or A-2-5</StyledTableCell><StyledTableCell>GM or SM</StyledTableCell></StyledTableRow>
+            <StyledTableRow><StyledTableCell>Clayey Gravel or Clayey Sandy</StyledTableCell><StyledTableCell>A-2-6</StyledTableCell><StyledTableCell>GC or SC</StyledTableCell></StyledTableRow>
+            <StyledTableRow><StyledTableCell>Silt or Silt/sand/gravel mixture</StyledTableCell><StyledTableCell>A-4</StyledTableCell><StyledTableCell>ML or OL</StyledTableCell></StyledTableRow>
+            <StyledTableRow><StyledTableCell>Poorly Graded Silt</StyledTableCell><StyledTableCell>A-5</StyledTableCell><StyledTableCell>MH</StyledTableCell></StyledTableRow>
+            <StyledTableRow><StyledTableCell>Plastic Clay</StyledTableCell><StyledTableCell>A-6</StyledTableCell><StyledTableCell>CL</StyledTableCell></StyledTableRow>
+            <StyledTableRow><StyledTableCell>Moderately Plastic Elastic Clay</StyledTableCell><StyledTableCell>A-7-5</StyledTableCell><StyledTableCell>CL or OL</StyledTableCell></StyledTableRow>
+            <StyledTableRow><StyledTableCell>Highly Plastic Elastic Clay</StyledTableCell><StyledTableCell>A-7-6</StyledTableCell><StyledTableCell>CH or OH</StyledTableCell></StyledTableRow>
+        </TableBody>
+    </Table>
+</>
+
+const HtmlTooltip = withStyles((theme) => ({
+    tooltip: {
+        maxWidth: 170,
+        fontSize: theme.typography.pxToRem(16),
+    },
+}))(Tooltip);
 
 class CRCP extends Component {
     constructor(props) {
@@ -188,7 +271,6 @@ class CRCP extends Component {
     initFunc() {
         fetch(excelFile).then(res => res.arrayBuffer()).then(ab => {
             const wb = XLSX.read(ab, {type: "array"});
-            debugger
             // XLSX.writeFile(wb, 'out.xlsm');
             const temperatureSheet = wb.Sheets['Temperature'];
             init.temperature = XLSX.utils.sheet_to_json(temperatureSheet);
@@ -436,7 +518,7 @@ class CRCP extends Component {
 
     warningFunc = {
         Step3: {
-            'SubbaseThickness': () => this.state.SubbaseThickness < this.state.SubbaseThicknessThreshHold ? `Should greater than ${this.state.SubbaseThicknessThreshHold}` : null,
+            'SubbaseThickness': () => this.state.SubbaseThickness < this.state.SubbaseThicknessThreshHold ? `Recommended subgrade treatment ≥ ${this.state.SubbaseThicknessThreshHold}` : null,
         }
     };
 
@@ -470,35 +552,39 @@ class CRCP extends Component {
         if (event.target.files[0]) {
             XlsxPopulate.fromDataAsync(event.target.files[0]).then(function(workbook) {
                 const fn = workbook.sheet('Result');
-                const _District = fn.cell("C6").value();
+                const _District = fn.cell("C7").value();
                 const indexDis = Object.values(districtCode).indexOf(_District);
-                const CSJ = fn.cell("C9").value();
+                const CSJ = fn.cell("C10").value();
                 const state = {
                     District: indexDis===-1?null:Object.keys(districtCode)[indexDis]??'',
-                    County: fn.cell("C7").value()??'',
-                    Highway:fn.cell("C8").value()??'',
+                    County: fn.cell("C8").value()??'',
+                    Highway:fn.cell("C9").value()??'',
                     Control:CSJ?CSJ.split('-')[0]:null,
                     Section:CSJ?CSJ.split('-')[1]:null,
                     Job:CSJ?CSJ.split('-')[2]:null,
-                    ProjectScope : fn.cell("C10").value()??'',
-                    StationBegin : fn.cell("C11").value()??'',
-                    StationEnd : fn.cell("C12").value()??'',
-                    Date : fn.cell("C13").value()??'',
-                    Comment : fn.cell("C14").value()??'',
-                    DesignLife : fn.cell("C18").value()??'',
-                    PunchoutsPerMile : fn.cell("C19").value()??'',
-                    LanesOneDirection : fn.cell("C20").value()??'',
-                    TrafficOneDirection : fn.cell("C21").value()??'',
-                    SoilClassificationSystem : fn.cell("C25").value()??'',
-                    SoilSub : fn.cell("C26").value()??'',
-                    PlasticityIndex : fn.cell("C27").value()??'',
-                    SubbaseType : fn.cell("C28").value()??'',
-                    SubbaseThickness : fn.cell("C29").value()??'',
-                    BaseType : fn.cell("C33").value()??'',
-                    BaseThickness : fn.cell("C34").value()??'',
-                    ModulusBase : fn.cell("C35").value()??'',
-                    ModulusOfRupture : fn.cell("C39").value()??'',
-                    ElasticModulue : fn.cell("C40").value()??'',
+                    ProjectScope : fn.cell("C11").value()??'',
+                    From : fn.cell("C13").value()??'',
+                    To : fn.cell("C14").value()??'',
+                    StationBegin : fn.cell("C15").value()??'',
+                    StationEnd : fn.cell("C16").value()??'',
+                    RMBegin : fn.cell("C17").value()??'',
+                    RMEnd : fn.cell("C18").value()??'',
+                    Date : fn.cell("C19").value()??'',
+                    Comment : fn.cell("B21").value()??'',
+                    DesignLife : fn.cell("C27").value()??'',
+                    PunchoutsPerMile : fn.cell("C28").value()??'',
+                    LanesOneDirection : fn.cell("C29").value()??'',
+                    TrafficOneDirection : fn.cell("C30").value()??'',
+                    SoilClassificationSystem : fn.cell("C34").value()??'',
+                    SoilSub : fn.cell("C35").value()??'',
+                    PlasticityIndex : fn.cell("C36").value()??'',
+                    SubbaseType : fn.cell("C37").value()??'',
+                    SubbaseThickness : fn.cell("C38").value()??'',
+                    BaseType : fn.cell("C42").value()??'',
+                    BaseThickness : fn.cell("C43").value()??'',
+                    ModulusBase : fn.cell("C44").value()??'',
+                    ModulusOfRupture : fn.cell("C48").value()??'',
+                    ElasticModulue : fn.cell("C49").value()??'',
                 };
                 state.currentCounties = districts[state.District];
                 self.setState(state)
@@ -518,63 +604,67 @@ class CRCP extends Component {
                 generateBlob();
                 function generate(type) {
                     const fn = workbook.sheet(0);
-                    fn.cell("C6").value(districtCode[data.District]);
-                    fn.cell("C7").value(data.County);
-                    fn.cell("C8").value(data.Highway);
-                    fn.cell("C9").value([data.Control??'',data.Section??'',data.Job??''].join('-'));
-                    fn.cell("C10").value(data.ProjectScope);
-                    fn.cell("C11").value(data.StationBegin);
-                    fn.cell("C12").value(data.StationEnd);
-                    fn.cell("C13").value(data.Date);
-                    fn.cell("C14").value(data.Comment);
+                    fn.cell("C7").value(districtCode[data.District]);
+                    fn.cell("C8").value(data.County);
+                    fn.cell("C9").value(data.Highway);
+                    fn.cell("C10").value([data.Control??'',data.Section??'',data.Job??''].join('-'));
+                    fn.cell("C11").value(data.ProjectScope);
+                    fn.cell("C13").value(data.To);
+                    fn.cell("C14").value(data.From);
+                    fn.cell("C15").value(data.StationBegin);
+                    fn.cell("C16").value(data.StationEnd);
+                    fn.cell("C17").value(data.RMBegin);
+                    fn.cell("C18").value(data.RMEnd);
+                    fn.cell("C19").value(data.Date);
+                    fn.cell("B21").value(data.Comment);
                     //B
-                    fn.cell("C18").value(data.DesignLife);
-                    fn.cell("C19").value(data.PunchoutsPerMile);
-                    fn.cell("C20").value(data.LanesOneDirection);
-                    fn.cell("C21").value(data.TrafficOneDirection);
+                    fn.cell("C27").value(data.DesignLife);
+                    fn.cell("C28").value(data.PunchoutsPerMile);
+                    fn.cell("C29").value(data.LanesOneDirection);
+                    fn.cell("C30").value(data.TrafficOneDirection);
                     //C
-                    fn.cell("C25").value(data.SoilClassificationSystem);
-                    fn.cell("C26").value(data.SoilSub);
-                    fn.cell("C27").value(data.PlasticityIndex);
-                    fn.cell("C28").value(data.SubbaseType);
-                    fn.cell("C29").value(data.SubbaseThickness);
+                    fn.cell("C34").value(data.SoilClassificationSystem);
+                    fn.cell("C35").value(data.SoilSub);
+                    fn.cell("C36").value(data.PlasticityIndex);
+                    fn.cell("C37").value(data.SubbaseType);
+                    fn.cell("C38").value(data.SubbaseThickness);
                     //D
-                    fn.cell("C33").value(data.BaseType);
-                    fn.cell("C34").value(data.BaseThickness);
-                    fn.cell("C35").value(data.ModulusBase);
+                    fn.cell("C42").value(data.BaseType);
+                    fn.cell("C43").value(data.BaseThickness);
+                    fn.cell("C44").value(data.ModulusBase);
                     //E
-                    fn.cell("C39").value(data.ModulusOfRupture);
-                    fn.cell("C40").value(data.ElasticModulue);
+                    fn.cell("C48").value(data.ModulusOfRupture);
+                    fn.cell("C49").value(data.ElasticModulue);
                     //F
-                    fn.cell("S6").value(AnalysisSlabThickness);
-                    fn.cell("S7").value(AnalysisPunchouts);
+                    fn.cell("S7").value(AnalysisSlabThickness);
+                    fn.cell("S8").value(AnalysisPunchouts);
                     //G
-                    fn.cell("O12").value(""+AnalysisSlabThickness+'"');
+                    fn.cell("O13").value(""+AnalysisSlabThickness+'"');
                     if(data.BaseType==='CTB'){
-                        fn.cell("O17").value("≥1");
+                        fn.cell("O20").value("≥1");
                     }else{
-                        fn.cell("O17").value(undefined);
-                        fn.cell("L17").value(undefined);
-                        fn.cell("I17").value(undefined);
-                        const upColor = fn.cell("O16").style('fill');
-                        fn.cell("H17").style('fill',upColor);
-                        fn.cell("I17").style('fill',upColor);
-                        fn.cell("J17").style('fill',upColor);
-                        fn.cell("K17").style('fill',upColor);
-                        fn.cell("L17").style('fill',upColor);
-                        fn.cell("M17").style('fill',upColor);
-                        fn.cell("N17").style('fill',upColor);
-                        fn.cell("O17").style('fill',upColor);
-                        fn.cell("P17").style('fill',upColor);
-                        fn.cell("Q17").style('fill',upColor);
-                        fn.cell("R17").style('fill',upColor);
+                        fn.cell("O20").value(undefined);
+                        fn.cell("L20").value(undefined);
+                        fn.cell("I20").value(undefined);
+                        const upColor = fn.cell("O19").style('fill');
+                        fn.cell("H20").style('fill',upColor);
+                        fn.cell("I20").style('fill',upColor);
+                        fn.cell("J20").style('fill',upColor);
+                        fn.cell("K20").style('fill',upColor);
+                        fn.cell("L20").style('fill',upColor);
+                        fn.cell("M20").style('fill',upColor);
+                        fn.cell("N20").style('fill',upColor);
+                        fn.cell("O20").style('fill',upColor);
+                        fn.cell("P20").style('fill',upColor);
+                        fn.cell("Q20").style('fill',upColor);
+                        fn.cell("R20").style('fill',upColor);
                     }
-                    fn.cell("O19").value(data.BaseType);
-                    fn.cell("O20").value(""+data.BaseThickness+'"');
-                    fn.cell("O23").value(data.SubbaseType);
-                    fn.cell("O24").value(""+data.SubbaseThickness+'"');
-                    fn.cell("O28").value(data.SoilSub);
-                    fn.cell("O29").value(data.PlasticityIndex);
+                    fn.cell("O22").value(data.BaseType);
+                    fn.cell("O23").value(""+data.BaseThickness+'"');
+                    fn.cell("O26").value(data.SubbaseType);
+                    fn.cell("O27").value(""+data.SubbaseThickness+'"');
+                    fn.cell("O31").value(data.SoilSub);
+                    fn.cell("O32").value(data.PlasticityIndex);
 
                     const an = workbook.sheet(1);
                     const borderstyle = an.cell('A1').style('border');
@@ -592,7 +682,6 @@ class CRCP extends Component {
                     an.column("H").style({'border': borderstyle,"numberFormat": "0.000"});
                     an.column("L").style({'border': borderstyle,"numberFormat": "0.0000"});
                     an.column("M").style({'border': borderstyle,"numberFormat": "0.00"});
-                    debugger
                     return workbook.outputAsync({ type: type });
                 }
                 function generateBlob() {
@@ -842,7 +931,7 @@ class CRCP extends Component {
                                 <form className={classes.root} noValidate autoComplete="off">
                                     <Grid container spacing={4}>
                                         <Grid container item xs={12} spacing={1} justify="center">
-                                            <Grid item xs={12} sm={6} md={4}>
+                                            <Grid item xs={12} sm={6} md={3}>
                                                 <Autocomplete
                                                     margin="dense"
                                                     id="district"
@@ -886,7 +975,7 @@ class CRCP extends Component {
                                                                                         </>}
                                                     />}/>
                                             </Grid>
-                                            <Grid item xs={12} sm={6} md={4}>
+                                            <Grid item xs={12} sm={6} md={3}>
                                                 <Autocomplete
                                                     margin="dense"
                                                     id="county"
@@ -916,7 +1005,7 @@ class CRCP extends Component {
                                                                                             /></IconButton></>}
                                                                                         variant="filled"/>}/>
                                             </Grid>
-                                            <Grid item xs={12} sm={6} md={4}>
+                                            <Grid item xs={12} sm={6} md={3}>
                                                 <TextField
                                                     margin="dense"
                                                     id="highway"
@@ -925,6 +1014,29 @@ class CRCP extends Component {
                                                     defaultValue={this.state.Highway}
                                                     onChange={(event) => this.handleChange('Highway', event.target.value)}
                                                     variant="filled"/>
+                                            </Grid>
+                                            <Grid item xs={12} sm={6} md={3}>
+                                                <TextField
+                                                    margin="dense"
+                                                    id="ProjectScope"
+                                                    className={classes.inputWithHelper}
+                                                    label={<>Project Scope <IconButton aria-label="info"
+                                                                                       className={classes.margin}
+                                                                                       size="small">
+                                                        <InfoIcon fontSize="small"
+                                                                  onClick={this.handleOpenHelper({text: "Will be provided later."}, true)}
+                                                                  onMouseEnter={this.handleOpenHelper({text: "Will be provided later."})}
+                                                                  onMouseLeave={this.handleCloseHelper}
+                                                        />
+                                                    </IconButton></>}
+                                                    select
+                                                    value={this.state.ProjectScope}
+                                                    onChange={(event) => this.handleChange('ProjectScope', event.target.value)}
+                                                    variant="filled">
+                                                    <MenuItem value="NEW CONSTRUCTION">New Construction</MenuItem>
+                                                    <MenuItem value="REHABILITATION">Rehabilitation</MenuItem>
+                                                    <MenuItem value="WIDENING">Widening</MenuItem>
+                                                </TextField>
                                             </Grid>
                                             <Grid item xs={12} sm={6} md={3}>
                                                 <TextField
@@ -956,47 +1068,6 @@ class CRCP extends Component {
                                             <Grid item xs={12} sm={6} md={3}>
                                                 <TextField
                                                     margin="dense"
-                                                    id="ProjectScope"
-                                                    className={classes.inputWithHelper}
-                                                    label={<>Project Scope <IconButton aria-label="info"
-                                                                                       className={classes.margin}
-                                                                                       size="small">
-                                                        <InfoIcon fontSize="small"
-                                                                  onClick={this.handleOpenHelper({text: "Will be provided later."}, true)}
-                                                                  onMouseEnter={this.handleOpenHelper({text: "Will be provided later."})}
-                                                                  onMouseLeave={this.handleCloseHelper}
-                                                        />
-                                                    </IconButton></>}
-                                                    select
-                                                    value={this.state.ProjectScope}
-                                                    onChange={(event) => this.handleChange('ProjectScope', event.target.value)}
-                                                    variant="filled">
-                                                    <MenuItem value="NEW CONSTRUCTION">New Construction</MenuItem>
-                                                    <MenuItem value="REHABILITATION">Rehabilitation</MenuItem>
-                                                    <MenuItem value="WIDENING">Widening</MenuItem>
-                                                </TextField>
-                                            </Grid>
-                                            <Grid item xs={12} sm={6} md={3}>
-                                                <TextField
-                                                    margin="dense"
-                                                    id="StationBegin"
-                                                    label="Station (Begin)"
-                                                    value={this.state.StationBegin}
-                                                    onChange={(event) => this.handleChange('StationBegin', event.target.value)}
-                                                    variant="filled"/>
-                                            </Grid>
-                                            <Grid item xs={12} sm={6} md={3}>
-                                                <TextField
-                                                    margin="dense"
-                                                    id="StationEnd"
-                                                    label="Station (End)"
-                                                    value={this.state.StationEnd}
-                                                    onChange={(event) => this.handleChange('StationEnd', event.target.value)}
-                                                    variant="filled"/>
-                                            </Grid>
-                                            <Grid item xs={12} sm={6} md={3}>
-                                                <TextField
-                                                    margin="dense"
                                                     id="date"
                                                     type="date"
                                                     label="Date"
@@ -1005,6 +1076,63 @@ class CRCP extends Component {
                                                     InputLabelProps={{
                                                         shrink: true,
                                                     }}
+                                                    variant="filled"/>
+                                            </Grid>
+                                            <Grid item xs={12} justify="flex-start">
+                                                <Typography variant={'h6'}>Project Limits</Typography>
+                                            </Grid>
+                                            <Grid item xs={12} sm={6} md={5}>
+                                                <TextField
+                                                    margin="dense"
+                                                    id="From"
+                                                    label="From"
+                                                    value={this.state.From}
+                                                    onChange={(event) => this.handleChange('From', event.target.value)}
+                                                    variant="filled"/>
+                                            </Grid>
+                                            <Grid item xs={12} sm={6} md={5}>
+                                                <TextField
+                                                    margin="dense"
+                                                    id="To"
+                                                    label="To"
+                                                    value={this.state.To}
+                                                    onChange={(event) => this.handleChange('To', event.target.value)}
+                                                    variant="filled"/>
+                                            </Grid>
+                                            <Grid item xs={12} sm={6} md={5}>
+                                                <TextField
+                                                    margin="dense"
+                                                    id="StationBegin"
+                                                    label="Station (Begin)"
+                                                    value={this.state.StationBegin}
+                                                    onChange={(event) => this.handleChange('StationBegin', event.target.value)}
+                                                    variant="filled"/>
+                                            </Grid>
+                                            <Grid item xs={12} sm={6} md={5}>
+                                                <TextField
+                                                    margin="dense"
+                                                    id="StationEnd"
+                                                    label="Station (End)"
+                                                    value={this.state.StationEnd}
+                                                    onChange={(event) => this.handleChange('StationEnd', event.target.value)}
+                                                    variant="filled"/>
+                                            </Grid>
+                                            <Grid item xs={12} sm={6} md={5}>
+                                                <TextField
+                                                    margin="dense"
+                                                    id="RMBegin"
+                                                    label="RM. (Begin)"
+                                                    value={this.state.RMBegin}
+                                                    onChange={(event) => this.handleChange('RMBegin', event.target.value)}
+                                                    variant="filled"/>
+                                            </Grid>
+                                            <Grid item xs={12} sm={6} md={5}>
+                                                <TextField
+                                                    margin="dense"
+                                                    id="RMEnd"
+                                                    label="RM. (End)"
+                                                    value={this.state.RMEnd}
+                                                    onChange={(event) => this.handleChange('RMEnd', event.target.value)}
                                                     variant="filled"/>
                                             </Grid>
                                         </Grid>
@@ -1091,8 +1219,8 @@ class CRCP extends Component {
                                                         <IconButton aria-label="info" className={classes.margin}
                                                                     size="small">
                                                             <InfoIcon fontSize="small"
-                                                                      onClick={this.handleOpenHelper({src: TrafficOneDirectionPic}, true)}
-                                                                      onMouseEnter={this.handleOpenHelper({src: TrafficOneDirectionPic})}
+                                                                      onClick={this.handleOpenHelper({text: Total_design_trafic}, true)}
+                                                                      onMouseEnter={this.handleOpenHelper({text: Total_design_trafic})}
                                                                       onMouseLeave={this.handleCloseHelper}
                                                             />
                                                         </IconButton>
@@ -1123,13 +1251,13 @@ class CRCP extends Component {
                                         <Grid container item xs={12} spacing={1} alignItems="flex-end" justify="center">
                                             <Grid item xs={12} container justify="flex-start">
                                                 <Typography variant={'h6'}>Structural Design Criteria</Typography>
-                                                <IconButton aria-label="info" className={classes.margin} size="small">
-                                                    <InfoIcon fontSize="small"
-                                                              onClick={this.handleOpenHelper({src: StructureDesignCriteriaPic}, true)}
-                                                              onMouseEnter={this.handleOpenHelper({src: StructureDesignCriteriaPic})}
-                                                              onMouseLeave={this.handleCloseHelper}
-                                                    />
-                                                </IconButton>
+                                                {/*<IconButton aria-label="info" className={classes.margin} size="small">*/}
+                                                {/*    <InfoIcon fontSize="small"*/}
+                                                {/*              onClick={this.handleOpenHelper({src: StructureDesignCriteriaPic}, true)}*/}
+                                                {/*              onMouseEnter={this.handleOpenHelper({src: StructureDesignCriteriaPic})}*/}
+                                                {/*              onMouseLeave={this.handleCloseHelper}*/}
+                                                {/*    />*/}
+                                                {/*</IconButton>*/}
                                             </Grid>
                                             <Grid container item xs={11} md={10} lg={8} spacing={1} justify="center"
                                                   alignItems="flex-end">
@@ -1184,6 +1312,14 @@ class CRCP extends Component {
                                                 <Grid item xs={8} justify="flex-start">
                                                     <Grid container xs={12} justify="flex-start">
                                                         <span>28-day modulus of rupture (psi)</span>
+                                                        <IconButton aria-label="info"
+                                                                    className={classes.margin} size="small">
+                                                            <InfoIcon fontSize="small"
+                                                                      onClick={this.handleOpenHelper({text: _28_Day_Modulus_of_Rupture}, true)}
+                                                                      onMouseEnter={this.handleOpenHelper({text: _28_Day_Modulus_of_Rupture})}
+                                                                      onMouseLeave={this.handleCloseHelper}
+                                                            />
+                                                        </IconButton>
                                                         <span className={classes.dot} style={{flexGrow: 1}}/>
                                                     </Grid>
                                                 </Grid>
@@ -1212,8 +1348,8 @@ class CRCP extends Component {
                                                         <IconButton aria-label="info"
                                                                     className={classes.margin} size="small">
                                                             <InfoIcon fontSize="small"
-                                                                      onClick={this.handleOpenHelper({text: "Will be provided later."}, true)}
-                                                                      onMouseEnter={this.handleOpenHelper({text: "Will be provided later."})}
+                                                                      onClick={this.handleOpenHelper({text: Concrete_elastic_modulus}, true)}
+                                                                      onMouseEnter={this.handleOpenHelper({text: Concrete_elastic_modulus})}
                                                                       onMouseLeave={this.handleCloseHelper}
                                                             />
                                                         </IconButton>
@@ -1262,8 +1398,8 @@ class CRCP extends Component {
                                                         <IconButton aria-label="info" className={classes.margin}
                                                                     size="small">
                                                             <InfoIcon fontSize="small"
-                                                                      onClick={this.handleOpenHelper({src: soilSystermPic}, true)}
-                                                                      onMouseEnter={this.handleOpenHelper({src: soilSystermPic})}
+                                                                      onClick={this.handleOpenHelper({text: Soil_classification_system}, true)}
+                                                                      onMouseEnter={this.handleOpenHelper({text: Soil_classification_system})}
                                                                       onMouseLeave={this.handleCloseHelper}
                                                             />
                                                         </IconButton>
@@ -1285,6 +1421,7 @@ class CRCP extends Component {
                                                     </Grid>
                                                 </Grid>
                                                 <Grid item xs={4}>
+                                                    <HtmlTooltip title="Cement Treated Base is highly recommended" arrow placement={"right"} open={["ML","CL","OL","MH","CH","OH"].indexOf(this.state.SoilSub)!==-1}>
                                                     <Autocomplete
                                                         margin="dense"
                                                         id="SoilSub"
@@ -1297,6 +1434,7 @@ class CRCP extends Component {
                                                                                             error={this.errorFunc.general('SoilSub')}
                                                                                             helperText={this.errorFunc.general('SoilSub')}
                                                                                             label=""/>}/>
+                                                    </HtmlTooltip>
                                                 </Grid>
                                                 <Grid item xs={8} justify="flex-start">
                                                     <Grid container xs={12} justify="flex-start">
@@ -1357,7 +1495,7 @@ class CRCP extends Component {
                                                         <IconButton aria-label="info" className={classes.margin}
                                                                     size="small">
                                                             <InfoIcon fontSize="small"
-                                                                      onClick={this.handleOpenHelper({src: subbasePic}, true)}
+                                                                      onClick={this.handleOpenHelper({src: subbasePic,href:'https://ftp.dot.state.tx.us/pub/txdot/mtd/treatment-guidelines.pdf'}, true)}
                                                                       onMouseEnter={this.handleOpenHelper({src: subbasePic})}
                                                                       onMouseLeave={this.handleCloseHelper}
                                                             />
@@ -1546,13 +1684,17 @@ class CRCP extends Component {
                                 >
                                     Reset
                                 </Button>
+                                {/*<ReactToPdf targetRef={ref} filename="div-blue.pdf">*/}
+                                {/*    {({toPdf}) => (*/}
+                                {/*        <button onClick={toPdf}>Generate pdf</button>*/}
+                                {/*    )}*/}
+                                {/*</ReactToPdf>*/}
                                 <Button
                                     variant="contained"
                                     color="primary"
                                     size="small"
                                     className={classes.button}
                                     startIcon={<PrintIcon/>}
-                                    // onClick={()=>this.props.print(this.state)}
                                     onClick={() => {
                                         if (window.matchMedia) {
                                             var mediaQueryList = window.matchMedia('print');
@@ -1718,10 +1860,10 @@ class CRCP extends Component {
                                     this.setState({County: value})
                             }}/>:<div><div style={{paddingLeft:10}}>
 
-                        <h5>A. Project Identification</h5>
-                        <span>Provide general information of a project, i.i. district, county, highway, direaction of construction, and stations. The "District" field is require to initiate the prescribed climatic
-                        data that will be used for evaluation of stresses due to environmental loading. The input must be per the official abbreviation as show in Table 1.1. All 25 TxDOT districts in the State of Texas
-                        are applicable to the district field. The other fields are optional. Once the design is completed, this screen can be printed for record in the project file</span>
+                        {/*<h5>A. Project Identification</h5>*/}
+                        {/*<span>Provide general information of a project, i.i. district, county, highway, direaction of construction, and stations. The "District" field is require to initiate the prescribed climatic*/}
+                        {/*data that will be used for evaluation of stresses due to environmental loading. The input must be per the official abbreviation as show in Table 1.1. All 25 TxDOT districts in the State of Texas*/}
+                        {/*are applicable to the district field. The other fields are optional. Once the design is completed, this screen can be printed for record in the project file</span>*/}
                         </div>
                         <District
                                          target={this.state.District}

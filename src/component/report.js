@@ -40,7 +40,7 @@ const styles = theme => ({
           width:'100%',
           height:'100%'
         },
-        '& div, & h5':{
+        '& div, & h5, & h6':{
           zIndex:1
         },
         '& .MuiGrid-item:first-child':{
@@ -93,17 +93,17 @@ class Report extends Component {
                     </Button>
                 </Grid> : ''}
                 <Grid container item xs={12} justify={"start"} spacing={1} className={["section-to-print","root-print", classes.root]}>
-                    <Grid item xs={12} container>
-                        <Grid item xs={12}><img src={footer} style={{width:'100%',height:20,transform:'scale(-1)'}}/></Grid>
-                        <Grid item><img src={logo} style={{width:80}}/></Grid>
-                        <Grid item xs><h2>TxCRCP-ME Analysis</h2></Grid>
-                        {/*<Grid item xs={12}><img src={footer} style={{width:'100%',height:20}}/></Grid>*/}
-                    </Grid>
+                    {/*<Grid item xs={12} container>*/}
+                    {/*    <Grid item xs={12}><img src={footer} style={{width:'100%',height:15,transform:'scale(-1)'}}/></Grid>*/}
+                    {/*    <Grid item><img src={logo} style={{width:60}}/></Grid>*/}
+                    {/*    <Grid item xs><h3>TxCRCP-ME Analysis</h3></Grid>*/}
+                    {/*    /!*<Grid item xs={12}><img src={footer} style={{width:'100%',height:20}}/></Grid>*!/*/}
+                    {/*</Grid>*/}
                     <Grid item xs={6} container justify="flex-start"
                           alignItems="flex-start"
                     >
                         <Grid item xs={12} className={classes.layerHolder}>
-                            <Typography variant={'h5'} className={classes.header}>INPUT DATA</Typography>
+                            <Typography variant={'h6'} className={classes.header}>INPUT DATA</Typography>
                             <svg><rect width={'100%'} height={'100%'} fill={'#F2F2F2'}/></svg>
                         </Grid>
                         <Grid item xs={12}>
@@ -140,17 +140,49 @@ class Report extends Component {
                         <Grid item xs={4}>
                             {this.props.data.ProjectScope}
                         </Grid>
-                        <Grid item xs={8}>
-                            Station (Begin)
+                        <Grid item xs={12}>
+                            Project Limits
                         </Grid>
-                        <Grid item xs={4}>
-                            {this.props.data.StationBegin}
-                        </Grid>
-                        <Grid item xs={8}>
-                            Station (End)
-                        </Grid>
-                        <Grid item xs={4}>
-                            {this.props.data.StationEnd}
+                        <Grid item xs={12} container>
+                            <Grid item xs={1}></Grid>
+                            <Grid item xs={11} container>
+                                <Grid item xs={8}>
+                                    From
+                                </Grid>
+                                <Grid item xs={4}>
+                                    {this.props.data.From}
+                                </Grid>
+                                <Grid item xs={8}>
+                                    To
+                                </Grid>
+                                <Grid item xs={4}>
+                                    {this.props.data.To}
+                                </Grid>
+                                <Grid item xs={8}>
+                                    Sta. (Begin)
+                                </Grid>
+                                <Grid item xs={4}>
+                                    {this.props.data.StationBegin}
+                                </Grid>
+                                <Grid item xs={8}>
+                                    Sta. (End)
+                                </Grid>
+                                <Grid item xs={4}>
+                                    {this.props.data.StationEnd}
+                                </Grid>
+                                <Grid item xs={8}>
+                                    RM. (Begin)
+                                </Grid>
+                                <Grid item xs={4}>
+                                    {this.props.data.RMBegin}
+                                </Grid>
+                                <Grid item xs={8}>
+                                    RM. (End)
+                                </Grid>
+                                <Grid item xs={4}>
+                                    {this.props.data.RMEnd}
+                                </Grid>
+                            </Grid>
                         </Grid>
                         <Grid item xs={8}>
                             Date
@@ -158,10 +190,10 @@ class Report extends Component {
                         <Grid item xs={4}>
                             {this.props.data.Date}
                         </Grid>
-                        <Grid item xs={8}>
-                            Comment
+                        <Grid item xs={12}>
+                            Comments
                         </Grid>
-                        <Grid item xs={4}>
+                        <Grid item xs={12} style={{minHeight:30}}>
                             {this.props.data.Comment}
                         </Grid>
                         <Grid item xs={12}>
@@ -274,11 +306,12 @@ class Report extends Component {
                         </Grid>
                     </Grid>
                     <Grid item xs={6} container justify="flex-start"
+                          style={{position:'relative'}}
                           direction="row"
                           alignContent="flex-start"
                     >
                         <Grid item xs={12} className={classes.layerHolder}>
-                            <Typography variant={'h5'} className={classes.header}>ANALYSIS RESULT</Typography>
+                            <Typography variant={'h6'} className={classes.header}>ANALYSIS RESULT</Typography>
                             <svg><rect width={'100%'} height={'100%'} fill={'#F2F2F2'}/></svg>
                         </Grid>
                         <Grid item xs={12}>
@@ -299,7 +332,7 @@ class Report extends Component {
                         <Grid item xs={12}>
                             <Typography variant={'h6'} className={classes.subHeader}> G. Layer Information</Typography>
                         </Grid>
-                        <Grid item xs={12} container justify="center" direction="column" style={{minHeight: 450, '-webkitPrintColorAdjust':'exact'}}>
+                        <Grid item xs={12} className={"layerDetail"} container justify="center" direction="column" style={{minHeight: 400, '-webkitPrintColorAdjust':'exact'}}>
                             <Grid className={classes.layerHolder} container alignContent={"center"}
                                   style={{flexGrow: this.state.CRCP, backgroundColor: '#F2F2F2'}}>
                                 <Grid xs item>CRCP</Grid>
@@ -363,6 +396,12 @@ class Report extends Component {
                                 <li>The minimum thickness for CRCP is 7 in., and the maximum thickness is 13 in.</li>
                                 <li>When the design slab thickness from this program is greater than 13-in, use 13-in slab. If a thickness greater than 13-in is desired, a request with justifications needs to be submitted to the District Engineer for approval.</li>
                             </ul>
+                        </Grid>
+                        <Grid item xs={12} container style={{bottom:0,position:'absolute'}}>
+                            <Grid item xs={12}><img src={footer} style={{width:'100%',height:15,transform:'scale(-1)'}}/></Grid>
+                            <Grid item><img src={logo} style={{width:60}}/></Grid>
+                            <Grid item xs><h3>TxCRCP-ME Analysis</h3></Grid>
+                            {/*<Grid item xs={12}><img src={footer} style={{width:'100%',height:20}}/></Grid>*/}
                         </Grid>
                     </Grid>
 
