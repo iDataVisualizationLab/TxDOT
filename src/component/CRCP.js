@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {withStyles} from '@material-ui/core/styles';
+import {withStyles,darken} from '@material-ui/core/styles';
 import {
     Slider,
     Typography,
@@ -40,6 +40,7 @@ import ConcreteLayerPic from '../././image/ConcreteLayer.png';
 import soilSystermPic from '../././image/soilSystermPic.png';
 import subbasePic from '../././image/subbase.svg';
 import BasetypePic from '../././image/BasetypePic.svg';
+import footerPic from '../././image/Footer_EXBD_prnt.png';
 import IconButton from "@material-ui/core/IconButton";
 import InfoIcon from '@material-ui/icons/Info';
 import CloseIcon from '@material-ui/icons/Close';
@@ -59,6 +60,9 @@ import County from "./County";
 import District from "./District";
 import Backdrop from "@material-ui/core/Backdrop";
 import {districts,districtCode,counties} from "./ulti"
+import BottomNavigation from "@material-ui/core/BottomNavigation";
+import BottomNavigationAction from "@material-ui/core/BottomNavigationAction";
+import CssBaseline from "@material-ui/core/CssBaseline";
 const highway = ["IH 45", "US 290", "IH 30", "US 59", "IH 35W", "IH 820", "IH 10", "IH 40", "IH 35", "US 287", "US 81", "IH 27", "SL 289", "SH 226", "SH 36", "US 83B", "VA", "FM 3129", "IH 20", "US 71", "US 79", "US 47", "US 67", "BU90-Y", "CS", "FM 1960", "FM 364", "FM 365", "SH 347", "SH 105", "SH 12", "SH 124", "SH 146", "SH 326", "SH 61", "SH 73", "SH 87", "SS 380", "US 90", "US 69", "US 96", "BS6-R", "SH 21", "BW 8", "US 83", "BS 121H", "FM 1171", "FM 1382", "FM 2499", "FM 709", "FM 740", "IH 35E", "IH4 5", "IH 635", "LP 12", "LP 354", "MH", "SH 289", "SH 31", "SH 66", "SH 78", "SH 114", "SH 121", "SH 161", "SH 180", "SH 183", "SH 310", "SH 34", "SH 342", "SH 356", "SL 12", "SL 288", "SP 244", "SP 348", "SP 366", "SPUR 354", "US 175", "US 380", "US 75", "US 77", "US 377", "US 80", "US 54", "BU 287P", "FM 157", "IH 820 ", "SH 199", "SH 26", "SH 360", "FM 1764", "FM 523", "FM 1092", "FM 1488", "FM 518", "IH 610", "SH 288", "SH 332", "SH 225", "SH 242", "SH 249", "SH 35", "US 90A", "IH27", "SH 7", "FM 1472", "LP 20", "ODA 181-1", "ODA 181-2", "ODA 250-1", "ODA 250-2", "US 82", "SH 6", "FM 85", "LP 281", "LP 323", "SH 19", "SH 198", "SH 334", "US 259", "US 281", "FM 1695", "FM 3476", "FM 933", "IH 36", "LP 363", "SH 195", "US 84", "BU 287J", "IH 44", "SH 240", "SP 1027 ", "US 287 ", "US 55", "US 70", "SH 71"];
 // const baseType = ["CTB", "HMA Base"];
 const soilClassSub = ["GW", "GP", "GM", "GC", "SW", "SP", "SM", "SC", "ML", "CL", "OL", "MH", "CH", "OH", "Pt"];
@@ -249,6 +253,24 @@ const HtmlTooltip = withStyles((theme) => ({
     },
 }))(Tooltip);
 
+const ColorButton = withStyles((theme) => ({
+    root: {
+        color: props=>theme.palette.getContrastText(props.color),
+        backgroundColor: props=>props.color,
+        border: '1px solid white',
+        fontWeight: 'bold',
+        paddingTop: 2,
+        paddingBottom: 2,
+        lineHeight: 1.5,
+        fontSize: '1rem',
+        borderRadius: 0,
+        textTransform: 'unset',
+        '&:hover': {
+            backgroundColor: props=>darken(props.color,0.2),
+        },
+    },
+}))(Button);
+
 class CRCP extends Component {
     constructor(props) {
         super(props);
@@ -320,7 +342,7 @@ class CRCP extends Component {
             mapd2[index] = {index, DT, H, K, STR_T, STR_E};
             lastd2 = {index, DT, H, K, STR_T, STR_E};
         });
-        debugger
+
         const data3 = [];
         for (let i = 1; i < 25; i++) {
             const index = Math.floor((i - 1) / 4) * 4 + 1;
@@ -594,7 +616,7 @@ class CRCP extends Component {
         }
     };
     onSaveInput = () => {
-        let filename = `txDoT_${this.state.District}_${new Date().toISOString().replace('.', '|')}`;
+        let filename = `TxDOT_${this.state.District}_${new Date().toISOString().replace('.', '|')}`;
         const AnalysisSlabThickness = this.props.AnalysisSlabThickness();
         const AnalysisPunchouts = this.props.AnalysisPunchouts();
         const data = this.state;
@@ -896,6 +918,7 @@ class CRCP extends Component {
             this.recompute();
         }
         return (<Container maxWidth="lg"> <Paper elevation={3}>
+            <CssBaseline />
             <Grid container>
                 <Grid item style={{maxWidth: this.state.finished ? '250px' : '100%'}}>
                     <Stepper activeStep={this.state.activeStep} orientation="vertical">
@@ -938,7 +961,6 @@ class CRCP extends Component {
                                                     value={this.state.District}
                                                     options={this.state.currentDistricts}
                                                     size="small"
-                                                    style={{marginTop: 8, marginBottom: 4}}
                                                     onChange={(event, value, reason) => {
                                                         if (value == null)
                                                             this.setState({
@@ -953,7 +975,7 @@ class CRCP extends Component {
                                                                 currentCounties: districts[value]
                                                             });
                                                     }}
-                                                    renderInput={(params) => <TextField dense {...params}
+                                                    renderInput={(params) => <TextField size="small" margin="dense" {...params}
                                                                                         variant="filled"
                                                                                         className={classes.inputWithHelper}
                                                                                         required
@@ -990,9 +1012,8 @@ class CRCP extends Component {
                                                         else
                                                             this.setState({County: value})
                                                     }}
-                                                    size="small"
-                                                    style={{marginTop: 8, marginBottom: 4}}
-                                                    renderInput={(params) => <TextField dense {...params}
+                                                    // style={{marginTop: 8, marginBottom: 4}}
+                                                    renderInput={(params) => <TextField size="small" margin="dense" {...params}
                                                                                         className={classes.inputWithHelper}
                                                                                         label={<>County<IconButton
                                                                                             aria-label="info"
@@ -1007,7 +1028,7 @@ class CRCP extends Component {
                                             </Grid>
                                             <Grid item xs={12} sm={6} md={3}>
                                                 <TextField
-                                                    margin="dense"
+                                                    margin="dense" size="small"
                                                     id="highway"
                                                     label="Highway"
                                                     value={this.state.Highway}
@@ -1017,7 +1038,7 @@ class CRCP extends Component {
                                             </Grid>
                                             <Grid item xs={12} sm={6} md={3}>
                                                 <TextField
-                                                    margin="dense"
+                                                    margin="dense" size="small"
                                                     id="ProjectScope"
                                                     className={classes.inputWithHelper}
                                                     label={<>Project Scope <IconButton aria-label="info"
@@ -1040,7 +1061,7 @@ class CRCP extends Component {
                                             </Grid>
                                             <Grid item xs={12} sm={6} md={3}>
                                                 <TextField
-                                                    margin="dense"
+                                                    margin="dense" size="small"
                                                     id="control"
                                                     label="Control"
                                                     value={this.state.Control}
@@ -1049,7 +1070,7 @@ class CRCP extends Component {
                                             </Grid>
                                             <Grid item xs={12} sm={6} md={3}>
                                                 <TextField
-                                                    margin="dense"
+                                                    margin="dense" size="small"
                                                     id="section"
                                                     label="Section"
                                                     value={this.state.Section}
@@ -1058,7 +1079,7 @@ class CRCP extends Component {
                                             </Grid>
                                             <Grid item xs={12} sm={6} md={3}>
                                                 <TextField
-                                                    margin="dense"
+                                                    margin="dense" size="small"
                                                     id="job"
                                                     label="Job"
                                                     value={this.state.Job}
@@ -1067,7 +1088,7 @@ class CRCP extends Component {
                                             </Grid>
                                             <Grid item xs={12} sm={6} md={3}>
                                                 <TextField
-                                                    margin="dense"
+                                                    margin="dense" size="small"
                                                     id="date"
                                                     type="date"
                                                     label="Date"
@@ -1083,7 +1104,7 @@ class CRCP extends Component {
                                             </Grid>
                                             <Grid item xs={12} sm={6} md={5}>
                                                 <TextField
-                                                    margin="dense"
+                                                    margin="dense" size="small"
                                                     id="From"
                                                     label="From"
                                                     value={this.state.From}
@@ -1092,7 +1113,7 @@ class CRCP extends Component {
                                             </Grid>
                                             <Grid item xs={12} sm={6} md={5}>
                                                 <TextField
-                                                    margin="dense"
+                                                    margin="dense" size="small"
                                                     id="To"
                                                     label="To"
                                                     value={this.state.To}
@@ -1101,7 +1122,7 @@ class CRCP extends Component {
                                             </Grid>
                                             <Grid item xs={12} sm={6} md={5}>
                                                 <TextField
-                                                    margin="dense"
+                                                    margin="dense" size="small"
                                                     id="StationBegin"
                                                     label="Station (Begin)"
                                                     value={this.state.StationBegin}
@@ -1110,7 +1131,7 @@ class CRCP extends Component {
                                             </Grid>
                                             <Grid item xs={12} sm={6} md={5}>
                                                 <TextField
-                                                    margin="dense"
+                                                    margin="dense" size="small"
                                                     id="StationEnd"
                                                     label="Station (End)"
                                                     value={this.state.StationEnd}
@@ -1119,7 +1140,7 @@ class CRCP extends Component {
                                             </Grid>
                                             <Grid item xs={12} sm={6} md={5}>
                                                 <TextField
-                                                    margin="dense"
+                                                    margin="dense" size="small"
                                                     id="RMBegin"
                                                     label="RM. (Begin)"
                                                     value={this.state.RMBegin}
@@ -1128,7 +1149,7 @@ class CRCP extends Component {
                                             </Grid>
                                             <Grid item xs={12} sm={6} md={5}>
                                                 <TextField
-                                                    margin="dense"
+                                                    margin="dense" size="small"
                                                     id="RMEnd"
                                                     label="RM. (End)"
                                                     value={this.state.RMEnd}
@@ -1140,6 +1161,7 @@ class CRCP extends Component {
                                             <TextField
                                                 id="comment"
                                                 label="Comments"
+                                                margin="dense" size="small"
                                                 multiline
                                                 onChange={(event) => this.handleChange('Comment', event.target.value)}
                                                 rows={4}
@@ -1171,6 +1193,7 @@ class CRCP extends Component {
                                                 </Grid>
                                                 <Grid item xs={4}>
                                                     <TextField
+                                                        margin="dense" size="small"
                                                         error={this.errorFunc.general('DesignLife')}
                                                         helperText={this.errorFunc.general('DesignLife')}
                                                         type={'number'}
@@ -1196,6 +1219,7 @@ class CRCP extends Component {
                                                 </Grid>
                                                 <Grid item xs={4}>
                                                     <TextField
+                                                        margin="dense" size="small"
                                                         type={'number'}
                                                         value={this.state.LanesOneDirection}
                                                         error={this.errorFunc.general('LanesOneDirection')}
@@ -1229,6 +1253,7 @@ class CRCP extends Component {
                                                 </Grid>
                                                 <Grid item xs={4}>
                                                     <TextField
+                                                        margin="dense" size="small"
                                                         type={"number"}
                                                         value={this.state.TrafficOneDirection}
                                                         error={this.errorFunc.general('TrafficOneDirection')}
@@ -1277,6 +1302,7 @@ class CRCP extends Component {
                                                 </Grid>
                                                 <Grid item xs={4}>
                                                     <TextField
+                                                        margin="dense" size="small"
                                                         type={"number"}
                                                         value={this.state.PunchoutsPerMile}
                                                         onChange={(event) => this.handleChangeSliderInput(event, 'PunchoutsPerMile')}
@@ -1325,6 +1351,7 @@ class CRCP extends Component {
                                                 </Grid>
                                                 <Grid item xs={4}>
                                                     <TextField
+                                                        margin="dense" size="small"
                                                         value={this.state.ModulusOfRupture}
                                                         onChange={(event) => this.handleChangeSliderInput(event, 'ModulusOfRupture')}
                                                         onBlur={() => this.handleBlurSliderInput('ModulusOfRupture', 1, 1000)}
@@ -1358,6 +1385,7 @@ class CRCP extends Component {
                                                 </Grid>
                                                 <Grid item xs={4}>
                                                     <TextField
+                                                        margin="dense" size="small"
                                                         value={this.state.ElasticModulue}
                                                         onChange={(event) => this.handleChangeSliderInput(event, 'ElasticModulue')}
                                                         onBlur={() => this.handleBlurSliderInput('ElasticModulue', 1, 1000)}
@@ -1429,7 +1457,7 @@ class CRCP extends Component {
                                                         size="small"
                                                         value={this.state.SoilSub}
                                                         onChange={(event, value) => this.handleSoilSub(value)}
-                                                        renderInput={(params) => <TextField dense {...params}
+                                                        renderInput={(params) => <TextField size="small" margin="dense" {...params}
                                                                                             required
                                                                                             error={this.errorFunc.general('SoilSub')}
                                                                                             helperText={this.errorFunc.general('SoilSub')}
@@ -1443,7 +1471,7 @@ class CRCP extends Component {
                                                     </Grid>
                                                 </Grid>
                                                 <Grid item xs={4}>
-                                                    <TextField type="number" id="PlasticityIndex"
+                                                    <TextField size="small" margin="dense" type="number" id="PlasticityIndex"
                                                                value={this.state.PlasticityIndex}
                                                                error={this.errorFunc.general('PlasticityIndex')}
                                                                helperText={this.errorFunc.general('PlasticityIndex')}
@@ -1483,7 +1511,7 @@ class CRCP extends Component {
                                                         freeSolo
                                                         autoSelect={true}
                                                         style={{marginTop: 8, marginBottom: 4}}
-                                                        renderInput={(params) => <TextField size="small" {...params}
+                                                        renderInput={(params) => <TextField margin="dense" size="small" {...params}
                                                                                             required
                                                                                             error={this.errorFunc.general('SubbaseType')}
                                                                                             helperText={this.errorFunc.general('SubbaseType')}
@@ -1505,6 +1533,7 @@ class CRCP extends Component {
                                                 </Grid>
                                                 <Grid item xs={4}>
                                                     <TextField
+                                                        margin="dense" size="small"
                                                         error={this.errorFunc.general('SubbaseThickness')||this.errorFunc.Step3.SubbaseThickness()||this.warningFunc.Step3.SubbaseThickness()}
                                                         helperText={this.errorFunc.general('SubbaseThickness')||this.errorFunc.Step3.SubbaseThickness()||this.warningFunc.Step3.SubbaseThickness()}
                                                         disabled={(this.state.SubbaseThickness===0)&&(this.state.SubbaseType==='No treatment')}
@@ -1586,6 +1615,7 @@ class CRCP extends Component {
 
                                                 <Grid item xs={4}>
                                                     <TextField
+                                                        margin="dense" size="small"
                                                         error={this.errorFunc.general('BaseThickness')||this.errorFunc.Step3.BaseThickness()}
                                                         helperText={this.errorFunc.general('BaseThickness')||this.errorFunc.Step3.BaseThickness()}
                                                         value={this.state.BaseThickness}
@@ -1622,7 +1652,7 @@ class CRCP extends Component {
                                                     </Grid>
                                                 </Grid>
                                                 <Grid item xs={4}>
-                                                    <TextField type="number" id="ModulusBase "
+                                                    <TextField margin="dense" size="small"  type="number" id="ModulusBase "
                                                                value={this.state.ModulusBase}
                                                                disabled
                                                                onChange={(event) => this.setState({ModulusBase: event.target.value})}/>
@@ -1641,7 +1671,7 @@ class CRCP extends Component {
                                                 {/*    </Grid>*/}
                                                 {/*</Grid>*/}
                                                 {/*<Grid item xs={4}>*/}
-                                                {/*    <TextField type="number" id="CompositeK "*/}
+                                                {/*    <TextField size="small" type="number" id="CompositeK "*/}
                                                 {/*               value={this.state.CompositeK}*/}
                                                 {/*               disabled/>*/}
                                                 {/*</Grid>*/}
@@ -1758,6 +1788,16 @@ class CRCP extends Component {
                         AnalysisSlabThickness={this.props.AnalysisSlabThickness()}
                     />
                 </Grid> : ''}
+                <Grid item xs={12}>
+
+                    <Paper elevation={3} style={{backgroundImage: `url(${footerPic})`, backgroundSize:'cover'}}>
+                        <Grid container item xs={12} spacing={3} justifyContent="center" alignItems="center" style={{justifyContent:"center"}}>
+                            <Grid item ><ColorButton target={"_blank"} variant="contained" color="#D4E1F0" href="http://onlinemanuals.txdot.gov/txdotmanuals/pdm/pdm.pdf">TxDOT Pavement Manual</ColorButton></Grid>
+                            <Grid item ><ColorButton target={"_blank"} variant="contained" color="#4B2D6A" href="https://www.txdot.gov/inside-txdot/division/construction/txdot-specifications.html">TxDOT Specifications</ColorButton></Grid>
+                            <Grid item ><ColorButton target={"_blank"} variant="contained" color="#146E43" href="https://www.txdot.gov/insdtdot/orgchart/cmd/cserve/standard/rdwylse.htm">TxDOT Roadway Standards</ColorButton></Grid>
+                        </Grid>
+                    </Paper>
+                </Grid>
             </Grid>
         </Paper>
             {(this.state.helperEl && this.state.helperEl.content && !this.state.helperEl.content.map) ?

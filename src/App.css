@@ -2,6 +2,10 @@
   background: rgb(20,55,90);
   background: linear-gradient(90deg, rgba(20,55,90,1) 0%, rgba(57,106,162,1) 51%, rgba(20,55,90,1) 100%);
 }
+.MuiFormControl-marginDense {
+  margin-top:0!important;
+  margin-bottom: 0!important;
+}
 .MuiStepLabel-label.MuiStepLabel-active {
   font-size: 16px;
 }

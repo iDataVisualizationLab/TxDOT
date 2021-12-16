@@ -7,6 +7,7 @@ import CRCP from './component/CRCP'
 import logo from "./image/logo_g.png";
 import {ThemeProvider} from "@material-ui/styles";
 import {createMuiTheme} from "@material-ui/core/styles";
+import headerPic from './image/Header_EXBD_prnt_fromMac.png';
 
 let theme = createMuiTheme({
   palette: {
@@ -63,7 +64,8 @@ function App() {
       <ThemeProvider theme={theme}>
     <div >
       <div className={classes.cover}></div>
-      <AppBar position="static">
+      <AppBar position="static" style={{backgroundImage: `url(${headerPic})`, backgroundSize:'cover'}}>
+      {/*<AppBar position="static">*/}
         <Toolbar>
           <img src={logo} style={{width:50}}/>
           <Typography variant="h6" className={classes.titleNav}>
