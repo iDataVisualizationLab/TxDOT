@@ -2,6 +2,9 @@
   "name": "txdot",
   "version": "0.2.0",
   "private": true,
+  "main": "public/electron.js",
+  "authors": "idvl",
+  "description": "idvl project",
   "dependencies": {
     "@material-ui/core": "^4.11.2",
     "@material-ui/icons": "^4.11.2",
@@ -13,6 +16,9 @@
     "d3-delaunay": "^6.0.2",
     "d3-geo": "^3.0.1",
     "d3-v6-tip": "^1.0.7",
+    "electron-is": "^3.0.0",
+    "electron-is-dev": "^2.0.0",
+    "electron-squirrel-startup": "^1.0.0",
     "exceljs": "^4.3.0",
     "gh-pages": "^3.1.0",
     "material-ui-image": "^3.3.1",
@@ -30,12 +36,17 @@
     "xlsx-style": "^0.8.13"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "electron-forge start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "dev": "concurrently -k \"BROWSER=none npm start\" \"npm:electron\"",
+    "electron": "wait-on tcp:3000 && electron-forge start",
+    "package": "react-scripts build && electron-forge package --asar",
+    "make": "react-scripts build && electron-forge make --asar",
+    "make-mac": "npx @electron-forge/cli make --platform darwin"
   },
   "eslintConfig": {
     "extends": [
@@ -55,5 +66,52 @@
       "last 1 safari version"
     ]
   },
-  "homepage": "https://idatavisualizationlab.github.io/TxDOT"
+  "homepage": "./",
+  "config": {
+    "forge": {
+      "packagerConfig": {
+        "asar": true
+      },
+      "makers": [
+        {
+          "name": "@electron-forge/maker-squirrel",
+          "config": {
+            "name": "txdot",
+            "asar": true
+          }
+        },
+        {
+          "name": "@electron-forge/maker-zip",
+          "platforms": [
+            "darwin"
+          ]
+        },
+        {
+          "name": "@electron-forge/maker-deb",
+          "config": {
+            "options": {
+              "bin": "txdot",
+              "maintainer": "idvl",
+              "homepage": "https://idatavisualizationlab.github.io/"
+            }
+          }
+        },
+        {
+          "name": "@electron-forge/maker-rpm",
+          "config": {}
+        }
+      ]
+    }
+  },
+  "devDependencies": {
+    "@electron-forge/cli": "^6.0.0-beta.61",
+    "@electron-forge/maker-deb": "^6.0.0-beta.61",
+    "@electron-forge/maker-rpm": "^6.0.0-beta.61",
+    "@electron-forge/maker-squirrel": "^6.0.0-beta.61",
+    "@electron-forge/maker-zip": "^6.0.0-beta.61",
+    "concurrently": "^6.4.0",
+    "electron": "^16.0.4",
+    "electron-devtools-installer": "^3.2.0",
+    "wait-on": "^6.0.0"
+  }
 }
