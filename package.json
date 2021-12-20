@@ -4,6 +4,7 @@
   "private": true,
   "main": "public/electron.js",
   "authors": "idvl",
+  "author": "idvl",
   "description": "idvl project",
   "dependencies": {
     "@material-ui/core": "^4.11.2",
@@ -45,8 +46,10 @@
     "dev": "concurrently -k \"BROWSER=none npm start\" \"npm:electron\"",
     "electron": "wait-on tcp:3000 && electron-forge start",
     "package": "react-scripts build && electron-forge package --asar",
-    "make": "react-scripts build && electron-forge make --asar",
-    "make-mac": "npx @electron-forge/cli make --platform darwin"
+    "make": "electron-forge make",
+    "make-mac": "npx @electron-forge/cli make --platform darwin",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
   },
   "eslintConfig": {
     "extends": [
@@ -67,6 +70,19 @@
     ]
   },
   "homepage": "./",
+  "postinstall": "electron-builder install-app-deps",
+  "build": {
+    "appId": "comp.idvl.txdot",
+    "mac": {
+      "category": "public.app-category.productivity"
+    },
+    "win": {
+      "target": "portable"
+    },
+    "linux": {
+      "target": "AppImage"
+    }
+  },
   "config": {
     "forge": {
       "packagerConfig": {
@@ -110,8 +126,10 @@
     "@electron-forge/maker-squirrel": "^6.0.0-beta.61",
     "@electron-forge/maker-zip": "^6.0.0-beta.61",
     "concurrently": "^6.4.0",
-    "electron": "^16.0.4",
+    "electron-builder": "^22.14.5",
     "electron-devtools-installer": "^3.2.0",
+    "electron-forge": "^5.2.4",
+    "electron-prebuilt-compile": "16.0.5",
     "wait-on": "^6.0.0"
   }
 }

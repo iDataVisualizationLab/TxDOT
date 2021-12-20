@@ -5,6 +5,8 @@
 /.pnp
 .pnp.js
 /out
+/dist/win-unpacked
+/dist/linux-unpacked
 
 # testing
 /coverage
