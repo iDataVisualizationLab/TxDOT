@@ -79,7 +79,7 @@
     },
     "win": {
       "target": "portable",
-      "icon": "build/iconv1.png"
+      "icon": "build/logo.png"
     },
     "linux": {
       "target": "AppImage"
