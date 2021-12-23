@@ -11,7 +11,7 @@ mac:
   category: public.app-category.productivity
 win:
   target: portable
-  icon: build/icon.png
+  icon: build/iconv1.png
 linux:
   target: AppImage
 extends: react-cra
