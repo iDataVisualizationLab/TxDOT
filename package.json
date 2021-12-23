@@ -1,6 +1,6 @@
 {
-  "name": "txdot",
-  "version": "0.2.0",
+  "name": "TxCRCPME",
+  "version": "2.0.0",
   "private": true,
   "main": "public/electron.js",
   "authors": "idvl",
@@ -71,13 +71,15 @@
   },
   "homepage": "./",
   "postinstall": "electron-builder install-app-deps",
+  "icon": "icon.png",
   "build": {
-    "appId": "comp.idvl.txdot",
+    "appId": "comp.idvl.TxCRCPME",
     "mac": {
       "category": "public.app-category.productivity"
     },
     "win": {
-      "target": "portable"
+      "target": "portable",
+      "icon": "build/icon.png"
     },
     "linux": {
       "target": "AppImage"
@@ -92,7 +94,7 @@
         {
           "name": "@electron-forge/maker-squirrel",
           "config": {
-            "name": "txdot",
+            "name": "TxCRCPME",
             "asar": true
           }
         },
@@ -106,7 +108,7 @@
           "name": "@electron-forge/maker-deb",
           "config": {
             "options": {
-              "bin": "txdot",
+              "bin": "TxCRCPME",
               "maintainer": "idvl",
               "homepage": "https://idatavisualizationlab.github.io/"
             }

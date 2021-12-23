@@ -6,11 +6,12 @@ files:
       - build/**/*
 extraMetadata:
   main: build/electron.js
-appId: comp.idvl.txdot
+appId: comp.idvl.TxCRCPME
 mac:
   category: public.app-category.productivity
 win:
   target: portable
+  icon: build/icon.png
 linux:
   target: AppImage
 extends: react-cra
