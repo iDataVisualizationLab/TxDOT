@@ -7,10 +7,11 @@ files:
 extraMetadata:
   main: build/electron.js
 appId: comp.idvl.TxCRCPME
+compression: maximum
 mac:
   category: public.app-category.productivity
 win:
-  target: portable
+  target: nsis
   icon: build/logo.png
 linux:
   target: AppImage

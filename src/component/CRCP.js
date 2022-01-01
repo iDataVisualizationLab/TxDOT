@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import {withStyles,darken} from '@material-ui/core/styles';
 import {
-    Slider,
     Typography,
     Button,
     Paper,
@@ -13,7 +12,6 @@ import {
     TextField,
     Container,
     Input,
-    Hidden,
     Table,
     TableRow,
     TableHead,
@@ -34,10 +32,6 @@ import ShowChartIcon from '@material-ui/icons/ShowChart';
 import MenuItem from "@material-ui/core/MenuItem";
 import Popper from "@material-ui/core/Popper";
 import TrafficOneDirectionPic from '../././image/TotalDesign Traffic_pic.png';
-import StructureDesignCriteriaPic from '../././image/StructureDesignCriteria.png';
-import AcceptableNumberofPunchoutPic from '../././image/AcceptableNumberofPunchout.png';
-import ConcreteLayerPic from '../././image/ConcreteLayer.png';
-import soilSystermPic from '../././image/soilSystermPic.png';
 import subbasePic from '../././image/subbase.svg';
 import BasetypePic from '../././image/BasetypePic.svg';
 import footerPic from '../././image/Footer_EXBD_prnt.png';
@@ -48,20 +42,18 @@ import Report from "./report";
 import Dialog from "@material-ui/core/Dialog";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
-import * as d3 from "d3";
 import {TransformWrapper, TransformComponent} from "react-zoom-pan-pinch";
 import XLSX from 'xlsx';
 import XlsxPopulate from 'xlsx-populate';
-import excelFile from "./data/txcrcp-me-v07b.xlsm"
-import excelOutputFile from "./data/01062021 TxCRCP-ME Analysis Result Sheet.xlsx"
+import excelFile from "./data/txcrcp-me-v07b.js"
+// import excelOutputFile from "./data/01062021 TxCRCP-ME Analysis Result Sheet.xlsx"
+import excelOutputFile from "./data/01062021_TxCRCP-ME_Analysis_Result.js"
 import Card from "@material-ui/core/Card";
 import Divider from "@material-ui/core/Divider/Divider";
 import County from "./County";
 import District from "./District";
 import Backdrop from "@material-ui/core/Backdrop";
 import {districts,districtCode,counties} from "./ulti"
-import BottomNavigation from "@material-ui/core/BottomNavigation";
-import BottomNavigationAction from "@material-ui/core/BottomNavigationAction";
 import CssBaseline from "@material-ui/core/CssBaseline";
 const highway = ["IH 45", "US 290", "IH 30", "US 59", "IH 35W", "IH 820", "IH 10", "IH 40", "IH 35", "US 287", "US 81", "IH 27", "SL 289", "SH 226", "SH 36", "US 83B", "VA", "FM 3129", "IH 20", "US 71", "US 79", "US 47", "US 67", "BU90-Y", "CS", "FM 1960", "FM 364", "FM 365", "SH 347", "SH 105", "SH 12", "SH 124", "SH 146", "SH 326", "SH 61", "SH 73", "SH 87", "SS 380", "US 90", "US 69", "US 96", "BS6-R", "SH 21", "BW 8", "US 83", "BS 121H", "FM 1171", "FM 1382", "FM 2499", "FM 709", "FM 740", "IH 35E", "IH4 5", "IH 635", "LP 12", "LP 354", "MH", "SH 289", "SH 31", "SH 66", "SH 78", "SH 114", "SH 121", "SH 161", "SH 180", "SH 183", "SH 310", "SH 34", "SH 342", "SH 356", "SL 12", "SL 288", "SP 244", "SP 348", "SP 366", "SPUR 354", "US 175", "US 380", "US 75", "US 77", "US 377", "US 80", "US 54", "BU 287P", "FM 157", "IH 820 ", "SH 199", "SH 26", "SH 360", "FM 1764", "FM 523", "FM 1092", "FM 1488", "FM 518", "IH 610", "SH 288", "SH 332", "SH 225", "SH 242", "SH 249", "SH 35", "US 90A", "IH27", "SH 7", "FM 1472", "LP 20", "ODA 181-1", "ODA 181-2", "ODA 250-1", "ODA 250-2", "US 82", "SH 6", "FM 85", "LP 281", "LP 323", "SH 19", "SH 198", "SH 334", "US 259", "US 281", "FM 1695", "FM 3476", "FM 933", "IH 36", "LP 363", "SH 195", "US 84", "BU 287J", "IH 44", "SH 240", "SP 1027 ", "US 287 ", "US 55", "US 70", "SH 71"];
 // const baseType = ["CTB", "HMA Base"];
