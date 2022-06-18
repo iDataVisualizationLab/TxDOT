@@ -1,8 +1,8 @@
-version: 2.0.0
+version: 2.0.1
 files:
-  - url: TxCRCPME-Setup-2.0.0.exe
-    sha512: tiWFb09Z12hRqi1WGcxypWfxtyewTIK/tYmbB+mTiLjMm777SmjnNLhPrXREPBvoes4ApS73Jy9IkUiYH6rcmA==
-    size: 99797248
-path: TxCRCPME-Setup-2.0.0.exe
-sha512: tiWFb09Z12hRqi1WGcxypWfxtyewTIK/tYmbB+mTiLjMm777SmjnNLhPrXREPBvoes4ApS73Jy9IkUiYH6rcmA==
-releaseDate: '2022-01-01T01:18:21.813Z'
+  - url: TxCRCPME-Setup-2.0.1.exe
+    sha512: /ayDkJaRa6WOwLpLx1nWWxL04LUJ5G8FYLsPbdAIle2hrPuw2rU/Pn85qTMIQC+HEZcv+Hy6i+FS/UWDRRpPvA==
+    size: 102190593
+path: TxCRCPME-Setup-2.0.1.exe
+sha512: /ayDkJaRa6WOwLpLx1nWWxL04LUJ5G8FYLsPbdAIle2hrPuw2rU/Pn85qTMIQC+HEZcv+Hy6i+FS/UWDRRpPvA==
+releaseDate: '2022-06-18T18:43:09.293Z'

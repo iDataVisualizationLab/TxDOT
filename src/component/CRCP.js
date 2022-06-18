@@ -43,8 +43,8 @@ import Dialog from "@material-ui/core/Dialog";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
 import {TransformWrapper, TransformComponent} from "react-zoom-pan-pinch";
-import XLSX from 'xlsx';
-import XlsxPopulate from 'xlsx-populate';
+import * as XLSX from 'xlsx';
+import XlsxPopulate from 'xlsx-populate/browser/xlsx-populate';
 import excelFile from "./data/txcrcp-me-v07b.js"
 // import excelOutputFile from "./data/01062021 TxCRCP-ME Analysis Result Sheet.xlsx"
 import excelOutputFile from "./data/01062021_TxCRCP-ME_Analysis_Result.js"
@@ -1251,7 +1251,7 @@ class CRCP extends Component {
                                                         error={this.errorFunc.general('TrafficOneDirection')}
                                                         helperText={this.errorFunc.general('TrafficOneDirection')}
                                                         onChange={(event) => this.handleChangeSliderInput(event, 'TrafficOneDirection')}
-                                                        onBlur={() => this.handleBlurSliderInput('TrafficOneDirection', 10, 500)}
+                                                        onBlur={() => this.handleBlurSliderInput('TrafficOneDirection', 1, 500)}
                                                         id="TrafficOneDirection"
                                                         InputLabelProps={{
                                                             shrink: true,
