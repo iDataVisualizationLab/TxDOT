@@ -1,36 +1,23 @@
 {
   "files": {
-    "main.css": "/TxDOT/static/css/main.c6a440d6.chunk.css",
-    "main.js": "/TxDOT/static/js/main.df4b77b9.chunk.js",
-    "main.js.map": "/TxDOT/static/js/main.df4b77b9.chunk.js.map",
-    "runtime-main.js": "/TxDOT/static/js/runtime-main.6a445f1d.js",
-    "runtime-main.js.map": "/TxDOT/static/js/runtime-main.6a445f1d.js.map",
-    "static/js/2.b3eade77.chunk.js": "/TxDOT/static/js/2.b3eade77.chunk.js",
-    "static/js/2.b3eade77.chunk.js.map": "/TxDOT/static/js/2.b3eade77.chunk.js.map",
-    "static/js/3.c89d2e32.chunk.js": "/TxDOT/static/js/3.c89d2e32.chunk.js",
-    "static/js/3.c89d2e32.chunk.js.map": "/TxDOT/static/js/3.c89d2e32.chunk.js.map",
-    "index.html": "/TxDOT/index.html",
-    "static/css/main.c6a440d6.chunk.css.map": "/TxDOT/static/css/main.c6a440d6.chunk.css.map",
-    "static/js/2.b3eade77.chunk.js.LICENSE.txt": "/TxDOT/static/js/2.b3eade77.chunk.js.LICENSE.txt",
-    "static/media/01062021 TxCRCP-ME Analysis Result Sheet.d3a59ad6.xlsx": "/TxDOT/static/media/01062021 TxCRCP-ME Analysis Result Sheet.d3a59ad6.xlsx",
-    "static/media/AcceptableNumberofPunchout.f191431d.png": "/TxDOT/static/media/AcceptableNumberofPunchout.f191431d.png",
-    "static/media/BasetypePic.63f168c1.svg": "/TxDOT/static/media/BasetypePic.63f168c1.svg",
-    "static/media/ConcreteLayer.45d36da4.png": "/TxDOT/static/media/ConcreteLayer.45d36da4.png",
-    "static/media/Footer_EXBD_prnt.ae83da64.png": "/TxDOT/static/media/Footer_EXBD_prnt.ae83da64.png",
-    "static/media/Header_EXBD_prnt_fromMac.5b73acae.png": "/TxDOT/static/media/Header_EXBD_prnt_fromMac.5b73acae.png",
-    "static/media/StructureDesignCriteria.4f123ed0.png": "/TxDOT/static/media/StructureDesignCriteria.4f123ed0.png",
-    "static/media/TotalDesign Traffic_pic.9e0d1bd5.png": "/TxDOT/static/media/TotalDesign Traffic_pic.9e0d1bd5.png",
-    "static/media/cover.43610a00.jpg": "/TxDOT/static/media/cover.43610a00.jpg",
-    "static/media/footer.ec17135b.png": "/TxDOT/static/media/footer.ec17135b.png",
-    "static/media/logo_g.64052807.png": "/TxDOT/static/media/logo_g.64052807.png",
-    "static/media/soilSystermPic.c6e7e75d.png": "/TxDOT/static/media/soilSystermPic.c6e7e75d.png",
-    "static/media/subbase.fe9573d3.svg": "/TxDOT/static/media/subbase.fe9573d3.svg",
-    "static/media/txcrcp-me-v07b.5be1ece2.xlsm": "/TxDOT/static/media/txcrcp-me-v07b.5be1ece2.xlsm"
+    "main.css": "./static/css/main.b367b687.css",
+    "main.js": "./static/js/main.f9bebd81.js",
+    "static/js/787.76a28394.chunk.js": "./static/js/787.76a28394.chunk.js",
+    "static/media/Header_EXBD_prnt_fromMac.png": "./static/media/Header_EXBD_prnt_fromMac.4279e0e799e5868371be.png",
+    "static/media/Footer_EXBD_prnt.png": "./static/media/Footer_EXBD_prnt.504622fffd94272bbd99.png",
+    "static/media/cover.jpg": "./static/media/cover.43610a0071e2693f8262.jpg",
+    "static/media/logo_g.png": "./static/media/logo_g.64052807ccf254527efa.png",
+    "static/media/TotalDesign Traffic_pic.png": "./static/media/TotalDesign Traffic_pic.9e0d1bd5552dc4aa41ab.png",
+    "static/media/footer.png": "./static/media/footer.ec17135bf4023455638b.png",
+    "static/media/subbase.svg": "./static/media/subbase.fe9573d35fdb00232e0140813afd9ab3.svg",
+    "static/media/BasetypePic.svg": "./static/media/BasetypePic.63f168c124608df8e1f07ace9ac223f9.svg",
+    "index.html": "./index.html",
+    "main.b367b687.css.map": "./static/css/main.b367b687.css.map",
+    "main.f9bebd81.js.map": "./static/js/main.f9bebd81.js.map",
+    "787.76a28394.chunk.js.map": "./static/js/787.76a28394.chunk.js.map"
   },
   "entrypoints": [
-    "static/js/runtime-main.6a445f1d.js",
-    "static/js/2.b3eade77.chunk.js",
-    "static/css/main.c6a440d6.chunk.css",
-    "static/js/main.df4b77b9.chunk.js"
+    "static/css/main.b367b687.css",
+    "static/js/main.f9bebd81.js"
   ]
 }
