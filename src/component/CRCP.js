@@ -167,7 +167,7 @@ const init = {
 }
 
 const Total_design_trafic = <>
-    <h5>* Use Form 2124 for traffic data request</h5>
+    <h5>* Contact TPP Division for traffic data request</h5>
     <p style={{maxWidth: 500, fontSize:'0.8rem'}}>: Transportation Planning and Programming Division
         Traffic Analysis for Highway Design</p>
 
@@ -765,16 +765,23 @@ class CRCP extends Component {
         obj[key] = value;
         this.setState(obj);
     };
-    handleSoilSub = (value) => {
+    handleBaseTypeGuide= (opt) =>{
         let baseTypeOpt = ["CTB", "HMA","ASB"];
-        let BaseType = this.state.BaseType;
-        if (this.state.PlasticityIndex >= 15) {
-            if (["ML", "CL", "OL", "MH", "CH", "OH"].indexOf(value) !== -1) {
+        let BaseType = opt.BaseType;
+        if (opt.PlasticityIndex >= 15) {
+            if (["ML", "CL", "OL", "MH", "CH", "OH"].indexOf(opt.SoilSub) !== -1) {
                 baseTypeOpt = ["CTB"];
                 BaseType = "CTB";
             }
         }
-        this.setState({SoilSub: value, baseTypeOpt, BaseType});
+        opt.baseTypeOpt = baseTypeOpt;
+        opt.BaseType = BaseType;
+        return opt;
+    };
+    handleSoilSub = (value) => {
+        const newState = this.handleBaseTypeGuide({SoilSub: value,BaseType:this.state.BaseType,PlasticityIndex:this.state.PlasticityIndex});
+        this.setState(newState);
+        this.handleBaseType(newState.BaseType);
     };
     handleBaseType = (value) => {
         if (value && value!=='') {
@@ -792,18 +799,20 @@ class CRCP extends Component {
                 BaseThickness = BaseThicknessMin;
             if (BaseThickness > BaseThicknessMax)
                 BaseThickness = BaseThicknessMax;
-            this.setState({BaseType: value, BaseThicknessMin, BaseThickness, ModulusBase});
+            this.setState({BaseType: value, BaseThicknessMin,BaseThicknessMax, BaseThickness, ModulusBase});
         }else {
-            this.setState({BaseType: value, BaseThicknessMin:null, BaseThickness:null, ModulusBase:null});
+            this.setState({BaseType: value, BaseThicknessMin:2,BaseThicknessMax:6, BaseThickness:null, ModulusBase:null});
         }
-    }
+    };
     handlePlasticityIndex = (value) => {
+        const newState = this.handleBaseTypeGuide({SoilSub: this.state.SoilSub,BaseType:this.state.BaseType,PlasticityIndex:value});
+
         let SubbaseThicknessThreshHold = -1;
         if (value >= 35){
             SubbaseThicknessThreshHold = 8;
         }
-        this.setState({PlasticityIndex: value, SubbaseThicknessThreshHold});
-        this.handleBaseType(this.state.BaseType);
+        this.setState({...newState, SubbaseThicknessThreshHold});
+        this.handleBaseType(newState.BaseType);
     };
     getPossibleMove = (step)=>{
         switch (step){
