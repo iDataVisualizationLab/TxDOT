@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import {withStyles} from "@material-ui/core/styles";
 import { geoMercator, geoPath } from "d3-geo";
 import * as topojson from "topojson-client";
-import * as d3 from "d3";
+import {select as d3select, zoom as d3zoom, pointer as d3pointer} from "d3";
 import county from "./data/texas-counties"
 
 const styles = theme => ({
@@ -167,9 +167,9 @@ class County extends Component {
         this.props.highlight.forEach(d=>highlighto[d]=1);
         this.setState({geographies,highlighto});
         if (this.svgRef){
-            let svg = d3.select(this.svgRef.current);
+            let svg = d3select(this.svgRef.current);
                 // .select('g.content')
-            svg.call(d3.zoom().scaleExtent([1, 10]).on('zoom',(event)=>{
+            svg.call(d3zoom().scaleExtent([1, 10]).on('zoom',(event)=>{
                 svg.select('g.content').attr('transform', event.transform);
                 this.zoom = event.transform
                 }))
@@ -205,28 +205,13 @@ class County extends Component {
                                     fill={(d.properties.NAME===target) ?'#17dd75':(highlighto[d.properties.NAME]?(this.state.Name===d.properties.NAME?'#3adddd':'steelBlue'):`rgba(38,50,56,1)` )}
                                     stroke="#FFFFFF"
                                     strokeWidth={ 0.5 }
-                                    onMouseOver={(event)=>{this.setState({Name:d.properties.NAME,x:(d3.pointer(event)[0]-this.zoom.x)/this.zoom.k,y:(d3.pointer(event)[1]/this.zoom.y)/this.zoom.k});}}
+                                    onMouseOver={(event)=>{this.setState({Name:d.properties.NAME,x:(d3pointer(event)[0]-this.zoom.x)/this.zoom.k,y:(d3pointer(event)[1]/this.zoom.y)/this.zoom.k});}}
                                     style={{pointerEvents:highlighto[d.properties.NAME]?'all':'none'}}
                                     onMouseOut={()=>{this.setState({Name:undefined})}}
                                     onClick={()=>{this.props.selected(d.properties.NAME)}}
                                 />
                             ))
                         }
-                        {/*{*/}
-                        {/*    <path*/}
-                        {/*        key={'hovered'}*/}
-                        {/*        d={ geoPath().projection(projection)(d) }*/}
-                        {/*        className="country"*/}
-                        {/*        // fill={ `rgba(38,50,56,${ 1 / geographies.length * i})` }*/}
-                        {/*        fill={(d.properties.NAME===target) ?'#17dd75':(highlighto[d.properties.NAME]?(this.state.Name===d.properties.NAME?'#3adddd':'steelBlue'):`rgba(38,50,56,1)` )}*/}
-                        {/*        stroke="#FFFFFF"*/}
-                        {/*        strokeWidth={ 0.5 }*/}
-                        {/*        onMouseEnter={(event)=>{this.setState({Name:d.properties.NAME,x:(d3.pointer(event)[0]-this.zoom.x)/this.zoom.k,y:(d3.pointer(event)[1]/this.zoom.y)/this.zoom.k});}}*/}
-                        {/*        onMouseOut={()=>{this.setState({Name:undefined})}}*/}
-                        {/*        onClick={()=>{this.props.selected(d.properties.NAME)}}*/}
-                        {/*        style={{pointerEvents:'none'}}*/}
-                        {/*    />*/}
-                        {/*}*/}
                     </g>
                     <g className="label">
                         {

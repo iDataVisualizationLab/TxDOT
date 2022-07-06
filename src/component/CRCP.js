@@ -43,7 +43,7 @@ import Dialog from "@material-ui/core/Dialog";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
 import {TransformWrapper, TransformComponent} from "react-zoom-pan-pinch";
-import * as XLSX from 'xlsx';
+import {utils as XLSXutils, read as XLSXread} from 'xlsx';
 import XlsxPopulate from 'xlsx-populate/browser/xlsx-populate';
 import excelFile from "./data/txcrcp-me-v07b.js"
 // import excelOutputFile from "./data/01062021 TxCRCP-ME Analysis Result Sheet.xlsx"
@@ -284,16 +284,16 @@ class CRCP extends Component {
 
     initFunc() {
         fetch(excelFile).then(res => res.arrayBuffer()).then(ab => {
-            const wb = XLSX.read(ab, {type: "array"});
+            const wb = XLSXread(ab, {type: "array"});
             // XLSX.writeFile(wb, 'out.xlsm');
             const temperatureSheet = wb.Sheets['Temperature'];
-            init.temperature = XLSX.utils.sheet_to_json(temperatureSheet);
+            init.temperature = XLSXutils.sheet_to_json(temperatureSheet);
 
             const sTableSheet = wb.Sheets['S-Table'];
-            init.ssTable = XLSX.utils.sheet_to_json(sTableSheet);
+            init.ssTable = XLSXutils.sheet_to_json(sTableSheet);
 
             const ksTableSheet = wb.Sheets['K-Table'];
-            const _ktalbe = XLSX.utils.sheet_to_json(ksTableSheet);
+            const _ktalbe = XLSXutils.sheet_to_json(ksTableSheet);
 
             init.ksTable = new Map();
             _ktalbe.forEach(r => {

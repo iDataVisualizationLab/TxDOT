@@ -13,7 +13,8 @@ asarUnpack: '**\*.{node,dll}'
 mac:
   category: public.app-category.productivity
 win:
-  target: nsis
+  target:
+    - portable
   icon: build/logo.png
 linux:
   target: AppImage
