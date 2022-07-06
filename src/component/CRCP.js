@@ -602,8 +602,8 @@ class CRCP extends Component {
                 };
                 state.currentCounties = districts[state.District];
                 // adjust limit when read file
-                this.handleBaseTypeGuide(state);
-                this.handleBaseType(state.BaseType);
+                self.handleBaseTypeGuide(state);
+                self.handleBaseType.bind(self)(state.BaseType,state);
 
                 self.setState(state)
             }).catch(()=>{
@@ -770,16 +770,16 @@ class CRCP extends Component {
         this.setState(obj);
     };
     handleBaseTypeGuide= (opt) =>{
-        let baseTypeOpt = ["CTB", "HMA","ASB"];
-        let BaseType = opt.BaseType;
-        if (opt.PlasticityIndex >= 15) {
-            if (["ML", "CL", "OL", "MH", "CH", "OH"].indexOf(opt.SoilSub) !== -1) {
-                baseTypeOpt = ["CTB"];
-                BaseType = "CTB";
-            }
-        }
-        opt.baseTypeOpt = baseTypeOpt;
-        opt.BaseType = BaseType;
+        // let baseTypeOpt = ["CTB", "HMA","ASB"];
+        // let BaseType = opt.BaseType;
+        // if (opt.PlasticityIndex >= 15) {
+        //     if (["ML", "CL", "OL", "MH", "CH", "OH"].indexOf(opt.SoilSub) !== -1) {
+        //         baseTypeOpt = ["CTB"];
+        //         BaseType = "CTB";
+        //     }
+        // }
+        // opt.baseTypeOpt = baseTypeOpt;
+        // opt.BaseType = BaseType;
         return opt;
     };
     handleSoilSub = (value) => {
@@ -787,11 +787,11 @@ class CRCP extends Component {
         this.setState(newState);
         this.handleBaseType(newState.BaseType);
     };
-    handleBaseType = (value) => {
+    handleBaseType = (value,opt) => {
         if (value && value!=='') {
             let BaseThicknessMin = 4;
             let BaseThicknessMax = 6;
-            let BaseThickness = this.state.BaseThickness;
+            let BaseThickness = (opt??this.state).BaseThickness;
             let ModulusBase = 400;
             if (value === 'CTB') {
                 BaseThicknessMin = 6;
