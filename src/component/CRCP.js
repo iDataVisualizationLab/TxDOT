@@ -601,6 +601,10 @@ class CRCP extends Component {
                     ElasticModulue : fn.cell("C49").value()??'',
                 };
                 state.currentCounties = districts[state.District];
+                // adjust limit when read file
+                this.handleBaseTypeGuide(state);
+                this.handleBaseType(state.BaseType);
+
                 self.setState(state)
             }).catch(()=>{
                 window.alert("Can't read file. Please check format!")

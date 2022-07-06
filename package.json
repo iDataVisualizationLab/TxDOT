@@ -81,7 +81,7 @@
       "category": "public.app-category.productivity"
     },
     "win": {
-      "target": ["portable"],
+      "target": ["portable","nsis"],
       "icon": "build/logo.png"
     },
     "linux": {
