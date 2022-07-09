@@ -62,56 +62,56 @@ function App() {
   const AnalysisSlabThicknessFunc = (d)=>d===undefined?AnalysisSlabThickness:setAnalysisSlabThickness(d);
   return (
       <ThemeProvider theme={theme}>
-    <div >
-      <div className={classes.cover}></div>
-      <AppBar position="static" style={{backgroundImage: `url(${headerPic})`, backgroundSize:'cover'}}>
-      {/*<AppBar position="static">*/}
-        <Toolbar>
-          <img src={logo} style={{width:50}}/>
-          <Typography variant="h6" className={classes.titleNav}>
-            TxCRCP-ME Analysis
-          </Typography>
-        </Toolbar>
-      </AppBar>
-      <div className={classes.root}>
-        <Slide direction="up" in={page==='home'} mountOnEnter unmountOnExit>
-          <Grid container spacing={5} alignItems="center" justify="center" direction={"column"} style={{height: 'calc(100vh - 64px)',width:'100%'}}>
-            <Grid item>
-              <Typography variant="h3" className={classes.title}>
-                TxDOT Mechanistic-Empirical CRCP Design System
+        <div >
+          <div className={classes.cover}></div>
+          <AppBar position="static" style={{backgroundImage: `url(${headerPic})`, backgroundSize:'cover'}}>
+            {/*<AppBar position="static">*/}
+            <Toolbar>
+              <img src={logo} style={{width:50}}/>
+              <Typography variant="h6" className={classes.titleNav}>
+                TxCRCP-ME Analysis
               </Typography>
-            </Grid>
-            <Grid container item alignItems="stretch" justify="center" direction={"column"} spacing={3} style={{width:'fit-content'}}>
-              <Grid item>
-                <Button variant="contained" color="primary" style={{width:'100%'}} onClick={()=>setPage('CRCP')}>CRCP Design</Button>
+            </Toolbar>
+          </AppBar>
+          <div className={classes.root}>
+            <Slide direction="up" in={page==='home'} mountOnEnter unmountOnExit>
+              <Grid container spacing={5} alignItems="center" justify="center" direction={"column"} style={{height: 'calc(100vh - 64px)',width:'100%'}}>
+                <Grid item>
+                  <Typography variant="h3" className={classes.title}>
+                    TxDOT Mechanistic-Empirical CRCP Design System
+                  </Typography>
+                </Grid>
+                <Grid container item alignItems="stretch" justify="center" direction={"column"} spacing={3} style={{width:'fit-content'}}>
+                  <Grid item>
+                    <Button variant="contained" color="primary" style={{width:'100%'}} onClick={()=>setPage('CRCP')}>CRCP Design</Button>
+                  </Grid>
+                  <Grid item>
+                    <Button variant="contained" style={{width:'100%'}}>Slab Support</Button>
+                  </Grid>
+                  <Grid item>
+                    <Button variant="contained" style={{width:'100%'}}>Product Disclaimer</Button>
+                  </Grid>
+                </Grid>
               </Grid>
-              <Grid item>
-                <Button variant="contained" style={{width:'100%'}}>Slab Support</Button>
-              </Grid>
-              <Grid item>
-                <Button variant="contained" style={{width:'100%'}}>Product Disclaimer</Button>
-              </Grid>
-            </Grid>
-          </Grid>
-        </Slide>
-        <Slide direction="up" in={page==='CRCP'} mountOnEnter unmountOnExit>
-          <CRCP
-              toMenu={()=>setPage('home')}
-              // print={(d)=>{setReportData(d);setPage('Print')}}
-              AnalysisPunchouts={AnalysisPunchoutsFunc}
-              AnalysisSlabThickness={AnalysisSlabThicknessFunc}
-          />
-        </Slide>
-        {/*<Slide direction="up" in={page==='Print'} mountOnEnter unmountOnExit>*/}
-        {/*  <Report*/}
-        {/*      data={reportData}*/}
-        {/*      toMenu={()=>setPage('home')}*/}
-        {/*      toCRCP={()=>setPage('CRCP')}*/}
-        {/*      AnalysisPunchouts={AnalysisPunchoutsFunc()}*/}
-        {/*  />*/}
-        {/*</Slide>*/}
-      </div>
-    </div>
+            </Slide>
+            <Slide direction="up" in={page==='CRCP'} mountOnEnter unmountOnExit>
+              <CRCP
+                  toMenu={()=>setPage('home')}
+                  // print={(d)=>{setReportData(d);setPage('Print')}}
+                  AnalysisPunchouts={AnalysisPunchoutsFunc}
+                  AnalysisSlabThickness={AnalysisSlabThicknessFunc}
+              />
+            </Slide>
+            {/*<Slide direction="up" in={page==='Print'} mountOnEnter unmountOnExit>*/}
+            {/*  <Report*/}
+            {/*      data={reportData}*/}
+            {/*      toMenu={()=>setPage('home')}*/}
+            {/*      toCRCP={()=>setPage('CRCP')}*/}
+            {/*      AnalysisPunchouts={AnalysisPunchoutsFunc()}*/}
+            {/*  />*/}
+            {/*</Slide>*/}
+          </div>
+        </div>
       </ThemeProvider>
   );
 }
