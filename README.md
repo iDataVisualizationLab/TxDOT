@@ -24,6 +24,9 @@ After installation is done run `npm start`
 
 Then in another terminal tab/window run `tauri dev`
 
+## bundle
+run `npm run bundle`
+
 ## Demo 
 https://github.com/mdtanrikulu/react-tauri/releases/tag/demo
 
