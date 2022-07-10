@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
 import { makeStyles } from '@material-ui/core/styles';
-import {AppBar,IconButton,Typography,Button,Toolbar,Grid,Slide} from '@material-ui/core';
+import {AppBar,Typography,Button,Toolbar,Grid,Slide} from '@material-ui/core';
 import coverPic from './image/cover.jpg';
 import CRCP from './component/CRCP'
 import logo from "./image/logo_g.png";
@@ -54,7 +54,6 @@ const useStyles = makeStyles((theme) => ({
 
 function App() {
   const [page, setPage] = React.useState('home');
-  const [reportData, setReportData] = React.useState({});
   const [AnalysisPunchouts, setAnalysisPunchouts] = React.useState(0);
   const [AnalysisSlabThickness, setAnalysisSlabThickness] = React.useState(0);
   const classes = useStyles();
@@ -67,7 +66,7 @@ function App() {
           <AppBar position="static" style={{backgroundImage: `url(${headerPic})`, backgroundSize:'cover'}}>
             {/*<AppBar position="static">*/}
             <Toolbar>
-              <img src={logo} style={{width:50}}/>
+              <img src={logo} style={{width:50}} alt={"title"}/>
               <Typography variant="h6" className={classes.titleNav}>
                 TxCRCP-ME Analysis
               </Typography>

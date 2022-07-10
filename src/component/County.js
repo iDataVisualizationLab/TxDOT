@@ -190,7 +190,7 @@ class County extends Component {
         const {classes} = this.props;
         const {target,highlighto} = this.state;
         const {geographies} = this.state;
-        const {map_width,map_height,projection} = this;
+        const {map_width,map_height} = this;
         return <div className={classes.root}>
             <svg width={ map_width } height={ map_height } viewBox={`0 0 ${map_width} ${map_height}`} ref={this.svgRef}>
                 <g className="content">
