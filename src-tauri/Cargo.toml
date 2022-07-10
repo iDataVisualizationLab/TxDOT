@@ -7,7 +7,6 @@ repository = ""
 default-run = "TxCRCPME"
 edition = "2021"
 build = "src/build.rs"
-license = "Apache-2.0 OR MIT"
 
 [build-dependencies]
 tauri-build = { version = "1.0.3", features = [] }
