@@ -1,19 +1,22 @@
 {
   "name": "TxCRCPME",
-  "version": "2.4.0",
+  "version": "2.5.0",
   "private": true,
+  "main": "public/electron.js",
+  "authors": "idvl",
+  "author": "idvl",
+  "description": "idvl project",
   "dependencies": {
     "@material-ui/core": "^4.12.4",
     "@material-ui/icons": "^4.11.3",
     "@material-ui/lab": "^4.0.0-alpha.61",
-    "@tauri-apps/api": "^1.0.2",
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.3.2",
-    "@testing-library/user-event": "^7.1.2",
     "d3": "^6.3.1",
     "d3-delaunay": "^6.0.2",
     "d3-geo": "^3.0.1",
     "d3-v6-tip": "^1.0.7",
+    "electron-is": "^3.0.0",
+    "electron-is-dev": "^2.0.0",
+    "electron-squirrel-startup": "^1.0.0",
     "gh-pages": "^3.1.0",
     "material-ui-image": "^3.3.2",
     "material-ui-popup-state": "^3.1.1",
@@ -28,18 +31,27 @@
     "xlsx-style": "^0.8.13"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "electron-forge start",
+    "build": "npm run build:react && npm run build:bundle",
+    "build:react": "react-scripts build",
+    "build:bundle": "webpack --config webpack.config.js",
+    "test": "react-scripts test",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
-    "bundle": "react-scripts build && tauri build",
-    "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "tauri": "tauri",
-    "dev": "npm run tauri dev"
+    "dev": "concurrently -k \"BROWSER=none npm start\" \"npm:electron\"",
+    "electron": "wait-on tcp:3000 && electron-forge start",
+    "package": "react-scripts build && electron-forge package --asar",
+    "make": "electron-forge make",
+    "make-mac": "npx @electron-forge/cli make --platform darwin",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
   },
   "browserslist": {
     "production": [
@@ -54,7 +66,73 @@
     ]
   },
   "homepage": "./",
+  "postinstall": "electron-builder install-app-deps",
+  "icon": "icon.png",
+  "build": {
+    "appId": "comp.idvl.TxCRCPME",
+    "compression": "maximum",
+    "asar": true,
+    "asarUnpack": "**\\*.{node,dll}",
+    "mac": {
+      "category": "public.app-category.productivity"
+    },
+    "win": {
+      "target": ["portable","nsis"],
+      "icon": "build/logo.png"
+    },
+    "linux": {
+      "target": "AppImage"
+    }
+  },
+  "config": {
+    "forge": {
+      "packagerConfig": {
+        "asar": true
+      },
+      "makers": [
+        {
+          "name": "@electron-forge/maker-squirrel",
+          "config": {
+            "name": "TxCRCPME",
+            "asar": true
+          }
+        },
+        {
+          "name": "@electron-forge/maker-zip",
+          "platforms": [
+            "darwin"
+          ]
+        },
+        {
+          "name": "@electron-forge/maker-deb",
+          "config": {
+            "options": {
+              "bin": "TxCRCPME",
+              "maintainer": "idvl",
+              "homepage": "https://idatavisualizationlab.github.io/"
+            }
+          }
+        },
+        {
+          "name": "@electron-forge/maker-rpm",
+          "config": {}
+        }
+      ]
+    }
+  },
   "devDependencies": {
-    "@tauri-apps/cli": "^1.0.3"
+    "@electron-forge/cli": "^6.0.0-beta.64",
+    "@electron-forge/maker-deb": "^6.0.0-beta.64",
+    "@electron-forge/maker-rpm": "^6.0.0-beta.64",
+    "@electron-forge/maker-squirrel": "^6.0.0-beta.64",
+    "@electron-forge/maker-zip": "^6.0.0-beta.64",
+    "concurrently": "^7.2.2",
+    "electron": "19.0.4",
+    "electron-builder": "^23.0.3",
+    "electron-devtools-installer": "^3.2.0",
+    "glob": "^8.0.3",
+    "uglifyjs-webpack-plugin": "^1.1.2",
+    "wait-on": "^6.0.0",
+    "webpack-cli": "^4.10.0"
   }
 }
