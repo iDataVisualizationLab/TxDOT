@@ -373,14 +373,12 @@ class CRCP extends Component {
             const K = input.K.Input;
             const STR_T = getSTR_T(DT);
             const STR_E = getSTR_E(DT);
-            if (ti === 3)
-                debugger
             return {
                 'District': this.state.District, 'Month': ti + 1, 'Average Temperature': AveragetTemperature,
                 DT, H, K, 'STR (T)': STR_T, 'STR (E)': STR_E
             }
         });
-
+        debugger
         function getSTR_T(DT) {
             if (DT >= 95)
                 return (data5[5].STR_T - data5[4].STR_T) / (data3[20].DT - data3[16].DT) * (DT - data3[20].DT) + data5[5].STR_T;
@@ -422,18 +420,21 @@ class CRCP extends Component {
     recompute = () => {
         let __ret = {};
         let i = 7;
-        for (i = 7; i < 16; i+=0.5) {
+        const maxLimit = 15;
+        for (i = 7; i <= maxLimit; i+=0.5) {
             __ret = this.analysis(i);
             if (__ret.rows[__ret.r][12] <= this.state.PunchoutsPerMile)
                 break;
         }
+        this.props.AnalysisSlabThickness(Math.min(i, maxLimit));
+
         let rowIndexStress = __ret.rowIndexStress;
         let row1 = __ret.row1;
         const rows = __ret.rows;
         var r = __ret.r;
         this.props.AnalysisPunchouts(rows[r][12]);
         // this.props.AnalysisSlabThickness(Math.min(13,i));
-        this.props.AnalysisSlabThickness(Math.min(i, 15));
+        // this.props.AnalysisSlabThickness(i);
         this.setState({row1, rows, rowIndexStress})
     };
 
