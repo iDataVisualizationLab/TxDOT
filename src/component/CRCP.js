@@ -303,7 +303,7 @@ class CRCP extends Component {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    if ((prevState.ModulusBase !== this.state.ModulusBase) || (prevState.SoilSub !== this.state.SoilSub) || (prevState.BaseThickness !== this.state.BaseThickness)) {
+    if ((prevState.ModulusBase !== this.state.ModulusBase) || (prevState.SoilSub !== this.state.SoilSub) || (prevState.BaseThickness !== this.state.BaseThickness) || (prevState.ksTableMap !== this.state.ksTableMap)) {
       this.calculateCompositeK();
     }
     if (this.state.printRequest && this.state.isBackdropOpen) {
