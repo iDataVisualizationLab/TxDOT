@@ -112,14 +112,14 @@ const styles = theme => ({
 const DialogTitle = withStyles(styles)((props) => {
   const { children, classes, onClose, ...other } = props;
   return (
-    <MuiDialogTitle disableTypography className={classes.root} {...other}>
-      {children}
-      {onClose ? (
-        <IconButton aria-label="close" size="small" className={classes.closeButton} onClick={onClose} size="small">
-          <CloseIcon fontSize="small" />
-        </IconButton>
-      ) : null}
-    </MuiDialogTitle>
+      <MuiDialogTitle disableTypography className={classes.root} {...other}>
+        {children}
+        {onClose ? (
+            <IconButton aria-label="close" size="small" className={classes.closeButton} onClick={onClose} size="small">
+              <CloseIcon fontSize="small" />
+            </IconButton>
+        ) : null}
+      </MuiDialogTitle>
   );
 });
 const init = {
@@ -185,13 +185,13 @@ const Total_design_trafic = <>
     local conditions that may result in unequal distributions of heavy trucks, TPP should be informed of this condition
     when requesting traffic projections, and the reported 18-kip ESALS for pavement design should be adjusted.</p>
   <TransformWrapper
-    defaultPositionX={1}
-    defaultPositionY={1}
+      defaultPositionX={1}
+      defaultPositionY={1}
   >
     <TransformComponent>
       <img
-        src={TrafficOneDirectionPic}
-        style={{ maxWidth: 500, height: "auto" }}
+          src={TrafficOneDirectionPic}
+          style={{ maxWidth: 500, height: "auto" }}
       /></TransformComponent></TransformWrapper>
 </>;
 const Acceptable_punchout_Popup = <>
@@ -321,12 +321,18 @@ class CRCP extends Component {
       // XLSX.writeFile(wb, 'out.xlsm');
       const temperatureSheet = wb.Sheets["Temperature"];
       init.temperature = XLSXutils.sheet_to_json(temperatureSheet);
+      // remove unknown rows
+      const temperatureField = Object.keys(init.temperature[0]);
+      init.temperature = init.temperature.filter(d=>d[temperatureField[0]]&&d[temperatureField[1]]&&d[temperatureField[2]]);
 
       const sTableSheet = wb.Sheets["S-Table"];
       init.ssTable = XLSXutils.sheet_to_json(sTableSheet);
 
       const ksTableSheet = wb.Sheets["K-Table"];
       init.ksTable = XLSXutils.sheet_to_json(ksTableSheet);
+      // remove unknown rows
+      const ksField = Object.keys(init.ksTable[0]);
+      init.ksTable = init.ksTable.filter(d=>d[ksField[0]]&&d[ksField[1]]&&d[ksField[2]]);
 
       init.ksTableMap = new Map();
       init.ksTable.forEach(r => {
@@ -497,7 +503,7 @@ class CRCP extends Component {
     row1.push(row1[6] / row1[2]);
     row1.push(11800 * Math.pow(row1[7], fatigue(this.state.CompositeK)));
     row1.push(lane(this.state.LanesOneDirection)
-      * this.state.TrafficOneDirection * 1000000 / 12 / this.state.DesignLife);
+        * this.state.TrafficOneDirection * 1000000 / 12 / this.state.DesignLife);
     row1.push(row1[9] / row1[8]);
     row1.push(row1[10]);
     row1.push(18.985 / (1 + 5 * Math.pow(row1[11], -1.1)));
@@ -510,7 +516,7 @@ class CRCP extends Component {
       for (var j = 0; j < 12; j++) {
         if (i == 1 && j == 0)
           ;
-          //If counterYear = 1 And counterMonth = 1 Then
+            //If counterYear = 1 And counterMonth = 1 Then
         //      'If First Year than Omit Calculation of First Month, Already Done
         else {
           rowIndexStress = rowIndexStress + 1;
@@ -519,7 +525,7 @@ class CRCP extends Component {
           row2.push(row2[0] / 12);
           // Cells(rowIndex, 2) = Cells(rowIndex, 1).Value / 12
           row2.push(this.state.ModulusOfRupture
-            * Math.pow((30 * row2[0] / (4 + 0.85 * 30 * row2[0])), 0.5));
+              * Math.pow((30 * row2[0] / (4 + 0.85 * 30 * row2[0])), 0.5));
           // Cells(rowIndex, 3) = Sheets("Input").Range("F8").Value * ((30 * Cells(rowIndex, 1).Value / (4 + 0.85 * 30 * Cells(rowIndex, 1).Value))) ^ 0.5
           row2.push(57000 / 7.5 * row2[2] / 1000);
           // Cells(rowIndex, 4) = 57000 / 7.5 * Cells(rowIndex, 3) / 1000
@@ -751,24 +757,24 @@ class CRCP extends Component {
 
         function generateBlob() {
           return generate()
-            .then(function(blob) {
-              if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-                window.navigator.msSaveOrOpenBlob(blob, filename + ".xlsx");
-              } else {
-                var url = window.URL.createObjectURL(blob);
-                var a = document.createElement("a");
-                document.body.appendChild(a);
-                a.href = url;
-                a.download = filename + ".xlsx";
-                a.click();
-                window.URL.revokeObjectURL(url);
-                document.body.removeChild(a);
-              }
-            })
-            .catch(function(err) {
-              alert(err.message || err);
-              throw err;
-            });
+              .then(function(blob) {
+                if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+                  window.navigator.msSaveOrOpenBlob(blob, filename + ".xlsx");
+                } else {
+                  var url = window.URL.createObjectURL(blob);
+                  var a = document.createElement("a");
+                  document.body.appendChild(a);
+                  a.href = url;
+                  a.download = filename + ".xlsx";
+                  a.click();
+                  window.URL.revokeObjectURL(url);
+                  document.body.removeChild(a);
+                }
+              })
+              .catch(function(err) {
+                alert(err.message || err);
+                throw err;
+              });
         }
 
       });
@@ -951,28 +957,28 @@ class CRCP extends Component {
       return <div className={classes.actionsContainer}>
         <div>
           <Button
-            color="secondary"
-            variant="contained"
-            onClick={this.props.toMenu}
-            className={classes.button}
-            startIcon={<HomeIcon />}
+              color="secondary"
+              variant="contained"
+              onClick={this.props.toMenu}
+              className={classes.button}
+              startIcon={<HomeIcon />}
           >
             To Main Menu
           </Button>
           <Button
-            variant="contained"
-            disabled={this.state.activeStep === 0}
-            onClick={this.handleBack}
-            className={classes.button}
+              variant="contained"
+              disabled={this.state.activeStep === 0}
+              onClick={this.handleBack}
+              className={classes.button}
           >
             Back
           </Button>
           <Button
-            disabled={!this.getPossibleMove(this.state.activeStep)}
-            variant="contained"
-            color="primary"
-            onClick={this.handleNext}
-            className={classes.button}
+              disabled={!this.getPossibleMove(this.state.activeStep)}
+              variant="contained"
+              color="primary"
+              onClick={this.handleNext}
+              className={classes.button}
           >
             {this.state.activeStep === this.state.stepsLength - 1 ? "Finish" : "Next"}
           </Button>
@@ -994,34 +1000,34 @@ class CRCP extends Component {
                 <Grid container spacing={4} justify="center">
                   <Grid item>
                     <Button
-                      variant="contained"
-                      color="primary"
-                      size="small"
-                      className={classes.button}
-                      startIcon={<EditIcon />}
-                      component="label"
-                      style={{ textTransform: "none" }}
-                      onClick={()=>{this.setState({isEditLookupTable:true})}}
+                        variant="contained"
+                        color="primary"
+                        size="small"
+                        className={classes.button}
+                        startIcon={<EditIcon />}
+                        component="label"
+                        style={{ textTransform: "none" }}
+                        onClick={()=>{this.setState({isEditLookupTable:true})}}
                     >
                       Edit Lookup Tables
                     </Button>
                   </Grid>
                   <Grid item>
                     <Button
-                      variant="contained"
-                      color="primary"
-                      size="small"
-                      className={classes.button}
-                      startIcon={<PublishIcon />}
-                      component="label"
-                      style={{ textTransform: "none" }}
+                        variant="contained"
+                        color="primary"
+                        size="small"
+                        className={classes.button}
+                        startIcon={<PublishIcon />}
+                        component="label"
+                        style={{ textTransform: "none" }}
                     >
                       Load Input File
                       <input
-                        accept="application/vnd.sealed.xls"
-                        type="file"
-                        hidden
-                        onChange={this.onLoadInput}
+                          accept="application/vnd.sealed.xls"
+                          type="file"
+                          hidden
+                          onChange={this.onLoadInput}
                       />
                     </Button>
                   </Grid>
@@ -1036,104 +1042,104 @@ class CRCP extends Component {
                     <Grid container item xs={12} spacing={1} justify="center">
                       <Grid item xs={12} sm={6} md={3}>
                         <Autocomplete
-                          margin="dense"
-                          id="district"
-                          value={this.state.District}
-                          options={this.state.currentDistricts}
-                          size="small"
-                          onChange={(event, value, reason) => {
-                            if (value == null)
-                              this.setState({
-                                District: value,
-                                County: null,
-                                currentCounties: Object.keys(counties)
-                              });
-                            else
-                              this.setState({
-                                District: value,
-                                County: null,
-                                currentCounties: districts[value]
-                              });
-                          }}
-                          renderInput={(params) => <TextField size="small" margin="dense" {...params}
-                                                              variant="filled"
-                                                              className={classes.inputWithHelper}
-                                                              required
-                                                              error={!this.state.District}
-                                                              label={<>District<IconButton
-                                                                aria-label="info"
-                                                                className={classes.margin}
-                                                                size="small">
-                                                                <InfoIcon fontSize="small"
-                                                                          onClick={this.handleOpenHelper({ map: "district" }, true)}
-                                                                          onMouseEnter={this.handleOpenHelper({ map: "district" })}
-                                                                          onMouseLeave={this.handleCloseHelper}
-                                                                /></IconButton>
-                                                                {/*<InfoIcon fontSize="small"*/}
-                                                                {/*          onClick={this.handleOpenHelper({src: DistrictPic}, true)}*/}
-                                                                {/*          onMouseEnter={this.handleOpenHelper({src: DistrictPic})}*/}
-                                                                {/*          onMouseLeave={this.handleCloseHelper}*/}
-                                                                {/*/></IconButton>*/}
-                                                              </>}
-                          />} />
+                            margin="dense"
+                            id="district"
+                            value={this.state.District}
+                            options={this.state.currentDistricts}
+                            size="small"
+                            onChange={(event, value, reason) => {
+                              if (value == null)
+                                this.setState({
+                                  District: value,
+                                  County: null,
+                                  currentCounties: Object.keys(counties)
+                                });
+                              else
+                                this.setState({
+                                  District: value,
+                                  County: null,
+                                  currentCounties: districts[value]
+                                });
+                            }}
+                            renderInput={(params) => <TextField size="small" margin="dense" {...params}
+                                                                variant="filled"
+                                                                className={classes.inputWithHelper}
+                                                                required
+                                                                error={!this.state.District}
+                                                                label={<>District<IconButton
+                                                                    aria-label="info"
+                                                                    className={classes.margin}
+                                                                    size="small">
+                                                                  <InfoIcon fontSize="small"
+                                                                            onClick={this.handleOpenHelper({ map: "district" }, true)}
+                                                                            onMouseEnter={this.handleOpenHelper({ map: "district" })}
+                                                                            onMouseLeave={this.handleCloseHelper}
+                                                                  /></IconButton>
+                                                                  {/*<InfoIcon fontSize="small"*/}
+                                                                  {/*          onClick={this.handleOpenHelper({src: DistrictPic}, true)}*/}
+                                                                  {/*          onMouseEnter={this.handleOpenHelper({src: DistrictPic})}*/}
+                                                                  {/*          onMouseLeave={this.handleCloseHelper}*/}
+                                                                  {/*/></IconButton>*/}
+                                                                </>}
+                            />} />
                       </Grid>
                       <Grid item xs={12} sm={6} md={3}>
                         <Autocomplete
-                          margin="dense"
-                          id="county"
-                          value={this.state.County}
-                          options={this.state.currentCounties}
-                          onChange={(event, value) => {
-                            if (value)
-                              this.setState({
-                                County: value,
-                                District: counties[value].length === 1 ? counties[value][0] : null
-                              });
-                            else
-                              this.setState({ County: value });
-                          }}
-                          // style={{marginTop: 8, marginBottom: 4}}
-                          renderInput={(params) => <TextField size="small" margin="dense" {...params}
-                                                              className={classes.inputWithHelper}
-                                                              label={<>County<IconButton
-                                                                aria-label="info"
-                                                                className={classes.margin}
-                                                                size="small">
-                                                                <InfoIcon fontSize="small"
-                                                                          onClick={this.handleOpenHelper({ map: "county" }, true)}
-                                                                          onMouseEnter={this.handleOpenHelper({ map: "county" })}
-                                                                          onMouseLeave={this.handleCloseHelper}
-                                                                /></IconButton></>}
-                                                              variant="filled" />} />
+                            margin="dense"
+                            id="county"
+                            value={this.state.County}
+                            options={this.state.currentCounties}
+                            onChange={(event, value) => {
+                              if (value)
+                                this.setState({
+                                  County: value,
+                                  District: counties[value].length === 1 ? counties[value][0] : null
+                                });
+                              else
+                                this.setState({ County: value });
+                            }}
+                            // style={{marginTop: 8, marginBottom: 4}}
+                            renderInput={(params) => <TextField size="small" margin="dense" {...params}
+                                                                className={classes.inputWithHelper}
+                                                                label={<>County<IconButton
+                                                                    aria-label="info"
+                                                                    className={classes.margin}
+                                                                    size="small">
+                                                                  <InfoIcon fontSize="small"
+                                                                            onClick={this.handleOpenHelper({ map: "county" }, true)}
+                                                                            onMouseEnter={this.handleOpenHelper({ map: "county" })}
+                                                                            onMouseLeave={this.handleCloseHelper}
+                                                                  /></IconButton></>}
+                                                                variant="filled" />} />
                       </Grid>
                       <Grid item xs={12} sm={6} md={3}>
                         <TextField
-                          margin="dense" size="small"
-                          id="highway"
-                          label="Highway"
-                          value={this.state.Highway}
-                          defaultValue={this.state.Highway}
-                          onChange={(event) => this.handleChange("Highway", event.target.value)}
-                          variant="filled" />
+                            margin="dense" size="small"
+                            id="highway"
+                            label="Highway"
+                            value={this.state.Highway}
+                            defaultValue={this.state.Highway}
+                            onChange={(event) => this.handleChange("Highway", event.target.value)}
+                            variant="filled" />
                       </Grid>
                       <Grid item xs={12} sm={6} md={3}>
                         <TextField
-                          margin="dense" size="small"
-                          id="ProjectScope"
-                          className={classes.inputWithHelper}
-                          label={<>Project Scope <IconButton aria-label="info"
-                                                             className={classes.margin}
-                                                             size="small">
-                            <InfoIcon fontSize="small"
-                                      onClick={this.handleOpenHelper({ text: "Will be provided later." }, true)}
-                                      onMouseEnter={this.handleOpenHelper({ text: "Will be provided later." })}
-                                      onMouseLeave={this.handleCloseHelper}
-                            />
-                          </IconButton></>}
-                          select
-                          value={this.state.ProjectScope}
-                          onChange={(event) => this.handleChange("ProjectScope", event.target.value)}
-                          variant="filled">
+                            margin="dense" size="small"
+                            id="ProjectScope"
+                            className={classes.inputWithHelper}
+                            label={<>Project Scope <IconButton aria-label="info"
+                                                               className={classes.margin}
+                                                               size="small">
+                              <InfoIcon fontSize="small"
+                                        onClick={this.handleOpenHelper({ text: "Will be provided later." }, true)}
+                                        onMouseEnter={this.handleOpenHelper({ text: "Will be provided later." })}
+                                        onMouseLeave={this.handleCloseHelper}
+                              />
+                            </IconButton></>}
+                            select
+                            value={this.state.ProjectScope}
+                            onChange={(event) => this.handleChange("ProjectScope", event.target.value)}
+                            variant="filled">
                           <MenuItem value="NEW CONSTRUCTION">New Construction</MenuItem>
                           <MenuItem value="REHABILITATION">Rehabilitation</MenuItem>
                           <MenuItem value="WIDENING">Widening</MenuItem>
@@ -1141,112 +1147,112 @@ class CRCP extends Component {
                       </Grid>
                       <Grid item xs={12} sm={6} md={3}>
                         <TextField
-                          margin="dense" size="small"
-                          id="control"
-                          label="Control"
-                          value={this.state.Control}
-                          onChange={(event) => this.handleChange("Control", event.target.value)}
-                          variant="filled" />
+                            margin="dense" size="small"
+                            id="control"
+                            label="Control"
+                            value={this.state.Control}
+                            onChange={(event) => this.handleChange("Control", event.target.value)}
+                            variant="filled" />
                       </Grid>
                       <Grid item xs={12} sm={6} md={3}>
                         <TextField
-                          margin="dense" size="small"
-                          id="section"
-                          label="Section"
-                          value={this.state.Section}
-                          onChange={(event) => this.handleChange("Section", event.target.value)}
-                          variant="filled" />
+                            margin="dense" size="small"
+                            id="section"
+                            label="Section"
+                            value={this.state.Section}
+                            onChange={(event) => this.handleChange("Section", event.target.value)}
+                            variant="filled" />
                       </Grid>
                       <Grid item xs={12} sm={6} md={3}>
                         <TextField
-                          margin="dense" size="small"
-                          id="job"
-                          label="Job"
-                          value={this.state.Job}
-                          onChange={(event) => this.handleChange("Job", event.target.value)}
-                          variant="filled" />
+                            margin="dense" size="small"
+                            id="job"
+                            label="Job"
+                            value={this.state.Job}
+                            onChange={(event) => this.handleChange("Job", event.target.value)}
+                            variant="filled" />
                       </Grid>
                       <Grid item xs={12} sm={6} md={3}>
                         <TextField
-                          margin="dense" size="small"
-                          id="date"
-                          type="date"
-                          label="Date"
-                          value={this.state.Date}
-                          onChange={(event) => this.handleChange("Date", event.target.value)}
-                          InputLabelProps={{
-                            shrink: true
-                          }}
-                          variant="filled" />
+                            margin="dense" size="small"
+                            id="date"
+                            type="date"
+                            label="Date"
+                            value={this.state.Date}
+                            onChange={(event) => this.handleChange("Date", event.target.value)}
+                            InputLabelProps={{
+                              shrink: true
+                            }}
+                            variant="filled" />
                       </Grid>
                       <Grid item xs={12} justify="flex-start">
                         <Typography variant={"h6"}>Project Limits</Typography>
                       </Grid>
                       <Grid item xs={12} sm={6} md={5}>
                         <TextField
-                          margin="dense" size="small"
-                          id="From"
-                          label="From"
-                          value={this.state.From}
-                          onChange={(event) => this.handleChange("From", event.target.value)}
-                          variant="filled" />
+                            margin="dense" size="small"
+                            id="From"
+                            label="From"
+                            value={this.state.From}
+                            onChange={(event) => this.handleChange("From", event.target.value)}
+                            variant="filled" />
                       </Grid>
                       <Grid item xs={12} sm={6} md={5}>
                         <TextField
-                          margin="dense" size="small"
-                          id="To"
-                          label="To"
-                          value={this.state.To}
-                          onChange={(event) => this.handleChange("To", event.target.value)}
-                          variant="filled" />
+                            margin="dense" size="small"
+                            id="To"
+                            label="To"
+                            value={this.state.To}
+                            onChange={(event) => this.handleChange("To", event.target.value)}
+                            variant="filled" />
                       </Grid>
                       <Grid item xs={12} sm={6} md={5}>
                         <TextField
-                          margin="dense" size="small"
-                          id="StationBegin"
-                          label="Station (Begin)"
-                          value={this.state.StationBegin}
-                          onChange={(event) => this.handleChange("StationBegin", event.target.value)}
-                          variant="filled" />
+                            margin="dense" size="small"
+                            id="StationBegin"
+                            label="Station (Begin)"
+                            value={this.state.StationBegin}
+                            onChange={(event) => this.handleChange("StationBegin", event.target.value)}
+                            variant="filled" />
                       </Grid>
                       <Grid item xs={12} sm={6} md={5}>
                         <TextField
-                          margin="dense" size="small"
-                          id="StationEnd"
-                          label="Station (End)"
-                          value={this.state.StationEnd}
-                          onChange={(event) => this.handleChange("StationEnd", event.target.value)}
-                          variant="filled" />
+                            margin="dense" size="small"
+                            id="StationEnd"
+                            label="Station (End)"
+                            value={this.state.StationEnd}
+                            onChange={(event) => this.handleChange("StationEnd", event.target.value)}
+                            variant="filled" />
                       </Grid>
                       <Grid item xs={12} sm={6} md={5}>
                         <TextField
-                          margin="dense" size="small"
-                          id="RMBegin"
-                          label="RM. (Begin)"
-                          value={this.state.RMBegin}
-                          onChange={(event) => this.handleChange("RMBegin", event.target.value)}
-                          variant="filled" />
+                            margin="dense" size="small"
+                            id="RMBegin"
+                            label="RM. (Begin)"
+                            value={this.state.RMBegin}
+                            onChange={(event) => this.handleChange("RMBegin", event.target.value)}
+                            variant="filled" />
                       </Grid>
                       <Grid item xs={12} sm={6} md={5}>
                         <TextField
-                          margin="dense" size="small"
-                          id="RMEnd"
-                          label="RM. (End)"
-                          value={this.state.RMEnd}
-                          onChange={(event) => this.handleChange("RMEnd", event.target.value)}
-                          variant="filled" />
+                            margin="dense" size="small"
+                            id="RMEnd"
+                            label="RM. (End)"
+                            value={this.state.RMEnd}
+                            onChange={(event) => this.handleChange("RMEnd", event.target.value)}
+                            variant="filled" />
                       </Grid>
                     </Grid>
                     <Grid container item xs={12} spacing={1}>
                       <TextField
-                        id="comment"
-                        label="Comments"
-                        margin="dense" size="small"
-                        multiline
-                        onChange={(event) => this.handleChange("Comment", event.target.value)}
-                        rows={4}
-                        value={this.state.Comment}
-                        variant="filled"
+                          id="comment"
+                          label="Comments"
+                          margin="dense" size="small"
+                          multiline
+                          onChange={(event) => this.handleChange("Comment", event.target.value)}
+                          rows={4}
+                          value={this.state.Comment}
+                          variant="filled"
                       />
                     </Grid>
                   </Grid>
@@ -1273,22 +1279,22 @@ class CRCP extends Component {
                         </Grid>
                         <Grid item xs={4}>
                           <TextField
-                            margin="dense" size="small"
-                            error={this.errorFunc.general("DesignLife")}
-                            helperText={this.errorFunc.general("DesignLife")}
-                            type={"number"}
-                            value={this.state.DesignLife}
-                            onChange={(event) => this.handleChangeSliderInput(event, "DesignLife")}
-                            onBlur={() => this.handleBlurSliderInput("DesignLife", 1, 50)}
-                            id="DesignLife"
-                            InputLabelProps={{
-                              shrink: true
-                            }}
-                            inputProps={{
-                              min: 1,
-                              max: 50,
-                              type: "number"
-                            }}
+                              margin="dense" size="small"
+                              error={this.errorFunc.general("DesignLife")}
+                              helperText={this.errorFunc.general("DesignLife")}
+                              type={"number"}
+                              value={this.state.DesignLife}
+                              onChange={(event) => this.handleChangeSliderInput(event, "DesignLife")}
+                              onBlur={() => this.handleBlurSliderInput("DesignLife", 1, 50)}
+                              id="DesignLife"
+                              InputLabelProps={{
+                                shrink: true
+                              }}
+                              inputProps={{
+                                min: 1,
+                                max: 50,
+                                type: "number"
+                              }}
                           />
                         </Grid>
                         <Grid item xs={8} justify="flex-start">
@@ -1299,22 +1305,22 @@ class CRCP extends Component {
                         </Grid>
                         <Grid item xs={4}>
                           <TextField
-                            margin="dense" size="small"
-                            type={"number"}
-                            value={this.state.LanesOneDirection}
-                            error={this.errorFunc.general("LanesOneDirection")}
-                            helperText={this.errorFunc.general("LanesOneDirection")}
-                            onChange={(event) => this.handleChangeSliderInput(event, "LanesOneDirection")}
-                            onBlur={() => this.handleBlurSliderInput("LanesOneDirection", 1, 10)}
-                            id="LanesOneDirection"
-                            InputLabelProps={{
-                              shrink: true
-                            }}
-                            inputProps={{
-                              min: 1,
-                              max: 10,
-                              type: "number"
-                            }}
+                              margin="dense" size="small"
+                              type={"number"}
+                              value={this.state.LanesOneDirection}
+                              error={this.errorFunc.general("LanesOneDirection")}
+                              helperText={this.errorFunc.general("LanesOneDirection")}
+                              onChange={(event) => this.handleChangeSliderInput(event, "LanesOneDirection")}
+                              onBlur={() => this.handleBlurSliderInput("LanesOneDirection", 1, 10)}
+                              id="LanesOneDirection"
+                              InputLabelProps={{
+                                shrink: true
+                              }}
+                              inputProps={{
+                                min: 1,
+                                max: 10,
+                                type: "number"
+                              }}
                           />
                         </Grid>
                         <Grid item xs={8} justify="flex-start">
@@ -1333,22 +1339,22 @@ class CRCP extends Component {
                         </Grid>
                         <Grid item xs={4}>
                           <TextField
-                            margin="dense" size="small"
-                            type={"number"}
-                            value={this.state.TrafficOneDirection}
-                            error={this.errorFunc.general("TrafficOneDirection")}
-                            helperText={this.errorFunc.general("TrafficOneDirection")}
-                            onChange={(event) => this.handleChangeSliderInput(event, "TrafficOneDirection")}
-                            onBlur={() => this.handleBlurSliderInput("TrafficOneDirection", 1, 500)}
-                            id="TrafficOneDirection"
-                            InputLabelProps={{
-                              shrink: true
-                            }}
-                            inputProps={{
-                              min: 1,
-                              max: 500,
-                              type: "number"
-                            }}
+                              margin="dense" size="small"
+                              type={"number"}
+                              value={this.state.TrafficOneDirection}
+                              error={this.errorFunc.general("TrafficOneDirection")}
+                              helperText={this.errorFunc.general("TrafficOneDirection")}
+                              onChange={(event) => this.handleChangeSliderInput(event, "TrafficOneDirection")}
+                              onBlur={() => this.handleBlurSliderInput("TrafficOneDirection", 1, 500)}
+                              id="TrafficOneDirection"
+                              InputLabelProps={{
+                                shrink: true
+                              }}
+                              inputProps={{
+                                min: 1,
+                                max: 500,
+                                type: "number"
+                              }}
                           />
                         </Grid>
                       </Grid>
@@ -1382,21 +1388,21 @@ class CRCP extends Component {
                         </Grid>
                         <Grid item xs={4}>
                           <TextField
-                            margin="dense" size="small"
-                            type={"number"}
-                            value={this.state.PunchoutsPerMile}
-                            onChange={(event) => this.handleChangeSliderInput(event, "PunchoutsPerMile")}
-                            onBlur={() => this.handleBlurSliderInput("PunchoutsPerMile", 5, 20)}
-                            id="PunchoutsPerMile"
-                            InputLabelProps={{
-                              shrink: true
-                            }}
-                            inputProps={{
-                              min: 5,
-                              max: 20,
-                              type: "number"
-                            }}
-                            disabled
+                              margin="dense" size="small"
+                              type={"number"}
+                              value={this.state.PunchoutsPerMile}
+                              onChange={(event) => this.handleChangeSliderInput(event, "PunchoutsPerMile")}
+                              onBlur={() => this.handleBlurSliderInput("PunchoutsPerMile", 5, 20)}
+                              id="PunchoutsPerMile"
+                              InputLabelProps={{
+                                shrink: true
+                              }}
+                              inputProps={{
+                                min: 5,
+                                max: 20,
+                                type: "number"
+                              }}
+                              disabled
                           />
                         </Grid>
                       </Grid>
@@ -1431,20 +1437,20 @@ class CRCP extends Component {
                         </Grid>
                         <Grid item xs={4}>
                           <TextField
-                            margin="dense" size="small"
-                            value={this.state.ModulusOfRupture}
-                            onChange={(event) => this.handleChangeSliderInput(event, "ModulusOfRupture")}
-                            onBlur={() => this.handleBlurSliderInput("ModulusOfRupture", 1, 1000)}
-                            id="ModulusOfRupture"
-                            InputLabelProps={{
-                              shrink: true
-                            }}
-                            inputProps={{
-                              min: 1,
-                              max: 1000,
-                              type: "number"
-                            }}
-                            disabled
+                              margin="dense" size="small"
+                              value={this.state.ModulusOfRupture}
+                              onChange={(event) => this.handleChangeSliderInput(event, "ModulusOfRupture")}
+                              onBlur={() => this.handleBlurSliderInput("ModulusOfRupture", 1, 1000)}
+                              id="ModulusOfRupture"
+                              InputLabelProps={{
+                                shrink: true
+                              }}
+                              inputProps={{
+                                min: 1,
+                                max: 1000,
+                                type: "number"
+                              }}
+                              disabled
                           />
                         </Grid>
 
@@ -1465,20 +1471,20 @@ class CRCP extends Component {
                         </Grid>
                         <Grid item xs={4}>
                           <TextField
-                            margin="dense" size="small"
-                            value={this.state.ElasticModulue}
-                            onChange={(event) => this.handleChangeSliderInput(event, "ElasticModulue")}
-                            onBlur={() => this.handleBlurSliderInput("ElasticModulue", 1, 1000)}
-                            id="ModulusOfRupture"
-                            InputLabelProps={{
-                              shrink: true
-                            }}
-                            inputProps={{
-                              min: 1,
-                              max: 1000,
-                              type: "number"
-                            }}
-                            disabled
+                              margin="dense" size="small"
+                              value={this.state.ElasticModulue}
+                              onChange={(event) => this.handleChangeSliderInput(event, "ElasticModulue")}
+                              onBlur={() => this.handleBlurSliderInput("ElasticModulue", 1, 1000)}
+                              id="ModulusOfRupture"
+                              InputLabelProps={{
+                                shrink: true
+                              }}
+                              inputProps={{
+                                min: 1,
+                                max: 1000,
+                                type: "number"
+                              }}
+                              disabled
                           />
                         </Grid>
                       </Grid>
@@ -1516,10 +1522,10 @@ class CRCP extends Component {
                         </Grid>
                         <Grid item xs={4}>
                           <Input
-                            value={this.state.SoilClassificationSystem}
-                            onChange={(event, newValue) => this.setState({ SoilClassificationSystem: newValue })}
-                            id="SoilClassificationSystem"
-                            disabled
+                              value={this.state.SoilClassificationSystem}
+                              onChange={(event, newValue) => this.setState({ SoilClassificationSystem: newValue })}
+                              id="SoilClassificationSystem"
+                              disabled
                           />
                         </Grid>
                         <Grid item xs={8} justify="flex-start">
@@ -1532,17 +1538,17 @@ class CRCP extends Component {
                           <HtmlTooltip title="Cement Treated Base is highly recommended" arrow placement={"right"}
                                        open={["ML", "CL", "OL", "MH", "CH", "OH"].indexOf(this.state.SoilSub) !== -1}>
                             <Autocomplete
-                              margin="dense"
-                              id="SoilSub"
-                              options={soilClassSub}
-                              size="small"
-                              value={this.state.SoilSub}
-                              onChange={(event, value) => this.handleSoilSub(value)}
-                              renderInput={(params) => <TextField size="small" margin="dense" {...params}
-                                                                  required
-                                                                  error={this.errorFunc.general("SoilSub")}
-                                                                  helperText={this.errorFunc.general("SoilSub")}
-                                                                  label="" />} />
+                                margin="dense"
+                                id="SoilSub"
+                                options={soilClassSub}
+                                size="small"
+                                value={this.state.SoilSub}
+                                onChange={(event, value) => this.handleSoilSub(value)}
+                                renderInput={(params) => <TextField size="small" margin="dense" {...params}
+                                                                    required
+                                                                    error={this.errorFunc.general("SoilSub")}
+                                                                    helperText={this.errorFunc.general("SoilSub")}
+                                                                    label="" />} />
                           </HtmlTooltip>
                         </Grid>
                         <Grid item xs={8} justify="flex-start">
@@ -1582,24 +1588,24 @@ class CRCP extends Component {
                         </Grid>
                         <Grid item xs={4}>
                           <Autocomplete
-                            margin="dense"
-                            id="SubbaseType"
-                            options={this.state.SubbaseTypeOpt}
-                            value={this.state.SubbaseType}
-                            onChange={(event, value) => {
-                              this.handleChange("SubbaseType", value);
-                              if (value === "No treatment")
-                                this.setState({ SubbaseThickness: 0 });
-                            }}
-                            size="small"
-                            freeSolo
-                            autoSelect={true}
-                            style={{ marginTop: 8, marginBottom: 4 }}
-                            renderInput={(params) => <TextField margin="dense" size="small" {...params}
-                                                                required
-                                                                error={this.errorFunc.general("SubbaseType")}
-                                                                helperText={this.errorFunc.general("SubbaseType")}
-                            />} />
+                              margin="dense"
+                              id="SubbaseType"
+                              options={this.state.SubbaseTypeOpt}
+                              value={this.state.SubbaseType}
+                              onChange={(event, value) => {
+                                this.handleChange("SubbaseType", value);
+                                if (value === "No treatment")
+                                  this.setState({ SubbaseThickness: 0 });
+                              }}
+                              size="small"
+                              freeSolo
+                              autoSelect={true}
+                              style={{ marginTop: 8, marginBottom: 4 }}
+                              renderInput={(params) => <TextField margin="dense" size="small" {...params}
+                                                                  required
+                                                                  error={this.errorFunc.general("SubbaseType")}
+                                                                  helperText={this.errorFunc.general("SubbaseType")}
+                              />} />
                         </Grid>
                         <Grid item xs={8} justify="flex-start">
                           <Grid container xs={12} justify="flex-start">
@@ -1620,14 +1626,14 @@ class CRCP extends Component {
                         </Grid>
                         <Grid item xs={4}>
                           <TextField
-                            margin="dense" size="small"
-                            error={this.errorFunc.general("SubbaseThickness") || this.errorFunc.Step3.SubbaseThickness() || this.warningFunc.Step3.SubbaseThickness()}
-                            helperText={this.errorFunc.general("SubbaseThickness") || this.errorFunc.Step3.SubbaseThickness() || this.warningFunc.Step3.SubbaseThickness()}
-                            disabled={(this.state.SubbaseThickness === 0) && (this.state.SubbaseType === "No treatment")}
-                            type="number" id="SubbaseThickness"
-                            value={this.state.SubbaseThickness}
-                            onChange={(event) => ((event.target.value > 0) || (event.target.value === "")) ? this.handleChange("SubbaseThickness", event.target.value) : ""}
-                            inputProps={{ min: 0 }}
+                              margin="dense" size="small"
+                              error={this.errorFunc.general("SubbaseThickness") || this.errorFunc.Step3.SubbaseThickness() || this.warningFunc.Step3.SubbaseThickness()}
+                              helperText={this.errorFunc.general("SubbaseThickness") || this.errorFunc.Step3.SubbaseThickness() || this.warningFunc.Step3.SubbaseThickness()}
+                              disabled={(this.state.SubbaseThickness === 0) && (this.state.SubbaseType === "No treatment")}
+                              type="number" id="SubbaseThickness"
+                              value={this.state.SubbaseThickness}
+                              onChange={(event) => ((event.target.value > 0) || (event.target.value === "")) ? this.handleChange("SubbaseThickness", event.target.value) : ""}
+                              inputProps={{ min: 0 }}
                           />
                         </Grid>
                         {/*<Grid item xs={8} justify="flex-start">*/}
@@ -1651,9 +1657,9 @@ class CRCP extends Component {
                           <Grid container xs={12} justify="flex-start">
                             <span>Base type</span>
                             <IconButton
-                              aria-label="info"
-                              className={classes.margin}
-                              size="small">
+                                aria-label="info"
+                                className={classes.margin}
+                                size="small">
                               <InfoIcon fontSize="small"
                                         onClick={this.handleOpenHelper({ src: BasetypePic }, true)}
                                         onMouseEnter={this.handleOpenHelper({ src: BasetypePic })}
@@ -1664,16 +1670,16 @@ class CRCP extends Component {
                         </Grid>
                         <Grid item xs={4}>
                           <TextField
-                            select
-                            margin="dense"
-                            id="BaseType"
-                            size="small"
-                            value={this.state.BaseType}
-                            onChange={(event) => {
-                              this.handleBaseType(event.target.value);
-                            }}
-                            error={this.errorFunc.general("BaseType")}
-                            helperText={this.errorFunc.general("BaseType")}
+                              select
+                              margin="dense"
+                              id="BaseType"
+                              size="small"
+                              value={this.state.BaseType}
+                              onChange={(event) => {
+                                this.handleBaseType(event.target.value);
+                              }}
+                              error={this.errorFunc.general("BaseType")}
+                              helperText={this.errorFunc.general("BaseType")}
                           >
                             {this.state.baseTypeOpt.map(d => <MenuItem value={d}
                                                                        key={d}>{d}</MenuItem>)}
@@ -1702,21 +1708,21 @@ class CRCP extends Component {
 
                         <Grid item xs={4}>
                           <TextField
-                            margin="dense" size="small"
-                            error={this.errorFunc.general("BaseThickness") || this.errorFunc.Step3.BaseThickness()}
-                            helperText={this.errorFunc.general("BaseThickness") || this.errorFunc.Step3.BaseThickness()}
-                            value={this.state.BaseThickness}
-                            onChange={(event) => this.handleChange("BaseThickness", event.target.value)}
-                            onBlur={() => this.handleBlurSliderInput("BaseThickness", this.state.BaseThicknessMin, this.state.BaseThicknessMax)}
-                            id="BaseThickness"
-                            InputLabelProps={{
-                              shrink: true
-                            }}
-                            inputProps={{
-                              min: this.state.BaseThicknessMin,
-                              max: this.state.BaseThicknessMax,
-                              type: "number"
-                            }}
+                              margin="dense" size="small"
+                              error={this.errorFunc.general("BaseThickness") || this.errorFunc.Step3.BaseThickness()}
+                              helperText={this.errorFunc.general("BaseThickness") || this.errorFunc.Step3.BaseThickness()}
+                              value={this.state.BaseThickness}
+                              onChange={(event) => this.handleChange("BaseThickness", event.target.value)}
+                              onBlur={() => this.handleBlurSliderInput("BaseThickness", this.state.BaseThicknessMin, this.state.BaseThicknessMax)}
+                              id="BaseThickness"
+                              InputLabelProps={{
+                                shrink: true
+                              }}
+                              inputProps={{
+                                min: this.state.BaseThicknessMin,
+                                max: this.state.BaseThicknessMax,
+                                type: "number"
+                              }}
                           />
                         </Grid>
                         <Grid item xs={8} justify="flex-start">
@@ -1776,103 +1782,103 @@ class CRCP extends Component {
             </Step>
           </Stepper>
           {this.state.activeStep === this.state.stepsLength && (
-            <>
-              <Paper square elevation={0} className={classes.resetContainer}>
-                <Grid container direction="column">
-                  <Button
-                    onClick={this.handleBack}
-                    variant="contained"
-                    className={classes.button}
-                    startIcon={<ArrowBackIosIcon />}
-                  >
-                    Back
-                  </Button>
-                  <Button onClick={this.handleModify} className={classes.button}
-                          size="small"
-                          variant="contained"
-                          startIcon={<EditIcon />}
-                  >
-                    Modify
-                  </Button>
-                  <Button onClick={this.handleReset} className={classes.button}
-                          size="small"
-                          variant="contained"
-                          startIcon={<RefreshIcon />}
-                  >
-                    Reset
-                  </Button>
-                  {/*<ReactToPdf targetRef={ref} filename="div-blue.pdf">*/}
-                  {/*    {({toPdf}) => (*/}
-                  {/*        <button onClick={toPdf}>Generate pdf</button>*/}
-                  {/*    )}*/}
-                  {/*</ReactToPdf>*/}
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    size="small"
-                    className={classes.button}
-                    startIcon={<PrintIcon />}
-                    onClick={() => {
-                      if (window.matchMedia) {
-                        var mediaQueryList = window.matchMedia("print");
-                        mediaQueryList.addListener((mql) => {
-                          if (!mql.matches) {
-                            this.setState({ isBackdropOpen: false });
+              <>
+                <Paper square elevation={0} className={classes.resetContainer}>
+                  <Grid container direction="column">
+                    <Button
+                        onClick={this.handleBack}
+                        variant="contained"
+                        className={classes.button}
+                        startIcon={<ArrowBackIosIcon />}
+                    >
+                      Back
+                    </Button>
+                    <Button onClick={this.handleModify} className={classes.button}
+                            size="small"
+                            variant="contained"
+                            startIcon={<EditIcon />}
+                    >
+                      Modify
+                    </Button>
+                    <Button onClick={this.handleReset} className={classes.button}
+                            size="small"
+                            variant="contained"
+                            startIcon={<RefreshIcon />}
+                    >
+                      Reset
+                    </Button>
+                    {/*<ReactToPdf targetRef={ref} filename="div-blue.pdf">*/}
+                    {/*    {({toPdf}) => (*/}
+                    {/*        <button onClick={toPdf}>Generate pdf</button>*/}
+                    {/*    )}*/}
+                    {/*</ReactToPdf>*/}
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        size="small"
+                        className={classes.button}
+                        startIcon={<PrintIcon />}
+                        onClick={() => {
+                          if (window.matchMedia) {
+                            var mediaQueryList = window.matchMedia("print");
+                            mediaQueryList.addListener((mql) => {
+                              if (!mql.matches) {
+                                this.setState({ isBackdropOpen: false });
+                              }
+                            });
                           }
-                        });
-                      }
-                      window.onafterprint = () => {
-                        this.setState({ isBackdropOpen: false });
-                      };
-                      this.setState({ isBackdropOpen: true, printRequest: true });
-                      // window.print();
+                          window.onafterprint = () => {
+                            this.setState({ isBackdropOpen: false });
+                          };
+                          this.setState({ isBackdropOpen: true, printRequest: true });
+                          // window.print();
 
-                    }}
-                  >
-                    Print
-                  </Button>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    size="small"
-                    className={classes.button}
-                    startIcon={<SaveIcon />}
-                    // onClick={()=>this.props.print(this.state)}
-                    onClick={this.onSaveInput}
-                  >
-                    Save input
-                  </Button>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    size="small"
-                    className={classes.button}
-                    startIcon={<ShowChartIcon />}
-                    // onClick={()=>this.props.print(this.state)}
-                    onClick={() => this.setState({ openAnalytics: true })}
-                  >
-                    ANALYSIS RESULT
-                  </Button>
-                  <Button
-                    color="secondary"
-                    size="small"
-                    variant="contained"
-                    onClick={this.props.toMenu}
-                    className={classes.button}
-                    startIcon={<HomeIcon />}
-                  >
-                    To Main Menu
-                  </Button>
-                </Grid>
-              </Paper>
-            </>
+                        }}
+                    >
+                      Print
+                    </Button>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        size="small"
+                        className={classes.button}
+                        startIcon={<SaveIcon />}
+                        // onClick={()=>this.props.print(this.state)}
+                        onClick={this.onSaveInput}
+                    >
+                      Save input
+                    </Button>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        size="small"
+                        className={classes.button}
+                        startIcon={<ShowChartIcon />}
+                        // onClick={()=>this.props.print(this.state)}
+                        onClick={() => this.setState({ openAnalytics: true })}
+                    >
+                      ANALYSIS RESULT
+                    </Button>
+                    <Button
+                        color="secondary"
+                        size="small"
+                        variant="contained"
+                        onClick={this.props.toMenu}
+                        className={classes.button}
+                        startIcon={<HomeIcon />}
+                    >
+                      To Main Menu
+                    </Button>
+                  </Grid>
+                </Paper>
+              </>
           )}
         </Grid>
         {this.state.finished ? <Grid item style={{ width: "calc(100% - 250px)" }}>
           <Report
-            data={this.state}
-            AnalysisPunchouts={this.props.AnalysisPunchouts()}
-            AnalysisSlabThickness={this.props.AnalysisSlabThickness()}
+              data={this.state}
+              AnalysisPunchouts={this.props.AnalysisPunchouts()}
+              AnalysisSlabThickness={this.props.AnalysisSlabThickness()}
           />
         </Grid> : ""}
         <Grid item xs={12}>
@@ -1895,11 +1901,73 @@ class CRCP extends Component {
       </Grid>
     </Paper>
       {(this.state.helperEl && this.state.helperEl.content && !this.state.helperEl.content.map) ?
-        <Popper
+          <Popper
+              placement="right"
+              disablePortal={false}
+              open={true}
+              anchorEl={this.state.helperEl.el}
+              modifiers={{
+                flip: {
+                  enabled: true
+                },
+                preventOverflow: {
+                  enabled: true,
+                  boundariesElement: "window"
+                },
+                arrow: {
+                  enabled: true
+                }
+              }}
+              style={{ zIndex: 4 }}
+          >
+            <Card className={classes.helpHolder} raised={true}>
+              {this.state.helperEl.freeze ? <IconButton aria-label="close" className={classes.closeButton} size="small"
+                                                        onClick={this.handleCloseHelper}>
+                <CloseIcon fontSize="small" />
+              </IconButton> : ""}
+              {this.state.helperEl.content.src ?
+                  <a href={this.state.helperEl.content.href} target={"_blank"}>
+                    <TransformWrapper
+                        defaultScale={1}
+                        defaultPositionX={1}
+                        defaultPositionY={1}
+                    >
+                      <TransformComponent>
+                        <img
+                            src={this.state.helperEl.content.src}
+                            style={{ maxWidth: 600, height: "auto" }}
+                        /></TransformComponent></TransformWrapper> </a> :
+                  this.state.helperEl.content.text
+              }
+            </Card>
+          </Popper> : ""
+      }
+      <Backdrop
+          sx={{ color: "#fff" }}
+          style={{ zIndex: 10 }}
+          open={isBackdropOpen}
+      >
+      </Backdrop>
+      <Dialog
+          fullWidth={true}
+          maxWidth={"lg"}
+          open={!!this.state.openAnalytics}
+          onClose={() => this.setState({ openAnalytics: false })}>
+        <DialogTitle id="responsive-dialog-title"
+                     onClose={() => this.setState({ openAnalytics: false })}>Analysis</DialogTitle>
+        <DialogContent>
+          {this.state.finished ? <Graph
+              rows={this.state.rows}
+              AnalysisPunchouts={this.props.AnalysisPunchouts}
+              init={this.state.activeStep === this.state.stepsLength}
+              parameter={{ ...this.state }} /> : ""}
+        </DialogContent>
+      </Dialog>
+      <Popper
           placement="right"
           disablePortal={false}
-          open={true}
-          anchorEl={this.state.helperEl.el}
+          open={!!(this.state.helperEl && this.state.helperEl.content && this.state.helperEl.content.map)}
+          anchorEl={this.state.helperEl && this.state.helperEl.el}
           modifiers={{
             flip: {
               enabled: true
@@ -1913,118 +1981,56 @@ class CRCP extends Component {
             }
           }}
           style={{ zIndex: 4 }}
-        >
-          <Card className={classes.helpHolder} raised={true}>
-            {this.state.helperEl.freeze ? <IconButton aria-label="close" className={classes.closeButton} size="small"
-                                                      onClick={this.handleCloseHelper}>
-              <CloseIcon fontSize="small" />
-            </IconButton> : ""}
-            {this.state.helperEl.content.src ?
-              <a href={this.state.helperEl.content.href} target={"_blank"}>
-                <TransformWrapper
-                  defaultScale={1}
-                  defaultPositionX={1}
-                  defaultPositionY={1}
-                >
-                  <TransformComponent>
-                    <img
-                      src={this.state.helperEl.content.src}
-                      style={{ maxWidth: 600, height: "auto" }}
-                    /></TransformComponent></TransformWrapper> </a> :
-              this.state.helperEl.content.text
-            }
-          </Card>
-        </Popper> : ""
-      }
-      <Backdrop
-        sx={{ color: "#fff" }}
-        style={{ zIndex: 10 }}
-        open={isBackdropOpen}
-      >
-      </Backdrop>
-      <Dialog
-        fullWidth={true}
-        maxWidth={"lg"}
-        open={!!this.state.openAnalytics}
-        onClose={() => this.setState({ openAnalytics: false })}>
-        <DialogTitle id="responsive-dialog-title"
-                     onClose={() => this.setState({ openAnalytics: false })}>Analysis</DialogTitle>
-        <DialogContent>
-          {this.state.finished ? <Graph
-            rows={this.state.rows}
-            AnalysisPunchouts={this.props.AnalysisPunchouts}
-            init={this.state.activeStep === this.state.stepsLength}
-            parameter={{ ...this.state }} /> : ""}
-        </DialogContent>
-      </Dialog>
-      <Popper
-        placement="right"
-        disablePortal={false}
-        open={!!(this.state.helperEl && this.state.helperEl.content && this.state.helperEl.content.map)}
-        anchorEl={this.state.helperEl && this.state.helperEl.el}
-        modifiers={{
-          flip: {
-            enabled: true
-          },
-          preventOverflow: {
-            enabled: true,
-            boundariesElement: "window"
-          },
-          arrow: {
-            enabled: true
-          }
-        }}
-        style={{ zIndex: 4 }}
       >
         <Card style={{ width: 600 }} raised={true}>
           {this.state.helperEl && this.state.helperEl.freeze ?
-            <IconButton aria-label="close" className={classes.closeButton} onClick={this.handleCloseHelper}
-                        size="small">
-              <CloseIcon fontSize="small" />
-            </IconButton> : ""}
+              <IconButton aria-label="close" className={classes.closeButton} onClick={this.handleCloseHelper}
+                          size="small">
+                <CloseIcon fontSize="small" />
+              </IconButton> : ""}
 
           {this.state.helperEl && this.state.helperEl.content && this.state.helperEl.content.map === "county" ?
-            <County highlight={this.state.currentCounties}
-                    target={this.state.County}
+              <County highlight={this.state.currentCounties}
+                      target={this.state.County}
+                      selected={(value) => {
+                        if (value)
+                          this.setState({
+                            County: value,
+                            District: counties[value].length === 1 ? counties[value][0] : null
+                          });
+                        else
+                          this.setState({ County: value });
+                      }} /> : <div>
+                <div style={{ paddingLeft: 10 }}>
+
+                  {/*<h5>A. Project Identification</h5>*/}
+                  {/*<span>Provide general information of a project, i.i. district, county, highway, direaction of construction, and stations. The "District" field is require to initiate the prescribed climatic*/}
+                  {/*data that will be used for evaluation of stresses due to environmental loading. The input must be per the official abbreviation as show in Table 1.1. All 25 TxDOT districts in the State of Texas*/}
+                  {/*are applicable to the district field. The other fields are optional. Once the design is completed, this screen can be printed for record in the project file</span>*/}
+                </div>
+                <District
+                    target={this.state.District}
                     selected={(value) => {
-                      if (value)
+                      if (value == null)
                         this.setState({
-                          County: value,
-                          District: counties[value].length === 1 ? counties[value][0] : null
+                          District: value,
+                          County: null,
+                          currentCounties: Object.keys(counties)
                         });
                       else
-                        this.setState({ County: value });
-                    }} /> : <div>
-              <div style={{ paddingLeft: 10 }}>
-
-                {/*<h5>A. Project Identification</h5>*/}
-                {/*<span>Provide general information of a project, i.i. district, county, highway, direaction of construction, and stations. The "District" field is require to initiate the prescribed climatic*/}
-                {/*data that will be used for evaluation of stresses due to environmental loading. The input must be per the official abbreviation as show in Table 1.1. All 25 TxDOT districts in the State of Texas*/}
-                {/*are applicable to the district field. The other fields are optional. Once the design is completed, this screen can be printed for record in the project file</span>*/}
-              </div>
-              <District
-                target={this.state.District}
-                selected={(value) => {
-                  if (value == null)
-                    this.setState({
-                      District: value,
-                      County: null,
-                      currentCounties: Object.keys(counties)
-                    });
-                  else
-                    this.setState({
-                      District: value,
-                      County: null,
-                      currentCounties: districts[value]
-                    });
-                }} /></div>}
+                        this.setState({
+                          District: value,
+                          County: null,
+                          currentCounties: districts[value]
+                        });
+                    }} /></div>}
         </Card>
       </Popper>
       <Dialog
-        fullWidth={true}
-        maxWidth={"lg"}
-        open={!!isEditLookupTable}
-        onClose={() => this.setState({ isEditLookupTable: false })}>
+          fullWidth={true}
+          maxWidth={"lg"}
+          open={!!isEditLookupTable}
+          onClose={() => this.setState({ isEditLookupTable: false })}>
         <DialogTitle id="responsive-dialog-title"
                      onClose={() => this.setState({ isEditLookupTable: false })}>Lookup Table</DialogTitle>
         <DialogContent>
