@@ -8,6 +8,7 @@ import logo from "./image/logo_g.png";
 import {ThemeProvider} from "@material-ui/styles";
 import {createMuiTheme} from "@material-ui/core/styles";
 import headerPic from './image/Header_EXBD_prnt_fromMac.png';
+import packagejson from '../package.json';
 
 let theme = createMuiTheme({
   palette: {
@@ -71,6 +72,7 @@ function App() {
           <Typography variant="h6" className={classes.titleNav}>
             TxCRCP-ME Analysis
           </Typography>
+          <Typography variant="caption">version {packagejson.version}</Typography>
         </Toolbar>
       </AppBar>
       <div className={classes.root}>
