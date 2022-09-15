@@ -2034,7 +2034,7 @@ class CRCP extends Component {
         <DialogTitle id="responsive-dialog-title"
                      onClose={() => this.setState({ isEditLookupTable: false })}>Lookup Table</DialogTitle>
         <DialogContent>
-          <EditableTable data={[{ title: 'Temperature', data: this.state.temperature, editFields: ['Average Maximum (F)','Average Minimum (F)','Average Temperature (F)'] },
+          <EditableTable data={[{ title: 'Temperature', data: this.state.temperature, editFields: ['Average Maximum (F)','Average Minimum (F)'], formular:{'Average Temperature (F)':d=>(d['Average Maximum (F)']+d['Average Minimum (F)'])/2} },
             { title: 'K-Table', data: this.state.ksTable, editFields: ['Composite K (psi/in.)'] },
             { title: 'S-Table', data: this.state.ssTable, editFields: ['Concrete Stress (E) (psi)'] }]}
                          onSave={this.onEditTable.bind(this)}
