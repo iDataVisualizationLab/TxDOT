@@ -53,7 +53,7 @@ import Divider from "@material-ui/core/Divider/Divider";
 import County from "./County";
 import District from "./District";
 import Backdrop from "@material-ui/core/Backdrop";
-import { districts, districtCode, counties } from "./ulti";
+import { districts, districtCode, counties, str2date, date2str } from "./ulti";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import EditableTable from "./EditableTable";
 
@@ -634,7 +634,7 @@ class CRCP extends Component {
           StationEnd: fn.cell("C16").value() ?? "",
           RMBegin: fn.cell("C17").value() ?? "",
           RMEnd: fn.cell("C18").value() ?? "",
-          Date: fn.cell("C19").value() ?? "",
+          Date: str2date(fn.cell("C19").value()),
           Comment: fn.cell("B21").value() ?? "",
           DesignLife: fn.cell("C27").value() ?? "",
           PunchoutsPerMile: fn.cell("C28").value() ?? "",
@@ -685,7 +685,7 @@ class CRCP extends Component {
           fn.cell("C16").value(data.StationEnd);
           fn.cell("C17").value(data.RMBegin);
           fn.cell("C18").value(data.RMEnd);
-          fn.cell("C19").value(data.Date);
+          fn.cell("C19").value(date2str(data.Date));
           fn.cell("B21").value(data.Comment);
           //B
           fn.cell("C27").value(data.DesignLife);
@@ -1180,6 +1180,7 @@ class CRCP extends Component {
                             label="Date"
                             value={this.state.Date}
                             onChange={(event) => this.handleChange("Date", event.target.value)}
+                            inputFormat="MM-DD-YYYY"
                             InputLabelProps={{
                               shrink: true
                             }}

@@ -8,6 +8,7 @@ import Typography from "@material-ui/core/Typography";
 import PrintIcon from "@material-ui/icons/Print";
 import logo from "../image/logo.png";
 import footer from "../image/footer.png";
+import {date2str} from "../component/ulti"
 
 const styles = theme => ({
     root: {
@@ -188,7 +189,7 @@ class Report extends Component {
                             Date
                         </Grid>
                         <Grid item xs={4}>
-                            {this.props.data.Date}
+                            {date2str(this.props.data.Date)}
                         </Grid>
                         <Grid item xs={12}>
                             Comments
@@ -318,10 +319,10 @@ class Report extends Component {
                             <Typography variant={'h6'} className={classes.subHeader}> F. Design Slab Thickness & Performance</Typography>
                         </Grid>
                         <Grid item xs={8} className={classes.underline}>
-                            Design Slab Thickness
+                            Design Slab Thickness (in.)
                         </Grid>
                         <Grid item xs={4} className={classes.underline} style={{color:(this.props.AnalysisSlabThickness>13)?'red':null}}>
-                            {this.props.AnalysisSlabThickness}
+                            {this.props.AnalysisSlabThickness}”
                         </Grid>
                         <Grid item xs={8} className={classes.underline}>
                             Number of Punchouts per Mile

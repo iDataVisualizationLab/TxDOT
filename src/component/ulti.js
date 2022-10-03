@@ -1,3 +1,4 @@
+import moment from "moment"
 export const districts = {
     "Abilene": ["Borden", "Callahan", "Fisher", "Haskell", "Howard", "Jones", "Kent", "Mitchell", "Nolan", "Scurry", "Shackelford", "Stonewall", "Taylor"],
     "Amarillo": ["Armstrong", "Carson", "Dallam", "Deaf Smith", "Gray", "Hansford", "Hartley", "Hemphill", "Hutchinson", "Lipscomb", "Moore", "Ochiltree", "Oldham", "Potter", "Randall", "Roberts", "Sherman"],
@@ -56,3 +57,23 @@ export const counties = {};
 Object.keys(districts).forEach(key => {
     districts[key].forEach(c => counties[c] ? counties[c].push(key) : counties[c] = [key])
 });
+
+export const date2str = (date)=>{
+    // date format "YYYY-MM-DD" to "MM-DD-YYYY"
+    if (date){
+        const mDate = moment(date);
+        if (mDate.isValid())
+            return mDate.format("MM-DD-YYYY");
+    }
+    return ""
+}
+
+export const str2date = (date)=>{
+    // date format "YYYY-MM-DD" to "MM-DD-YYYY"
+    if (date){
+        const mDate = moment(date,["MM-DD-YYYY","YYYY/MM/DD","YYYY-MM-DD"]);
+        if (mDate.isValid())
+            return mDate.format("YYYY-MM-DD");
+    }
+    return "";
+}
