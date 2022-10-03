@@ -38,7 +38,7 @@ export const districtCode = {
     "Childress": "CHS",
     "Dallas": "DAL",
     "El Paso": "ELP",
-    "Fort worth": "FTW",
+    "Fort Worth": "FTW",
     "Houston": "HOU",
     "Lubbock": "LBB",
     "Lufkin": "LFK",
