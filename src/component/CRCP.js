@@ -46,8 +46,8 @@ import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import { utils as XLSXutils, read as XLSXread } from "xlsx";
 import XlsxPopulate from "xlsx-populate/browser/xlsx-populate";
 import excelFile from "./data/txcrcp-me-v07b.xlsm";
-// import excelOutputFile from "./data/01062021 TxCRCP-ME Analysis Result Sheet.xlsx"
-import excelOutputFile from "./data/01062021_TxCRCP-ME_Analysis_Result.js";
+import excelOutputFile from "./data/01062021 TxCRCP-ME Analysis Result Sheet.xlsx"
+// import excelOutputFile from "./data/01062021_TxCRCP-ME_Analysis_Result.js";
 import Card from "@material-ui/core/Card";
 import Divider from "@material-ui/core/Divider/Divider";
 import County from "./County";
