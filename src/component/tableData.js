@@ -1,6 +1,5 @@
 import React,{ Component } from 'react';
 import * as d3 from 'd3';
-import {withStyles} from "@material-ui/core/styles";
 
 class Tabledata  extends Component {
     constructor(props) {
@@ -84,7 +83,7 @@ class Tabledata  extends Component {
                         paddingTop: '0px',
                         paddingBottom: '0px'
                     }}>
-                        {([1, 2, 3, 12, 8, 9, 5, 6, 7, 10, 11].indexOf(j) !== -1) ? parseFloat(c).toFixed((j == 1 || j == 12) ? 2 : ((j == 2 || j == 3 || j == 8 || j == 9) ? 0 : ((j == 5 || j == 6) ? 1 : ((j == 7) ? 3 : 4)))) : c}
+                        {([1, 2, 3, 12, 8, 9, 5, 6, 7, 10, 11].indexOf(j) !== -1) ? parseFloat(c).toFixed((j === 1 || j === 12) ? 2 : ((j === 2 || j === 3 || j === 8 || j === 9) ? 0 : ((j === 5 || j === 6) ? 1 : ((j === 7) ? 3 : 4)))) : c}
                     </td>)}</tr>)}
                 </table>
             </div>)

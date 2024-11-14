@@ -4,15 +4,6 @@ import Tabledata from './tableData';
 import {withStyles} from '@material-ui/core/styles';
 import {
     Grid,
-    Typography,
-    Button,
-    Paper,
-    Stepper,
-    Step,
-    StepLabel,
-    StepContent,
-    TextField,
-    Container
 } from '@material-ui/core';
 import * as d3 from 'd3';
 import {tip as d3tip} from "d3-v6-tip";

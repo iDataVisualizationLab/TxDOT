@@ -399,8 +399,8 @@ class Report extends Component {
                             </ul>
                         </Grid>
                         <Grid item xs={12} container style={{bottom:0,position:'absolute'}}>
-                            <Grid item xs={12}><img src={footer} style={{width:'100%',height:15,transform:'scale(-1)'}}/></Grid>
-                            <Grid item><img src={logo} style={{width:60}}/></Grid>
+                            <Grid item xs={12}><img src={footer} alt="description" style={{width:'100%',height:15,transform:'scale(-1)'}}/></Grid>
+                            <Grid item><img src={logo} alt="description" style={{width:60}}/></Grid>
                             <Grid item xs><h3>TxCRCP-ME Analysis</h3></Grid>
                             {/*<Grid item xs={12}><img src={footer} style={{width:'100%',height:20}}/></Grid>*/}
                         </Grid>
