@@ -29,7 +29,7 @@ class Tabledata  extends Component {
             maxArray.push(0);
         }
         for (var i = 0; i < rows.length; i++) {
-            for (var j = 0; j < rows[i].length; j++) {
+            for (j = 0; j < rows[i].length; j++) {
                 if (rows[i][j] > maxArray[j])
                     maxArray[j] = rows[i][j];
                 if (rows[i][j] < minArray[j])
@@ -37,7 +37,7 @@ class Tabledata  extends Component {
             }
         }
         this.colorRedBlues = [];
-        for (var j = 0; j < rows[0].length; j++) {
+        for (j = 0; j < rows[0].length; j++) {
             var colorScale = d3.scaleLinear()
                 .domain([minArray[j], (minArray[j] + maxArray[j]) / 2, maxArray[j]])
                 .range(["#55f", "white", "#f55"]);

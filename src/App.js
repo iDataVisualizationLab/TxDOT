@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
 import { makeStyles } from '@material-ui/core/styles';
-import {AppBar,IconButton,Typography,Button,Toolbar,Grid,Slide} from '@material-ui/core';
+import {AppBar,Typography,Button,Toolbar,Grid,Slide} from '@material-ui/core';
 import coverPic from './image/cover.jpg';
 import CRCP from './component/CRCP'
 import TransferFunc from './component/TransferFunc'
@@ -56,7 +56,6 @@ const useStyles = makeStyles((theme) => ({
 
 function App() {
   const [page, setPage] = React.useState('home');
-  const [reportData, setReportData] = React.useState({});
   const [AnalysisPunchouts, setAnalysisPunchouts] = React.useState(0);
   const [AnalysisSlabThickness, setAnalysisSlabThickness] = React.useState(0);
   const classes = useStyles();
@@ -67,9 +66,8 @@ function App() {
     <div >
       <div className={classes.cover}></div>
       <AppBar position="static" style={{backgroundImage: `url(${headerPic})`, backgroundSize:'cover'}}>
-      {/*<AppBar position="static">*/}
         <Toolbar>
-          <img src={logo} style={{width:50}}/>
+          <img src={logo} alt="description" style={{width:50}}/>
           <Typography variant="h6" className={classes.titleNav}>
             TxCRCP-ME Analysis
           </Typography>
@@ -103,24 +101,15 @@ function App() {
         <Slide direction="up" in={page==='CRCP'} mountOnEnter unmountOnExit>
           <CRCP
               toMenu={()=>setPage('home')}
-              // print={(d)=>{setReportData(d);setPage('Print')}}
               AnalysisPunchouts={AnalysisPunchoutsFunc}
               AnalysisSlabThickness={AnalysisSlabThicknessFunc}
           />
         </Slide>
         <Slide direction="up" in={page === 'TransferFunc'} mountOnEnter unmountOnExit>
-        <div> {/* Wrap TransferFunc in Box */}
+        <div>
           <TransferFunc />
         </div>
       </Slide>
-        {/*<Slide direction="up" in={page==='Print'} mountOnEnter unmountOnExit>*/}
-        {/*  <Report*/}
-        {/*      data={reportData}*/}
-        {/*      toMenu={()=>setPage('home')}*/}
-        {/*      toCRCP={()=>setPage('CRCP')}*/}
-        {/*      AnalysisPunchouts={AnalysisPunchoutsFunc()}*/}
-        {/*  />*/}
-        {/*</Slide>*/}
       </div>
     </div>
       </ThemeProvider>

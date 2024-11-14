@@ -93,7 +93,7 @@ function CustomTable ({data,editFields,onChange,formular}){
         getVal: (formular?formular[k]:undefined)??(d=>d[k])
       })))
     }
-  },[data])
+  },[data, editFields, formular])
   return <TableContainer  style={{height:'70vh'}}>
     <Table stickyHeader aria-label="sticky table" size="small">
       <TableHead>

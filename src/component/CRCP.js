@@ -115,7 +115,7 @@ const DialogTitle = withStyles(styles)((props) => {
       <MuiDialogTitle disableTypography className={classes.root} {...other}>
         {children}
         {onClose ? (
-            <IconButton aria-label="close" size="small" className={classes.closeButton} onClick={onClose} size="small">
+            <IconButton aria-label="close" size="small" className={classes.closeButton} onClick={onClose}>
               <CloseIcon fontSize="small" />
             </IconButton>
         ) : null}
@@ -191,6 +191,7 @@ const Total_design_trafic = <>
     <TransformComponent>
       <img
           src={TrafficOneDirectionPic}
+          alt="description"
           style={{ maxWidth: 500, height: "auto" }}
       /></TransformComponent></TransformWrapper>
 </>;
@@ -514,7 +515,7 @@ class CRCP extends Component {
       if (i !== 1)
         rowIndexStress = 7;
       for (var j = 0; j < 12; j++) {
-        if (i == 1 && j == 0)
+        if (i === 1 && j === 0)
           ;
             //If counterYear = 1 And counterMonth = 1 Then
         //      'If First Year than Omit Calculation of First Month, Already Done
@@ -547,7 +548,7 @@ class CRCP extends Component {
           // Cells(rowIndex, 12) = Cells(rowIndex - 1, 12).Value + Cells(rowIndex, 11).Value
           row2.push(18.985 / (1 + 5 * Math.pow(row2[11], -1.1)));
           // Cells(rowIndex, 13) = 18.985 / (1 + 5 * Cells(rowIndex, 12).Value ^ -1.1)
-          if (rowIndexStress == 13)
+          if (rowIndexStress === 13)
             rowIndexStress = 1;
           rows.push(row2);
           row1 = row2;
@@ -786,7 +787,7 @@ class CRCP extends Component {
       if (this.state.helperEl.el === event.currentTarget && freeze && this.state.helperEl.freeze) // same target
         this.handleCloseHelper(event);
       else {
-        if (freeze || this.state.helperEl.el !== event.currentTarget && freeze)
+        if ((freeze || this.state.helperEl.el) !== (event.currentTarget && freeze))
           this.setState({ helperEl: { el: event.currentTarget, content, freeze } });
       }
     } else {
@@ -934,6 +935,7 @@ class CRCP extends Component {
         case "MH":
         case "CL":
           return 25;
+        default:
       }
     }
 
@@ -1927,7 +1929,7 @@ class CRCP extends Component {
                 <CloseIcon fontSize="small" />
               </IconButton> : ""}
               {this.state.helperEl.content.src ?
-                  <a href={this.state.helperEl.content.href} target={"_blank"}>
+                  <a href={this.state.helperEl.content.href} target={"_blank"} rel="noopener noreferrer">
                     <TransformWrapper
                         defaultScale={1}
                         defaultPositionX={1}
@@ -1936,6 +1938,7 @@ class CRCP extends Component {
                       <TransformComponent>
                         <img
                             src={this.state.helperEl.content.src}
+                            alt="description"
                             style={{ maxWidth: 600, height: "auto" }}
                         /></TransformComponent></TransformWrapper> </a> :
                   this.state.helperEl.content.text
