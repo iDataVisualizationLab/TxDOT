@@ -1,6 +1,6 @@
-const path = require("path")
-const UglifyJsPlugin = require("uglifyjs-webpack-plugin")
-const glob = require("glob")
+const path = require("path");
+const TerserPlugin = require("terser-webpack-plugin");
+const glob = require("glob");
 
 module.exports = {
     mode: "production",
@@ -18,5 +18,8 @@ module.exports = {
             },
         ],
     },
-    plugins: [new UglifyJsPlugin()]
-}
+    optimization: {
+        minimize: true,
+        minimizer: [new TerserPlugin()],
+    },
+};
