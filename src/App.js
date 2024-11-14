@@ -4,6 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import {AppBar,IconButton,Typography,Button,Toolbar,Grid,Slide} from '@material-ui/core';
 import coverPic from './image/cover.jpg';
 import CRCP from './component/CRCP'
+import TransferFunc from './component/TransferFunc'
 import logo from "./image/logo_g.png";
 import {ThemeProvider} from "@material-ui/styles";
 import {createMuiTheme} from "@material-ui/core/styles";
@@ -93,6 +94,9 @@ function App() {
               <Grid item>
                 <Button variant="contained" style={{width:'100%'}}>Product Disclaimer</Button>
               </Grid>
+              <Grid item>
+                <Button variant="contained" color="primary" style={{width:'100%'}} onClick={() => { console.log("Setting page to: TransferFunc"); setPage('TransferFunc'); }}> Transfer Function </Button>
+              </Grid>
             </Grid>
           </Grid>
         </Slide>
@@ -104,6 +108,11 @@ function App() {
               AnalysisSlabThickness={AnalysisSlabThicknessFunc}
           />
         </Slide>
+        <Slide direction="up" in={page === 'TransferFunc'} mountOnEnter unmountOnExit>
+        <div> {/* Wrap TransferFunc in Box */}
+          <TransferFunc />
+        </div>
+      </Slide>
         {/*<Slide direction="up" in={page==='Print'} mountOnEnter unmountOnExit>*/}
         {/*  <Report*/}
         {/*      data={reportData}*/}
