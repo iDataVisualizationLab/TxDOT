@@ -146,7 +146,7 @@ class Graph extends Component {
     }
 
     render() {
-        const {classes} = this.props;
+        // const {classes} = this.props;
         return ((this.props.rows.length && this.state.dataset) ?
             <Grid container alignItems="center" direction={"column"} spacing={1}>
                 <Grid item xs={11}>
@@ -161,7 +161,7 @@ class Graph extends Component {
                                   y={this.state.height + 40}>Age (months)
                             </text>
                             <text className="YAxisText"
-                                  transform={"translate(" + (-50) + "," + this.state.height / 2 + ")" + " rotate(-90)"}
+                                   transform={`translate(-50, ${this.state.height / 2}) rotate(-90)`}
                                   style={{"textAnchor": "middle", "textShadow": "1px 1px 0 rgba(200, 200, 200, 0.7"}}
                                   fontFamily="sans-serif" fontSize="16px">Number of Punchouts per Mile
                             </text>
