@@ -6,7 +6,7 @@ on:
   workflow_dispatch:  # Allows for manual triggering
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -51,6 +51,6 @@ jobs:
         id: deployment
         uses: peaceiris/actions-gh-pages@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_branch: gh-pages  # Deploy to gh-pages, not main
-          publish_dir: ./build  # This is the build directory for deployment
+          github_token: ${{ secrets.GH_TOKEN }}  # Use the personal access token (PAT)
+          publish_branch: gh-pages
+          publish_dir: ./build
