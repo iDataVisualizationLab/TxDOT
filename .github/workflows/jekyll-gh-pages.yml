@@ -55,4 +55,5 @@ jobs:
           publish_branch: gh-pages  
           publish_dir: ./build  
       - name: Debug URL Output
-        run: echo "Deployed to GitHub Pages: ${{ steps.deployment.outputs.page_url }}"
+        run: |
+          echo "Deployed to GitHub Pages: ${{ steps.deployment.outputs.page_url }}"
