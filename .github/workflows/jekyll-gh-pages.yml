@@ -34,8 +34,12 @@ jobs:
 
       - name: Build Project
         run: npm run build
-  # Job to deploy the static site to GitHub Pages
 
+      # - name: Deploy to GitHub Pages
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   run: npm run deploy
+  # Job to deploy the static site to GitHub Pages
   # Deployment job
   deploy:
     environment:
