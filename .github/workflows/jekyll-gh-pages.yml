@@ -51,6 +51,6 @@ jobs:
         id: deployment
         uses: peaceiris/actions-gh-pages@v3
         with:
-          github_token: ${{ secrets.GH_TOKEN }}  # Use the personal access token (PAT)
-          publish_branch: gh-pages
-          publish_dir: ./build
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages  
+          publish_dir: ./build  
