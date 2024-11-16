@@ -57,5 +57,6 @@ jobs:
         id: deployment
         uses: peaceiris/actions-gh-pages@v3
         with:
-          target_branch: gh-pages  # The branch where GitHub Pages is set
-          source_dir: ./build  # The directory to be deployed
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages  # The branch where GitHub Pages is set
+          publish_dir: ./build  # The directory to be deployed
