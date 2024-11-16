@@ -27,7 +27,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '16'  # Specify a version compatible with your project
+          node-version: '16'
 
       - name: Install Dependencies
         run: npm install --legacy-peer-deps
@@ -35,11 +35,17 @@ jobs:
       - name: Build Project
         run: npm run build
 
+      - name: Clean Build Directory
+        run: |
+          find build -type l -delete
+          find build -name '*.map' -delete
+
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: github-pages
-          path: build  # Adjust this to the output directory of your build
+          path: build
+
 
   deploy:
     environment:
