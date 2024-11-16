@@ -4,6 +4,17 @@ on:
   push:
     branches: ["main"]  # Runs on pushes to the main branch
   workflow_dispatch:     # Allows manual runs
+  
+# Permissions to deploy to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Ensures only one deployment is active at a time
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
 
 jobs:
   build-and-deploy:
