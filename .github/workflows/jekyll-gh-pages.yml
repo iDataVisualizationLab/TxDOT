@@ -32,17 +32,11 @@ jobs:
       - name: Build React App
         run: npm run build:react  # Only build the React app
 
-      - name: Clean Up Build Directory
-        run: |
-          find build -type l -delete
-          find build -name '*.map' -delete
-          find build -size +500M -delete
-
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: github-pages
-          path: build
+          path: ./build
 
   deploy:
     runs-on: ubuntu-latest
@@ -51,10 +45,6 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Download Build Artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: github-pages
-
       - name: Deploy to GitHub Pages
+        id: deployment
         uses: actions/deploy-pages@v4
