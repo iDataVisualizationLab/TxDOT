@@ -15,34 +15,41 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  # Build job
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3  # Updated to v3
+        uses: actions/checkout@v2
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '20'  # Use a supported Node.js version
+          node-version: '16'
       - name: Install dependencies
         run: npm install
       - name: Build React app
-        run: npm run build
+        run: npm run build:react
+      - name: Bundle the app with Webpack
+        run: npm run build:bundle
       - name: Upload artifact
-        uses: actions/upload-artifact@v4  # Updated to v4
+        uses: actions/upload-artifact@v3
         with:
           name: react-build
-          path: ./build
+          path: build
 
   deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4  # Updated to v4
+      - name: Download artifact
+        uses: actions/download-artifact@v2
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_branch: gh-pages
-          publish_dir: ./build
+          name: react-build  # Ensure this matches the artifact name in the build job
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4  # Official GitHub Pages deploy action
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
