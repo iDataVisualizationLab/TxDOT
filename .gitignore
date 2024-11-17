@@ -7,8 +7,6 @@
 /out
 /dist/win-unpacked
 /dist/linux-unpacked
-/dist
-/design
 
 # testing
 /coverage
