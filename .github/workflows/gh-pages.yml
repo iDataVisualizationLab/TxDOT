@@ -2,8 +2,8 @@ name: Deploy React App with GitHub Pages
 
 on:
   push:
-    branches: ["main"]  # Trigger on pushes to the main branch
-  workflow_dispatch:  # Allows for manual triggering
+    branches: ["main"]
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -19,9 +19,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v3
       - name: Set up Node.js
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
           node-version: '20'
       - name: Install dependencies
@@ -33,24 +33,24 @@ jobs:
       - name: List files in the build directory
         run: ls -l ./build  
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v1
+        uses: actions/upload-pages-artifact@v2
         with:
-          name: github-pages  # Name the artifact as 'react-build'
-          path: ./build  # Path to the build output directory
+          name: github-pages
+          path: ./build
   
   deploy:
     needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v3
       - name: Download artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v2
         with:
-          name: github-pages  # Name should match the uploaded artifact name
+          name: github-pages
       - name: List files after download
-        run: ls -l  # Confirm the artifact was downloaded correctly
+        run: ls -l
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v1
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}  # GitHub token for authentication
+          token: ${{ secrets.GITHUB_TOKEN }}
