@@ -33,7 +33,7 @@ jobs:
       - name: List files in the build directory
         run: ls -l ./build  
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-pages-artifact@v1
         with:
           name: github-pages  # Name the artifact as 'react-build'
           path: ./build  # Path to the build output directory
