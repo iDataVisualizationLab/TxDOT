@@ -30,12 +30,13 @@ jobs:
         run: npm run build:react
       - name: Bundle the app with Webpack
         run: npm run build:bundle
+      - name: List files in the build directory
+        run: ls -l ./build  
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: react-build
-          path: build  
-
+          path: ./build  
   deploy:
     needs: build
     runs-on: ubuntu-latest
@@ -47,7 +48,7 @@ jobs:
         with:
           name: react-build  # Correct artifact name
       - name: List files after download
-        run: ls -l build  # Confirm the artifact was downloaded correctly
+        run: ls -l 
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v4
         with:
