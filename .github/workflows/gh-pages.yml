@@ -35,7 +35,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: react-build
-          path: ./build
+          path: build
 
   # Deployment job
   deploy:
@@ -53,7 +53,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages  
-          publish_dir: ./build  
+          publish_dir: build  
       - name: Debug URL Output
         run: |
           echo "Deployed to GitHub Pages: ${{ steps.deployment.outputs.page_url }}"
