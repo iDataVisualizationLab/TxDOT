@@ -31,12 +31,12 @@ jobs:
       - name: Bundle the app with Webpack
         run: npm run build:bundle
       - name: List files in the build directory
-        run: ls -l ./build  # Ensure that files exist in the build directory
+        run: ls -l 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: react-build
-          path: build  # Ensure the path to the build directory is correct
+          path: build  
 
   deploy:
     needs: build
