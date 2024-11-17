@@ -20,36 +20,42 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4  # Use actions/checkout@v4 to check out the repository
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '20'  # Use Node.js version 20
       - name: Install dependencies
-        run: npm install
+        run: npm install  # Install your React app's dependencies
       - name: Build React app
-        run: npm run build:react
+        run: npm run build:react  # Build your React app
       - name: Bundle the app with Webpack
-        run: npm run build:bundle
+        run: npm run build:bundle  # Optionally, run Webpack bundling
+      - name: List files in the build directory
+        run: ls -l build  # List files in the build directory to confirm it has content
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4  # Upload the build directory as an artifact
         with:
-          name: react-build
-          path: build
+          name: react-build  # Name of the artifact
+          path: build  # The directory to upload
 
+  # Deployment job
   deploy:
     environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      name: github-pages  # Name of the environment
+      url: ${{ steps.deployment.outputs.page_url }}  # URL of the deployed page
     runs-on: ubuntu-latest
-    needs: build
+    needs: build  # Make sure this job runs after the build job
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4  # Check out the repository again for deployment
       - name: Download artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v4  # Download the previously uploaded artifact
         with:
-          name: react-build  # Ensure this matches the artifact name in the build job
+          name: react-build  # The name of the artifact to download
+      - name: List files in the downloaded artifact
+        run: ls -l react-build  # Verify that the artifact is downloaded correctly
       - name: Deploy to GitHub Pages
-        uses: actions/deploy-pages@v4  # Official GitHub Pages deploy action
+        uses: actions/deploy-pages@v4  # Official GitHub Pages deployment action
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-
+          token: ${{ secrets.GITHUB_TOKEN }}  # GitHub token for authentication
