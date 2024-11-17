@@ -14,7 +14,7 @@ module.exports = {
     rules: [
       {
         test: /\.css$/,
-        exclude: /build|dist|design/,
+        exclude: /dist|design/,
         use: ["style-loader", "css-loader"],
       },
     ],
