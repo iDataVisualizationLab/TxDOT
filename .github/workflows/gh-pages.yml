@@ -35,7 +35,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: react-build  # Name the artifact as 'react-build'
+          name: github-pages  # Name the artifact as 'react-build'
           path: ./build  # Path to the build output directory
   
   deploy:
@@ -47,7 +47,7 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@v4
         with:
-          name: react-build  # Name should match the uploaded artifact name
+          name: github-pages  # Name should match the uploaded artifact name
       - name: List files after download
         run: ls -l  # Confirm the artifact was downloaded correctly
       - name: Deploy to GitHub Pages
