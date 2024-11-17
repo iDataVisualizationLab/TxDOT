@@ -53,8 +53,6 @@ jobs:
         uses: actions/download-artifact@v4  # Download the previously uploaded artifact
         with:
           name: react-build  # The name of the artifact to download
-      - name: List files in the downloaded artifact
-        run: ls -l react-build  # Verify that the artifact is downloaded correctly
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v4  # Official GitHub Pages deployment action
         with:
