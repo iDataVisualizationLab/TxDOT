@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
 import { Container, Paper, Typography, Button, TextField } from '@material-ui/core';
 import axios from 'axios';
+import * as TransferFuncVar from './TransferFuncVar.js';
 
 const TransferFunc = () => {
-  const [text, setText] = useState(''); // State for file content
-  const [token, setToken] = useState(''); // State for token input
+  const [A, setA] = useState(TransferFuncVar.A);  // State for A
+  const [B, setB] = useState(TransferFuncVar.B);  // State for B
+  const [C, setC] = useState(TransferFuncVar.C);  // State for C
+  const [token, setToken] = useState(''); // State for GitHub token
 
   const uploadFile = async () => {
-    const filePath = `src/component/test.js`;
+    const filePath = `src/component/TransferFuncVar.js`;
     const repoOwner = 'iDataVisualizationLab';
     const repoName = 'TxDOT';
     const branch = 'main';
@@ -37,13 +40,20 @@ const TransferFunc = () => {
     const sha = await getFileSHA();
     console.log('File SHA:', sha);
 
-    const content = btoa(unescape(encodeURIComponent(text))); // Convert text to base64
+    // Prepare the updated content for the file
+    const updatedContent = `
+export const A = ${A};
+export const B = ${B};
+export const C = ${C};
+`;
+
+    const content = btoa(unescape(encodeURIComponent(updatedContent))); // Convert text to base64
 
     try {
       const response = await axios.put(
         `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${filePath}`,
         {
-          message: sha ? 'Update TransferFunc.js file' : 'Create TransferFunc.js file',
+          message: sha ? 'Update TransferFuncVar.js file' : 'Create TransferFuncVar.js file',
           content: content,
           sha: sha,
           branch: branch,
@@ -67,20 +77,37 @@ const TransferFunc = () => {
           Transfer Function Page
         </Typography>
         <Typography variant="body1" align="center">
-          This is the Transfer Function page content.
+          Update the values of A, B, and C below.
         </Typography>
-        
+
         <TextField
-          label="File Content"
-          multiline
-          rows={4}
+          label="Value for A"
+          type="number"
           variant="outlined"
           fullWidth
           margin="normal"
-          value={text}
-          onChange={(e) => setText(e.target.value)}
+          value={A}
+          onChange={(e) => setA(e.target.value)}
         />
-        
+        <TextField
+          label="Value for B"
+          type="number"
+          variant="outlined"
+          fullWidth
+          margin="normal"
+          value={B}
+          onChange={(e) => setB(e.target.value)}
+        />
+        <TextField
+          label="Value for C"
+          type="number"
+          variant="outlined"
+          fullWidth
+          margin="normal"
+          value={C}
+          onChange={(e) => setC(e.target.value)}
+        />
+
         <TextField
           label="GitHub Token"
           type="password" // Hides token input for security
