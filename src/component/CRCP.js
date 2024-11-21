@@ -56,6 +56,7 @@ import Backdrop from "@material-ui/core/Backdrop";
 import { districts, districtCode, counties, str2date, date2str } from "./ulti";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import EditableTable from "./EditableTable";
+import * as TransferFuncVar from './TransferFuncVar.js';
 
 // const highway = ["IH 45", "US 290", "IH 30", "US 59", "IH 35W", "IH 820", "IH 10", "IH 40", "IH 35", "US 287", "US 81", "IH 27", "SL 289", "SH 226", "SH 36", "US 83B", "VA", "FM 3129", "IH 20", "US 71", "US 79", "US 47", "US 67", "BU90-Y", "CS", "FM 1960", "FM 364", "FM 365", "SH 347", "SH 105", "SH 12", "SH 124", "SH 146", "SH 326", "SH 61", "SH 73", "SH 87", "SS 380", "US 90", "US 69", "US 96", "BS6-R", "SH 21", "BW 8", "US 83", "BS 121H", "FM 1171", "FM 1382", "FM 2499", "FM 709", "FM 740", "IH 35E", "IH4 5", "IH 635", "LP 12", "LP 354", "MH", "SH 289", "SH 31", "SH 66", "SH 78", "SH 114", "SH 121", "SH 161", "SH 180", "SH 183", "SH 310", "SH 34", "SH 342", "SH 356", "SL 12", "SL 288", "SP 244", "SP 348", "SP 366", "SPUR 354", "US 175", "US 380", "US 75", "US 77", "US 377", "US 80", "US 54", "BU 287P", "FM 157", "IH 820 ", "SH 199", "SH 26", "SH 360", "FM 1764", "FM 523", "FM 1092", "FM 1488", "FM 518", "IH 610", "SH 288", "SH 332", "SH 225", "SH 242", "SH 249", "SH 35", "US 90A", "IH27", "SH 7", "FM 1472", "LP 20", "ODA 181-1", "ODA 181-2", "ODA 250-1", "ODA 250-2", "US 82", "SH 6", "FM 85", "LP 281", "LP 323", "SH 19", "SH 198", "SH 334", "US 259", "US 281", "FM 1695", "FM 3476", "FM 933", "IH 36", "LP 363", "SH 195", "US 84", "BU 287J", "IH 44", "SH 240", "SP 1027 ", "US 287 ", "US 55", "US 70", "SH 71"];
 // const baseType = ["CTB", "HMA Base"];
@@ -507,7 +508,8 @@ class CRCP extends Component {
         * this.state.TrafficOneDirection * 1000000 / 12 / this.state.DesignLife);
     row1.push(row1[9] / row1[8]);
     row1.push(row1[10]);
-    row1.push(18.985 / (1 + 5 * Math.pow(row1[11], -1.1)));
+    // row1.push(18.985 / (1 + 5 * Math.pow(row1[11], -1.1)));
+    row1.push(TransferFuncVar.A / (1 + TransferFuncVar.B * Math.pow(row1[11], TransferFuncVar.C)));
     rows.push(row1);    // Add to the array
 
     //console.log(+document.getElementById("DesignLife").value);
@@ -546,7 +548,8 @@ class CRCP extends Component {
           // Cells(rowIndex, 11) = Cells(rowIndex, 10).Value / Cells(rowIndex, 9).Value
           row2.push(row1[11] + row2[10]);
           // Cells(rowIndex, 12) = Cells(rowIndex - 1, 12).Value + Cells(rowIndex, 11).Value
-          row2.push(18.985 / (1 + 5 * Math.pow(row2[11], -1.1)));
+          row2.push(TransferFuncVar.A / (1 + TransferFuncVar.B * Math.pow(row1[11], TransferFuncVar.C)));
+          // row2.push(18.985 / (1 + 5 * Math.pow(row2[11], -1.1)));
           // Cells(rowIndex, 13) = 18.985 / (1 + 5 * Cells(rowIndex, 12).Value ^ -1.1)
           if (rowIndexStress === 13)
             rowIndexStress = 1;
