@@ -1,3 +1,4 @@
-export const A = 18.985;
-export const B = 5;
-export const C = -1.1;
+
+export const A = 19.99;
+export const B = 29.34;
+export const C = -1.33;
