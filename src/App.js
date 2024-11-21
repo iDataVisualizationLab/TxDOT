@@ -107,7 +107,7 @@ function App() {
         </Slide>
         <Slide direction="up" in={page === 'TransferFunc'} mountOnEnter unmountOnExit>
         <div>
-          <TransferFunc />
+          <TransferFunc toMenu={() => setPage('home')}/>
         </div>
       </Slide>
       </div>
