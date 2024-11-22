@@ -123,8 +123,7 @@ jobs:
         run: ls -l  
       - name: Debug VERSION
         run: |
-          VERSION=$VERSION
-          echo "VERSION is: ${VERSION}" 
+          echo "VERSION is: ${{ env.VERSION }}" 
         env:
           VERSION: ${{ env.VERSION }}
       - name: Create GitHub Release
@@ -135,14 +134,15 @@ jobs:
           VERSION: ${{ env.VERSION }}
         with:
           tag_name: ${{ github.ref_name }}-${{ github.run_id }}
-          release_name: Release v $VERSION
+          release_name: Release v${{ env.VERSION }}
           draft: false
           prerelease: false
 
       - name: Find All Files Matching VERSION
         id: find_files
         run: |
-          VERSION=${{env.VERSION}}
+          VERSION=${{ env.VERSION }}
+          # Locate all files matching the VERSION
           files=($(ls ./*${VERSION}* 2>/dev/null || echo ""))
           if [ ${#files[@]} -eq 0 ]; then
             echo "Error: No files found matching VERSION ${VERSION}"
@@ -158,12 +158,12 @@ jobs:
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}  # Use the upload URL from the create-release step
-          asset_path: $file  # Adjust the path if necessary
+          asset_path: ./*${{ env.file }}*  # Adjust the path if necessary
           asset_name: ${{ env.VERSION }}-asset  # Name of the asset to upload
           asset_content_type: application/octet-stream
         env:
-          file: ${{ env.file }}
           VERSION: ${{ env.VERSION }}
+          file: ${{ env.file }}
 
   
       # - name: Upload Windows Installer

@@ -1,7 +1,19 @@
-import React, { Component } from 'react';
-import { Container, Paper, Typography, Button, Grid, TextField } from '@material-ui/core';
+import React, {
+  Component
+} from 'react';
+import {
+  Container,
+  Paper,
+  Typography,
+  Button,
+  Grid,
+  TextField
+} from '@material-ui/core';
 import axios from 'axios';
-import { MathJax, MathJaxContext } from 'better-react-mathjax';
+import {
+  MathJax,
+  MathJaxContext
+} from 'better-react-mathjax';
 import Plot from 'react-plotly.js'; // Import Plotly component
 import * as TransferFuncVar from './TransferFuncVar.js';
 import HomeIcon from "@material-ui/icons/Home";
@@ -14,7 +26,7 @@ class TransferFunc extends Component {
       A: TransferFuncVar.A,
       B: TransferFuncVar.B,
       C: TransferFuncVar.C,
-      version: packagejson.version, 
+      version: packagejson.version,
       token: '',
       errorA: false,
       errorB: false,
@@ -27,48 +39,80 @@ class TransferFunc extends Component {
   // Validation function
   validateInputs = () => {
     let valid = true;
-    const { A, B, C, token, version } = this.state;
+    const {
+      A,
+      B,
+      C,
+      token,
+      version
+    } = this.state;
 
     if (!A || isNaN(A)) {
-      this.setState({ errorA: true });
+      this.setState({
+        errorA: true
+      });
       valid = false;
     } else {
-      this.setState({ errorA: false });
+      this.setState({
+        errorA: false
+      });
     }
 
     if (!B || isNaN(B)) {
-      this.setState({ errorB: true });
+      this.setState({
+        errorB: true
+      });
       valid = false;
     } else {
-      this.setState({ errorB: false });
+      this.setState({
+        errorB: false
+      });
     }
 
     if (!C || isNaN(C)) {
-      this.setState({ errorC: true });
+      this.setState({
+        errorC: true
+      });
       valid = false;
     } else {
-      this.setState({ errorC: false });
+      this.setState({
+        errorC: false
+      });
     }
 
     if (!version) {
-      this.setState({ errorVersion: true });
+      this.setState({
+        errorVersion: true
+      });
       valid = false;
     } else {
-      this.setState({ errorVersion: false });
+      this.setState({
+        errorVersion: false
+      });
     }
 
     if (!token) {
-      this.setState({ errorToken: true });
+      this.setState({
+        errorToken: true
+      });
       valid = false;
     } else {
-      this.setState({ errorToken: false });
+      this.setState({
+        errorToken: false
+      });
     }
 
     return valid;
   };
 
   uploadVar = async () => {
-    const { A, B, C, token } = this.state;
+    const {
+      A,
+      B,
+      C,
+      token,
+      version
+    } = this.state;
 
     if (!this.validateInputs()) return;
 
@@ -80,8 +124,7 @@ class TransferFunc extends Component {
     const getFileSHA = async () => {
       try {
         const res = await axios.get(
-          `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${filePath}?ref=${branch}`,
-          {
+          `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${filePath}?ref=${branch}`, {
             headers: {
               Authorization: `token ${token}`,
             },
@@ -94,28 +137,48 @@ class TransferFunc extends Component {
       }
     };
 
-    this.setState({ loading: true });  // Set loading to true before making the request
+    this.setState({
+      loading: true
+    }); 
     const sha = await getFileSHA();
-    console.log('File SHA:', sha);
-    this.setState({ loading: false }); // Reset loading after the request is done
+    this.setState({
+      loading: false
+    }); // Reset loading after the request is done
     const updatedContent = `
-export const A = ${A};
-export const B = ${B};
-export const C = ${C};
-`;
+      export const A = ${A};
+      export const B = ${B};
+      export const C = ${C};
+      `;
 
     const content = btoa(unescape(encodeURIComponent(updatedContent))); // Convert text to base64
+    const updatedPackageJson = {
+      ...packagejson, // Current content
+      version: version, // New version
+    };
+
+    const updatedPackageJsonContent = JSON.stringify(updatedPackageJson, null, 2); // Format the JSON
+
+    const contentPackageJson = btoa(unescape(encodeURIComponent(updatedPackageJsonContent))); // Base64 encode
 
     try {
       const response = await axios.put(
-        `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${filePath}`,
-        {
+        `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${filePath}`, {
           message: sha ? 'Update TransferFuncVar.js file' : 'Create TransferFuncVar.js file',
           content: content,
-          sha: sha,
           branch: branch,
-        },
-        {
+        }, {
+          headers: {
+            Authorization: `token ${token}`,
+          },
+        }
+      );
+
+      await axios.put(
+        `https://api.github.com/repos/${repoOwner}/${repoName}/contents/package.json`, {
+          message: 'Update package.json version',
+          content: contentPackageJson,
+          branch: branch,
+        }, {
           headers: {
             Authorization: `token ${token}`,
           },
