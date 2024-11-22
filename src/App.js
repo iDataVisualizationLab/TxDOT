@@ -89,7 +89,7 @@ function App() {
               onClose={() => setAnchorEl(null)} // Close menu
             >
               <MenuItem onClick={() => setPage('TransferFunc')}>Transfer Function</MenuItem>
-              <MenuItem onClick={() => console.log("Help clicked")}>Help</MenuItem>
+              <MenuItem onClick={() => console.log('Version: ', packagejson.version)}>Help</MenuItem>
               <MenuItem onClick={() => console.log("About clicked")}>About</MenuItem>
             </Menu>
           </Toolbar>
