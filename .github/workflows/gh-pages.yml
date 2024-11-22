@@ -60,7 +60,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        platform: [win, linux]
+        platform: [win]
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
@@ -111,7 +111,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        platform: [win, linux]
+        platform: [win]
     steps:
       - name: Download Artifacts
         uses: actions/download-artifact@v3
@@ -168,7 +168,7 @@ jobs:
     runs-on: macos-latest
     strategy:
       matrix:
-        platform: [mac]
+        platform: [mac, linux]
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
@@ -216,7 +216,7 @@ jobs:
     runs-on: macos-latest
     strategy:
       matrix:
-        platform: [mac]
+        platform: [mac, linux]
     steps:
       - name: Download Artifacts
         uses: actions/download-artifact@v3
