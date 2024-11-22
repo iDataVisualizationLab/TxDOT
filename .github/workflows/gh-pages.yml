@@ -120,13 +120,6 @@ jobs:
           name: ${{ matrix.platform }}-builds
       - name: List files in the build directory
         run: ls -l  
-      - name: List Downloaded Files
-        run: |
-          echo "Listing downloaded files in the TxDOT directory:"
-          ls -l /home/runner/work/TxDOT/TxDOT
-          echo "Listing files specifically for SETUP and installer:"
-          ls -l /home/runner/work/TxDOT/TxDOT/*Setup* /home/runner/work/TxDOT/TxDOT/*.exe
-
       - name: Create GitHub Release
         id: create_release
         uses: actions/create-release@v1
@@ -143,7 +136,7 @@ jobs:
         run: |
           VERSION=${{ steps.extract_version.outputs.version }}
           # Locate all files matching the version
-          files=($(ls ./artifacts/*${VERSION}*.exe 2>/dev/null || echo ""))
+          files=($(ls ./*${VERSION}* 2>/dev/null || echo ""))
           if [ ${#files[@]} -eq 0 ]; then
             echo "Error: No files found matching version ${VERSION}"
             exit 1
