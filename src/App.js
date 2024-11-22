@@ -54,19 +54,18 @@ function App() {
   const [AnalysisPunchouts, setAnalysisPunchouts] = React.useState(0);
   const [AnalysisSlabThickness, setAnalysisSlabThickness] = React.useState(0);
   const [anchorEl, setAnchorEl] = useState(null); // State to manage the settings menu
-  const [openModal, setOpenModal] = useState(false); // State to control modal visibility
+  const [openAboutModal, setOpenAboutModal] = useState(false); // About modal state
+  const [openHelpModal, setOpenHelpModal] = useState(false); // Help modal state
 
   const classes = useStyles();
   const AnalysisPunchoutsFunc = (d) => d === undefined ? AnalysisPunchouts : setAnalysisPunchouts(d);
   const AnalysisSlabThicknessFunc = (d) => d === undefined ? AnalysisSlabThickness : setAnalysisSlabThickness(d);
-  const handleAboutClick = () => {
-    setOpenModal(true); // Open the modal
-    console.log('Version: ', packagejson.version);
-  };
-  const handleCloseModal = () => {
-    setOpenModal(false); // Close the modal
-  };
+  
+  const handleAboutClick = () => setOpenAboutModal(true);
+  const handleHelpClick = () => setOpenHelpModal(true);
 
+  const handleCloseAboutModal = () => setOpenAboutModal(false);
+  const handleCloseHelpModal = () => setOpenHelpModal(false);
   return (
     <ThemeProvider theme={theme}>
       <div>
@@ -97,14 +96,14 @@ function App() {
               onClose={() => setAnchorEl(null)} // Close menu
             >
               <MenuItem onClick={() => setPage('TransferFunc')}>Transfer Function</MenuItem>
-              <MenuItem onClick={() => console.log('Version: ', packagejson.version)}>Help</MenuItem>
+              <MenuItem onClick={handleHelpClick}>Help</MenuItem>
               <MenuItem onClick={handleAboutClick}>About</MenuItem>
             </Menu>
             
           </Toolbar>
         </AppBar>
         {/* About Modal */}
-        <Dialog open={openModal} onClose={handleCloseModal}>
+        <Dialog open={openAboutModal} onClose={handleCloseAboutModal}>
           <DialogTitle>About</DialogTitle>
           <DialogContent>
             <h3>Program Name</h3>
@@ -112,11 +111,32 @@ function App() {
 
             <h3>Version</h3>
             <p>{packagejson.version}</p> 
+
             <h3>Developed By</h3>
             <p>iDataVisualizationLab</p> 
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleCloseModal} color="primary">Close</Button>
+            <Button onClick={handleCloseAboutModal} color="primary">Close</Button>
+          </DialogActions>
+        </Dialog>
+
+        {/* Help Modal */}
+        <Dialog open={openHelpModal} onClose={handleCloseHelpModal}>
+          <DialogTitle>Help</DialogTitle>
+          <DialogContent>
+            <h3>How to Generate a Private Access Token</h3>
+            <ol>
+              <li>Go to your GitHub account and navigate to <strong>Settings</strong>.</li>
+              <li>Under <strong>Developer settings</strong>, select <strong>Personal access tokens</strong>.</li>
+              <li>Click <strong>Fine-grained tokens</strong>, then <strong>Generate new token</strong>.</li>
+              <li>Enter a descriptive <strong>Name</strong> for the token.</li>
+              <li>Set the <strong>Repository Access</strong> scope to include <strong>iDataVisualizationLab/TxDOT</strong>.</li>
+              <li>Select appropriate permissions (e.g., read/write for releases).</li>
+              <li>Click <strong>Generate token</strong> and copy the token for use.</li>
+            </ol>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseHelpModal} color="primary">Close</Button>
           </DialogActions>
         </Dialog>
 
@@ -155,7 +175,9 @@ function App() {
           {/* Transfer Function Page */}
           <Slide direction="up" in={page === 'TransferFunc'} mountOnEnter unmountOnExit>
             <div>
-              <TransferFunc toMenu={() => setPage('home')} />
+              <TransferFunc 
+                toMenu={() => setPage('home')}
+                handleHelpClick = {handleHelpClick} />
             </div>
           </Slide>
         </div>

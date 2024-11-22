@@ -143,9 +143,6 @@ class TransferFunc extends Component {
     }); 
     const shaTransferFuncVar = await getFileSHA(filePath);
     const shaPackageJson = await getFileSHA('package.json');
-    this.setState({
-      loading: false
-    }); // Reset loading after the request is done
     const updatedContent = `
       export const A = ${A};
       export const B = ${B};
@@ -192,10 +189,16 @@ class TransferFunc extends Component {
 
       // Show success alert
       alert('File uploaded successfully!');
+      this.setState({
+        loading: false
+      }); 
       this.props.toMenu();
     } catch (error) {
       console.error('Error uploading file', error);
 
+      this.setState({
+        loading: false
+      }); 
       // Check if the error is due to an invalid token (401 Unauthorized)
       if (error.response && error.response.status === 401) {
         alert('Error: Invalid GitHub token. Please check your token and try again.');
@@ -231,7 +234,7 @@ class TransferFunc extends Component {
   };
 
   render() {
-    const { A, B, C, token, version, errorA, errorB, errorC, errorToken, errorVersion, loading } = this.state;
+    const { A, B, C, token, version, errorA, errorB, errorC, errorToken, errorVersion, loading} = this.state;
   
     // Generate FC values and PO values
     const FCValues = Array.from({ length: 1000 }, (_, i) => Math.pow(10, -3 + (i * 6) / 999)); // From 1e-3 to 1e3
@@ -271,7 +274,7 @@ class TransferFunc extends Component {
               {/* Form Section */}
               <Grid item xs={12} sm={6}>
                 <Typography variant="body1" align="center" gutterBottom style={{ color: '#1976d2', fontSize: '2rem' }}>
-                  <MathJax style={{ fontSize: '2rem', textAlign: 'center' }}>
+                  <MathJax key={`${A}-${B}-${C}`} style={{ fontSize: '2rem', textAlign: 'center' }}>
                     {`\\( New \\ PO_{Texas} = \\frac{${A}}{1 + ${B} \\cdot (FC)^{${C}}} \\)`}
                   </MathJax>
                 </Typography>
@@ -288,21 +291,45 @@ class TransferFunc extends Component {
                   { label: 'GitHub Token', value: token, error: errorToken, type: 'password', onChange: (e) => this.setState({ token: e.target.value }) },
                   { label: 'Version', value: version, error: errorVersion, type: 'text', onChange: (e) => this.setState({ version: e.target.value }) }
                 ].map(({ label, value, error, type = 'number', onChange }, index) => (
-                  <TextField
-                    key={index}
-                    label={label}
-                    type={type}
-                    variant="outlined"
-                    fullWidth
-                    margin="normal"
-                    value={value}
-                    onChange={onChange}
-                    error={error}
-                    helperText={error ? `Please enter a valid ${label.toLowerCase()}.` : ''}
-                    style={{ fontSize: '1.2rem', marginBottom: '20px' }}
-                  />
+                  <React.Fragment key={index}>
+                    {label === 'GitHub Token' ? (
+      <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
+        <TextField
+          label={label}
+          type={type}
+          variant="outlined"
+          fullWidth
+          value={value}
+          onChange={onChange}
+          error={error}
+          helperText={error ? `Please enter a valid ${label.toLowerCase()}.` : ''}
+          style={{ marginRight: '10px' }}
+        />
+        <Button
+          color="primary"
+          variant="outlined"
+          onClick={this.props.handleHelpClick}
+          style={{ fontSize: '0.875rem', padding: '2px 16px' }}
+        >
+          What is a Token?
+        </Button>
+      </div>
+    ) : (
+      <TextField
+        label={label}
+        type={type}
+        variant="outlined"
+        fullWidth
+        margin="normal"
+        value={value}
+        onChange={onChange}
+        error={error}
+        helperText={error ? `Please enter a valid ${label.toLowerCase()}.` : ''}
+        style={{ fontSize: '1.2rem', marginBottom: '20px' }}
+      />
+    )}
+                  </React.Fragment>
                 ))}
-    
                 {/* Buttons */}
                 <div style={{ display: 'flex', justifyContent: 'center' }}>
                   <Button
