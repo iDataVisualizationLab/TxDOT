@@ -105,7 +105,7 @@ jobs:
           VERSION=$(node -p "require('./package.json').version")
           echo "Version extracted: $VERSION"
           echo "::set-output name=version::$VERSION"
-          echo "version=$VERSION" >> $GITHUB_ENV
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
 
   release:
     needs: build-electron
@@ -121,26 +121,31 @@ jobs:
           name: ${{ matrix.platform }}-builds
       - name: List files in the build directory
         run: ls -l  
+      - name: Debug VERSION
+        run: |
+          echo "VERSION is: ${{ env.VERSION }}" 
+        env:
+          VERSION: ${{ env.VERSION }}
       - name: Create GitHub Release
         id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          VERSION: ${{ env.version }}
+          VERSION: ${{ env.VERSION }}
         with:
           tag_name: ${{ github.ref_name }}-${{ github.run_id }}
           release_name: Release v${{ env.VERSION }}
           draft: false
           prerelease: false
 
-      - name: Find All Files Matching Version
+      - name: Find All Files Matching VERSION
         id: find_files
         run: |
-          VERSION=${{ env.version }}
-          # Locate all files matching the version
+          VERSION=${{ env.VERSION }}
+          # Locate all files matching the VERSION
           files=($(ls ./*${VERSION}* 2>/dev/null || echo ""))
           if [ ${#files[@]} -eq 0 ]; then
-            echo "Error: No files found matching version ${VERSION}"
+            echo "Error: No files found matching VERSION ${VERSION}"
             exit 1
           fi
           for file in "${files[@]}"; do
@@ -148,19 +153,18 @@ jobs:
           done
           echo "Found files: ${files[@]}"
         env:
-          VERSION: ${{ env.version }}
+          VERSION: ${{ env.VERSION }}
 
-      - name: Upload All Files
-        run: |
-          for file in ${{ env.files }}; do
-            echo "Uploading $file"
-            filename=$(basename "$file")  # Get the basename of the file
-            echo "Uploading asset with name: $filename"
-            gh release upload ${{ steps.create_release.outputs.upload_url }} "$file" --clobber --name "$filename"
-          done
+      - name: Upload Release Assets
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}  # Use the upload URL from the create-release step
+          asset_path: ./*${{ env.VERSION }}*  # Adjust the path if necessary
+          asset_name: ${{ env.VERSION }}-asset  # Name of the asset to upload
+          asset_content_type: application/octet-stream
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          files: ${{ env.files }}
+          VERSION: ${{ env.VERSION }}
 
   
       # - name: Upload Windows Installer
