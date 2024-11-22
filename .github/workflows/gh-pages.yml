@@ -134,7 +134,7 @@ jobs:
           VERSION: ${{ env.VERSION }}
         with:
           tag_name: ${{ github.ref_name }}-${{ github.run_id }}
-          release_name: Release v ${{ steps.extract_version.outputs.version }}
+          release_name: Release New Version ${{ env.VERSION }}
           draft: false
           prerelease: false
 
@@ -175,7 +175,7 @@ jobs:
           done
         env:
           file_list: ${{ env.file_list }}
-          
+
       # - name: Upload Release Assets
       #   run: |
       #     # Loop through the asset files and upload them one by one
