@@ -88,9 +88,6 @@ jobs:
         with:
           name: ${{ matrix.platform }}-builds
           path: artifacts
-    
-      - name: List files in the build directory
-        run: ls -l ./dist 
 
       - name: Extract version from package.json
         id: extract_version
@@ -100,65 +97,9 @@ jobs:
           echo "::set-output name=version::$VERSION"
           echo "VERSION=$VERSION" >> $GITHUB_ENV
 
-  release:
+       
+  build-electron:
     needs: build-electron-win
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        platform: [win]
-    steps:
-      - name: Download Artifacts
-        uses: actions/download-artifact@v3
-        with:
-          name: ${{ matrix.platform }}-builds
-      - name: List files in the build directory
-        run: ls -l  
-      - name: Debug VERSION
-        run: |
-          echo "VERSION is: ${{ env.VERSION }}" 
-        env:
-          VERSION: ${{ env.VERSION }}
-      - name: Create GitHub Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          VERSION: ${{ env.VERSION }}
-        with:
-          tag_name: ${{ github.ref_name }}-${{ github.run_id }}
-          release_name: Release New Version ${{ env.VERSION }}
-          draft: false
-          prerelease: false
-
-      - name: Find All Files Matching VERSION
-        id: find_files
-        run: |
-          VERSION=${{ env.VERSION }}
-          files=($(ls ./*${VERSION}* 2>/dev/null || echo ""))
-          if [ ${#files[@]} -eq 0 ]; then
-            echo "Error: No files found matching VERSION ${VERSION}"
-            exit 1
-          fi
-          echo "Found files: ${files[@]}"
-          file_list=$(IFS=','; echo "${files[*]}")
-          echo "file_list=$file_list" >> $GITHUB_ENV
-
-      - name: Upload Release Assets
-        run: |
-          IFS=',' read -r -a file_array <<< "${{ env.file_list }}"
-          for file in "${file_array[@]}"; do
-            echo "Uploading $file..."
-            curl -XPOST \
-              -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-              -H "Content-Type: application/octet-stream" \
-              --data-binary @$file \
-              "https://uploads.github.com/repos/iDataVisualizationLab/TxDOT/releases/${{ steps.create_release.outputs.id }}/assets?name=$(basename $file)"
-          done
-        env:
-          file_list: ${{ env.file_list }}
-
-  build-mac-electron:
-    needs: release
     runs-on: macos-latest
     strategy:
       matrix:
@@ -193,29 +134,34 @@ jobs:
         with:
           name: ${{ matrix.platform }}-builds
           path: artifacts
-    
-      - name: List files in the build directory
-        run: ls -l ./dist 
 
-      - name: Extract version from package.json
-        id: extract_version
-        run: |
-          VERSION=$(node -p "require('./package.json').version")
-          echo "Version extracted: $VERSION"
-          echo "::set-output name=version::$VERSION"
-          echo "VERSION=$VERSION" >> $GITHUB_ENV
-          
-  mac-release:
-    needs: build-mac-electron
-    runs-on: macos-latest
-    strategy:
-      matrix:
-        platform: [mac, linux]
+  release:
+    needs: build-electron
+    runs-on: ubuntu-latest
     steps:
-      - name: Download Artifacts
+      - name: Download win Artifacts
         uses: actions/download-artifact@v3
         with:
-          name: ${{ matrix.platform }}-builds
+          name: win-builds
+      - name: Download mac Artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: mac-builds
+      - name: Download linux Artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: linux-builds
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ env.VERSION }}
+        with:
+          tag_name: ${{ github.ref_name }}-${{ github.run_id }}
+          release_name: Release New Version ${{ env.VERSION }}
+          draft: false
+          prerelease: false
       - name: Find All Files Matching VERSION
         id: find_files
         run: |
@@ -228,7 +174,6 @@ jobs:
           echo "Found files: ${files[@]}"
           file_list=$(IFS=','; echo "${files[*]}")
           echo "file_list=$file_list" >> $GITHUB_ENV
-
       - name: Upload Release Assets
         run: |
           IFS=',' read -r -a file_array <<< "${{ env.file_list }}"
@@ -243,6 +188,7 @@ jobs:
         env:
           file_list: ${{ env.file_list }}
 
+        
 
 
 
