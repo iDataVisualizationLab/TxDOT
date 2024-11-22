@@ -82,7 +82,7 @@
     "compression": "maximum",
     "asar": true,
     "asarUnpack": "**\\*.{node,dll}",
-    "productName": "TxCRCPMEv${version}",
+    "productName": "TxCRCPME",
     "mac": {
       "target": ["dmg"],
       "category": "public.app-category.utilities"
