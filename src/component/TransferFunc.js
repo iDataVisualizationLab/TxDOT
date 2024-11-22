@@ -5,6 +5,7 @@ import { MathJax, MathJaxContext } from 'better-react-mathjax';
 import Plot from 'react-plotly.js'; // Import Plotly component
 import * as TransferFuncVar from './TransferFuncVar.js';
 import HomeIcon from "@material-ui/icons/Home";
+import packagejson from '../../package.json';
 
 class TransferFunc extends Component {
   constructor(props) {
@@ -13,6 +14,7 @@ class TransferFunc extends Component {
       A: TransferFuncVar.A,
       B: TransferFuncVar.B,
       C: TransferFuncVar.C,
+      version: packagejson.version, 
       token: '',
       errorA: false,
       errorB: false,
@@ -25,7 +27,7 @@ class TransferFunc extends Component {
   // Validation function
   validateInputs = () => {
     let valid = true;
-    const { A, B, C, token } = this.state;
+    const { A, B, C, token, version } = this.state;
 
     if (!A || isNaN(A)) {
       this.setState({ errorA: true });
@@ -46,6 +48,13 @@ class TransferFunc extends Component {
       valid = false;
     } else {
       this.setState({ errorC: false });
+    }
+
+    if (!version) {
+      this.setState({ errorVersion: true });
+      valid = false;
+    } else {
+      this.setState({ errorVersion: false });
     }
 
     if (!token) {
@@ -154,7 +163,7 @@ export const C = ${C};
   };
 
   render() {
-    const { A, B, C, token, errorA, errorB, errorC, errorToken, loading } = this.state;
+    const { A, B, C, token, version, errorA, errorB, errorC, errorToken, errorVersion, loading } = this.state;
   
     // Generate FC values and PO values
     const FCValues = Array.from({ length: 1000 }, (_, i) => Math.pow(10, -3 + (i * 6) / 999)); // From 1e-3 to 1e3
@@ -209,6 +218,7 @@ export const C = ${C};
                   { label: 'Value for B', value: B, error: errorB, onChange: (e) => this.setState({ B: e.target.value }) },
                   { label: 'Value for C', value: C, error: errorC, onChange: (e) => this.setState({ C: e.target.value }) },
                   { label: 'GitHub Token', value: token, error: errorToken, type: 'password', onChange: (e) => this.setState({ token: e.target.value }) },
+                  { label: 'Version', value: version, error: errorVersion, type: 'text', onChange: (e) => this.setState({ version: e.target.value }) }
                 ].map(({ label, value, error, type = 'number', onChange }, index) => (
                   <TextField
                     key={index}

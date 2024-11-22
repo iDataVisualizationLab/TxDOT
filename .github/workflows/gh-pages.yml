@@ -142,10 +142,10 @@ jobs:
       - name: Find All Files Matching VERSION
         id: find_files
         run: |
-          VERSION=$VERSION
+          VERSION=${{env.VERSION}}
           files=($(ls ./*${VERSION}* 2>/dev/null || echo ""))
           if [ ${#files[@]} -eq 0 ]; then
-            echo "Error: No files found matching VERSION $VERSION"
+            echo "Error: No files found matching VERSION ${VERSION}"
             exit 1
           fi
           "file=${files[@]}" >> $GITHUB_ENV
