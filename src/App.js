@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './App.css';
 import { makeStyles } from '@material-ui/core/styles';
-import { AppBar, Typography, Button, Toolbar, Grid, Slide, IconButton, Menu, MenuItem } from '@material-ui/core';
+import { AppBar, Typography, Button, Toolbar, Grid, Slide, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Menu, MenuItem } from '@material-ui/core';
 import SettingsIcon from '@material-ui/icons/Settings';
 import coverPic from './image/cover.jpg';
 import CRCP from './component/CRCP';
@@ -54,10 +54,18 @@ function App() {
   const [AnalysisPunchouts, setAnalysisPunchouts] = React.useState(0);
   const [AnalysisSlabThickness, setAnalysisSlabThickness] = React.useState(0);
   const [anchorEl, setAnchorEl] = useState(null); // State to manage the settings menu
+  const [openModal, setOpenModal] = useState(false); // State to control modal visibility
 
   const classes = useStyles();
   const AnalysisPunchoutsFunc = (d) => d === undefined ? AnalysisPunchouts : setAnalysisPunchouts(d);
   const AnalysisSlabThicknessFunc = (d) => d === undefined ? AnalysisSlabThickness : setAnalysisSlabThickness(d);
+  const handleAboutClick = () => {
+    setOpenModal(true); // Open the modal
+    console.log('Version: ', packagejson.version);
+  };
+  const handleCloseModal = () => {
+    setOpenModal(false); // Close the modal
+  };
 
   return (
     <ThemeProvider theme={theme}>
@@ -90,10 +98,27 @@ function App() {
             >
               <MenuItem onClick={() => setPage('TransferFunc')}>Transfer Function</MenuItem>
               <MenuItem onClick={() => console.log('Version: ', packagejson.version)}>Help</MenuItem>
-              <MenuItem onClick={() => console.log("About clicked")}>About</MenuItem>
+              <MenuItem onClick={handleAboutClick}>About</MenuItem>
             </Menu>
+            
           </Toolbar>
         </AppBar>
+        {/* About Modal */}
+        <Dialog open={openModal} onClose={handleCloseModal}>
+          <DialogTitle>About</DialogTitle>
+          <DialogContent>
+            <h3>Program Name</h3>
+            <p>TxDOT Mechanistic-Empirical CRCP Design System</p> 
+
+            <h3>Version</h3>
+            <p>{packagejson.version}</p> 
+            <h3>Developed By</h3>
+            <p>iDataVisualizationLab</p> 
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseModal} color="primary">Close</Button>
+          </DialogActions>
+        </Dialog>
 
         <div className={classes.root}>
           {/* Home Page */}

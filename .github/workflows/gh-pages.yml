@@ -123,7 +123,8 @@ jobs:
         run: ls -l  
       - name: Debug VERSION
         run: |
-          echo "VERSION is: $VERSION" 
+          VERSION=$VERSION
+          echo "VERSION is: ${VERSION}" 
         env:
           VERSION: ${{ env.VERSION }}
       - name: Create GitHub Release
@@ -141,6 +142,7 @@ jobs:
       - name: Find All Files Matching VERSION
         id: find_files
         run: |
+          VERSION=$VERSION
           files=($(ls ./*${VERSION}* 2>/dev/null || echo ""))
           if [ ${#files[@]} -eq 0 ]; then
             echo "Error: No files found matching VERSION $VERSION"
