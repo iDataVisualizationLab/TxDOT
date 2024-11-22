@@ -55,192 +55,24 @@ jobs:
   #       with:
   #         token: ${{ secrets.GITHUB_TOKEN }}
   
-  # build-gh-electron:
-  #   # needs: deploy
-  #   runs-on: ubuntu-latest
-  #   strategy:
-  #     matrix:
-  #       # platform: [win]
-  #       platform: [win]
-  #       # platform: [win, mac, linux]
-  #   steps:
-  #     - name: Checkout Code
-  #       uses: actions/checkout@v3
-  #     - name: Install dependencies
-  #       run: npm install
-  #     - name: Install Wine
-  #       run: |
-  #         sudo dpkg --add-architecture i386
-  #         sudo apt update
-  #         sudo apt install -y wine64 wine32
-  #     - name: Build
-  #       run: npm run build
-  #     - name: Build Electron App
-  #       run: |
-  #         case ${{ matrix.platform }} in
-  #           win) GH_TOKEN=${{ secrets.GITHUB_TOKEN }} npm run dist -- --win;;
-  #           mac) GH_TOKEN=${{ secrets.GITHUB_TOKEN }} npm run dist -- --mac ;;
-  #           linux) GH_TOKEN=${{ secrets.GITHUB_TOKEN }} npm run dist -- --linux AppImage ;;
-  #         esac
-  #     - name: Archive Build Outputs
-  #       run: |
-  #         mkdir -p artifacts
-  #         case ${{ matrix.platform }} in
-  #           win) mv dist/*.exe artifacts/ ;;
-  #           mac) mv dist/*.dmg artifacts/ ;;
-  #           linux) mv dist/*.AppImage artifacts/ ;;
-  #         esac
-
-  #     - name: Upload Build Outputs
-  #       uses: actions/upload-artifact@v3
-  #       with:
-  #         name: ${{ matrix.platform }}-builds
-  #         path: artifacts
-    
-  #     - name: List files in the build directory
-  #       run: ls -l ./dist 
-
-  #     - name: Extract version from package.json
-  #       id: extract_version
-  #       run: |
-  #         VERSION=$(node -p "require('./package.json').version")
-  #         echo "Version extracted: $VERSION"
-  #         echo "::set-output name=version::$VERSION"
-  #         echo "VERSION=$VERSION" >> $GITHUB_ENV
-
-  # release:
-  #   needs: build-gh-electron
-  #   runs-on: ubuntu-latest
-  #   strategy:
-  #     matrix:
-  #       # platform: [win]
-  #       platform: [win]
-  #       # platform: [win, mac, linux]
-  #   steps:
-  #     - name: Download Artifacts
-  #       uses: actions/download-artifact@v3
-  #       with:
-  #         name: ${{ matrix.platform }}-builds
-  #     - name: List files in the build directory
-  #       run: ls -l  
-  #     - name: Debug VERSION
-  #       run: |
-  #         echo "VERSION is: ${{ env.VERSION }}" 
-  #       env:
-  #         VERSION: ${{ env.VERSION }}
-  #     - name: Create GitHub Release
-  #       id: create_release
-  #       uses: actions/create-release@v1
-  #       env:
-  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  #         VERSION: ${{ env.VERSION }}
-  #       with:
-  #         tag_name: ${{ github.ref_name }}-${{ github.run_id }}
-  #         release_name: Release New Version ${{ env.VERSION }}
-  #         draft: false
-  #         prerelease: false
-
-  #     - name: Find All Files Matching VERSION
-  #       id: find_files
-  #       run: |
-  #         VERSION=${{ env.VERSION }}
-  #         files=($(ls ./*${VERSION}* 2>/dev/null || echo ""))
-  #         if [ ${#files[@]} -eq 0 ]; then
-  #           echo "Error: No files found matching VERSION ${VERSION}"
-  #           exit 1
-  #         fi
-  #         echo "Found files: ${files[@]}"
-  #         file_list=$(IFS=','; echo "${files[*]}")
-  #         echo "file_list=$file_list" >> $GITHUB_ENV
-
-  #     - name: Generate Release Assets
-  #       run: |
-  #         echo "Files to upload: ${{ env.file_list }}"
-  #         IFS=',' read -r -a file_array <<< "${{ env.file_list }}"
-  #         for file in "${file_array[@]}"; do
-  #           echo "$file" > asset_files.txt
-  #           echo "Processing file: $file"
-  #         done
-  #       env:
-  #         file_list: ${{ env.file_list }}
-
-  #     - name: Upload Release Assets
-  #       run: |
-  #         IFS=',' read -r -a file_array <<< "${{ env.file_list }}"
-  #         for file in "${file_array[@]}"; do
-  #           echo "Uploading $file..."
-  #           curl -XPOST \
-  #             -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-  #             -H "Content-Type: application/octet-stream" \
-  #             --data-binary @$file \
-  #             "https://uploads.github.com/repos/iDataVisualizationLab/TxDOT/releases/${{ steps.create_release.outputs.id }}/assets?name=$(basename $file)"
-  #         done
-  #       env:
-  #         file_list: ${{ env.file_list }}
-
-  #     # - name: Upload Release Assets
-  #     #   run: |
-  #     #     # Loop through the asset files and upload them one by one
-  #     #     for file in $(cat asset_files.txt); do
-  #     #       echo "Uploading $file..."
-  #     #       curl -XPOST \
-  #     #         -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-  #     #         -H "Content-Type: application/octet-stream" \
-  #     #         --data-binary @$file \
-  #     #         "https://uploads.github.com/repos/iDataVisualizationLab/TxDOT/releases/${{ steps.create_release.outputs.id }}/assets?name=$file"
-  #     #     done
-
-  #     # - name: Upload Release Assets
-  #     #   id: upload-release-asset
-  #     #   uses: actions/upload-release-asset@v1
-  #     #   with:
-  #     #     upload_url: ${{ steps.create_release.outputs.upload_url }}  # Use the upload URL from the create-release step
-  #     #     asset_path: ${{ env.file_list }}  # Adjust the path if necessary
-  #     #     asset_name: ${{ env.VERSION }}-asset  # Name of the asset to upload
-  #     #     asset_content_type: application/octet-stream
-  #     #   env:
-  #     #     VERSION: ${{ env.VERSION }}
-  #     #     file_list: ${{ env.file_list }}
-
-  
-  #     # - name: Upload Windows Installer
-  #     #   uses: actions/upload-release-asset@v1
-  #     #   with:
-  #     #     upload_url: ${{ steps.create_release.outputs.upload_url }}
-  #     #     asset_path: ./artifacts/*.exe
-  #     #     asset_name: TxCRCPME-win-v${{ github.run_number }}.exe
-  #     #     asset_content_type: application/octet-stream
-
-  #     # - name: Upload macOS Installer
-  #     #   uses: actions/upload-release-asset@v1
-  #     #   with:
-  #     #     upload_url: ${{ steps.create_release.outputs.upload_url }}
-  #     #     asset_path: ./artifacts/*.dmg
-  #     #     asset_name: TxCRCPME-mac-v${{ github.run_number }}.dmg
-  #     #     asset_content_type: application/octet-stream
-
-  #     # - name: Upload Linux Installer
-  #     #   uses: actions/upload-release-asset@v1
-  #     #   with:
-  #     #     upload_url: ${{ steps.create_release.outputs.upload_url }}
-  #     #     asset_path: ./artifacts/*.AppImage
-  #     #     asset_name: TxCRCPME-linux-v${{ github.run_number }}.AppImage
-  #     #     asset_content_type: application/octet-stream
-
-
-  build-mac-electron:
-    # needs: release
-    runs-on: macos-latest
+  build-gh-electron:
+    # needs: deploy
+    runs-on: ubuntu-latest
     strategy:
       matrix:
-        platform: [mac]
+        # platform: [win]
+        platform: [win, linux]
+        # platform: [win, mac, linux]
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
       - name: Install dependencies
         run: npm install
-      - name: Install dmg-license
-        run: npm install dmg-license
+      - name: Install Wine
+        run: |
+          sudo dpkg --add-architecture i386
+          sudo apt update
+          sudo apt install -y wine64 wine32
       - name: Build
         run: npm run build
       - name: Build Electron App
@@ -275,13 +107,15 @@ jobs:
           echo "Version extracted: $VERSION"
           echo "::set-output name=version::$VERSION"
           echo "VERSION=$VERSION" >> $GITHUB_ENV
-          
-  mac-release:
-    needs: build-mac-electron
-    runs-on: macos-latest
+
+  release:
+    needs: build-gh-electron
+    runs-on: ubuntu-latest
     strategy:
       matrix:
-        platform: [mac]
+        # platform: [win]
+        platform: [win, linux]
+        # platform: [win, mac, linux]
     steps:
       - name: Download Artifacts
         uses: actions/download-artifact@v3
@@ -343,6 +177,172 @@ jobs:
           done
         env:
           file_list: ${{ env.file_list }}
+
+      # - name: Upload Release Assets
+      #   run: |
+      #     # Loop through the asset files and upload them one by one
+      #     for file in $(cat asset_files.txt); do
+      #       echo "Uploading $file..."
+      #       curl -XPOST \
+      #         -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+      #         -H "Content-Type: application/octet-stream" \
+      #         --data-binary @$file \
+      #         "https://uploads.github.com/repos/iDataVisualizationLab/TxDOT/releases/${{ steps.create_release.outputs.id }}/assets?name=$file"
+      #     done
+
+      # - name: Upload Release Assets
+      #   id: upload-release-asset
+      #   uses: actions/upload-release-asset@v1
+      #   with:
+      #     upload_url: ${{ steps.create_release.outputs.upload_url }}  # Use the upload URL from the create-release step
+      #     asset_path: ${{ env.file_list }}  # Adjust the path if necessary
+      #     asset_name: ${{ env.VERSION }}-asset  # Name of the asset to upload
+      #     asset_content_type: application/octet-stream
+      #   env:
+      #     VERSION: ${{ env.VERSION }}
+      #     file_list: ${{ env.file_list }}
+
+  
+      # - name: Upload Windows Installer
+      #   uses: actions/upload-release-asset@v1
+      #   with:
+      #     upload_url: ${{ steps.create_release.outputs.upload_url }}
+      #     asset_path: ./artifacts/*.exe
+      #     asset_name: TxCRCPME-win-v${{ github.run_number }}.exe
+      #     asset_content_type: application/octet-stream
+
+      # - name: Upload macOS Installer
+      #   uses: actions/upload-release-asset@v1
+      #   with:
+      #     upload_url: ${{ steps.create_release.outputs.upload_url }}
+      #     asset_path: ./artifacts/*.dmg
+      #     asset_name: TxCRCPME-mac-v${{ github.run_number }}.dmg
+      #     asset_content_type: application/octet-stream
+
+      # - name: Upload Linux Installer
+      #   uses: actions/upload-release-asset@v1
+      #   with:
+      #     upload_url: ${{ steps.create_release.outputs.upload_url }}
+      #     asset_path: ./artifacts/*.AppImage
+      #     asset_name: TxCRCPME-linux-v${{ github.run_number }}.AppImage
+      #     asset_content_type: application/octet-stream
+
+
+  # build-mac-electron:
+  #   # needs: release
+  #   runs-on: macos-latest
+  #   strategy:
+  #     matrix:
+  #       platform: [mac]
+  #   steps:
+  #     - name: Checkout Code
+  #       uses: actions/checkout@v3
+  #     - name: Install dependencies
+  #       run: npm install
+  #     - name: Install dmg-license
+  #       run: npm install dmg-license
+  #     - name: Build
+  #       run: npm run build
+  #     - name: Build Electron App
+  #       run: |
+  #         case ${{ matrix.platform }} in
+  #           win) GH_TOKEN=${{ secrets.GITHUB_TOKEN }} npm run dist -- --win;;
+  #           mac) GH_TOKEN=${{ secrets.GITHUB_TOKEN }} npm run dist -- --mac ;;
+  #           linux) GH_TOKEN=${{ secrets.GITHUB_TOKEN }} npm run dist -- --linux AppImage ;;
+  #         esac
+  #     - name: Archive Build Outputs
+  #       run: |
+  #         mkdir -p artifacts
+  #         case ${{ matrix.platform }} in
+  #           win) mv dist/*.exe artifacts/ ;;
+  #           mac) mv dist/*.dmg artifacts/ ;;
+  #           linux) mv dist/*.AppImage artifacts/ ;;
+  #         esac
+
+  #     - name: Upload Build Outputs
+  #       uses: actions/upload-artifact@v3
+  #       with:
+  #         name: ${{ matrix.platform }}-builds
+  #         path: artifacts
+    
+  #     - name: List files in the build directory
+  #       run: ls -l ./dist 
+
+  #     - name: Extract version from package.json
+  #       id: extract_version
+  #       run: |
+  #         VERSION=$(node -p "require('./package.json').version")
+  #         echo "Version extracted: $VERSION"
+  #         echo "::set-output name=version::$VERSION"
+  #         echo "VERSION=$VERSION" >> $GITHUB_ENV
+          
+  # mac-release:
+  #   needs: build-mac-electron
+  #   runs-on: macos-latest
+  #   strategy:
+  #     matrix:
+  #       platform: [mac]
+  #   steps:
+  #     - name: Download Artifacts
+  #       uses: actions/download-artifact@v3
+  #       with:
+  #         name: ${{ matrix.platform }}-builds
+  #     - name: List files in the build directory
+  #       run: ls -l  
+  #     - name: Debug VERSION
+  #       run: |
+  #         echo "VERSION is: ${{ env.VERSION }}" 
+  #       env:
+  #         VERSION: ${{ env.VERSION }}
+  #     - name: Create GitHub Release
+  #       id: create_release
+  #       uses: actions/create-release@v1
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #         VERSION: ${{ env.VERSION }}
+  #       with:
+  #         tag_name: ${{ github.ref_name }}-${{ github.run_id }}
+  #         release_name: Release New Version ${{ env.VERSION }}
+  #         draft: false
+  #         prerelease: false
+
+  #     - name: Find All Files Matching VERSION
+  #       id: find_files
+  #       run: |
+  #         VERSION=${{ env.VERSION }}
+  #         files=($(ls ./*${VERSION}* 2>/dev/null || echo ""))
+  #         if [ ${#files[@]} -eq 0 ]; then
+  #           echo "Error: No files found matching VERSION ${VERSION}"
+  #           exit 1
+  #         fi
+  #         echo "Found files: ${files[@]}"
+  #         file_list=$(IFS=','; echo "${files[*]}")
+  #         echo "file_list=$file_list" >> $GITHUB_ENV
+
+  #     - name: Generate Release Assets
+  #       run: |
+  #         echo "Files to upload: ${{ env.file_list }}"
+  #         IFS=',' read -r -a file_array <<< "${{ env.file_list }}"
+  #         for file in "${file_array[@]}"; do
+  #           echo "$file" > asset_files.txt
+  #           echo "Processing file: $file"
+  #         done
+  #       env:
+  #         file_list: ${{ env.file_list }}
+
+  #     - name: Upload Release Assets
+  #       run: |
+  #         IFS=',' read -r -a file_array <<< "${{ env.file_list }}"
+  #         for file in "${file_array[@]}"; do
+  #           echo "Uploading $file..."
+  #           curl -XPOST \
+  #             -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+  #             -H "Content-Type: application/octet-stream" \
+  #             --data-binary @$file \
+  #             "https://uploads.github.com/repos/iDataVisualizationLab/TxDOT/releases/${{ steps.create_release.outputs.id }}/assets?name=$(basename $file)"
+  #         done
+  #       env:
+  #         file_list: ${{ env.file_list }}
 
 
 
