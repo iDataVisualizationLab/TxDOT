@@ -123,7 +123,8 @@ jobs:
           echo "Listing downloaded files in the TxDOT directory:"
           ls -l /home/runner/work/TxDOT/TxDOT
           echo "Listing files specifically for SETUP and installer:"
-          ls -l /home/runner/work/TxDOT/TxDOT/*SETUP* /home/runner/work/TxDOT/TxDOT/*.exe
+          ls -l /home/runner/work/TxDOT/TxDOT/*Setup* /home/runner/work/TxDOT/TxDOT/*.exe
+
       - name: Create GitHub Release
         id: create_release
         uses: actions/create-release@v1
@@ -134,13 +135,23 @@ jobs:
           release_name: Release ${{ github.ref_name }}
           draft: false
           prerelease: false
-      - name: Upload Windows Installer
+
+      - name: Upload Windows Installer 1
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./artifacts/*.exe
+          asset_path: ./artifacts/TxCRCPME\ 1.0.0.exe
           asset_name: TxCRCPME-win-v${{ steps.extract_version.outputs.version }}.exe
           asset_content_type: application/octet-stream
+
+      - name: Upload Windows Installer 2
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./artifacts/TxCRCPME\ Setup\ 1.0.0.exe
+          asset_name: TxCRCPME-Setup-win-v${{ steps.extract_version.outputs.version }}.exe
+          asset_content_type: application/octet-stream
+  
       # - name: Upload Windows Installer
       #   uses: actions/upload-release-asset@v1
       #   with:
