@@ -83,7 +83,9 @@
     "asar": true,
     "asarUnpack": "**\\*.{node,dll}",
     "mac": {
-      "category": "public.app-category.productivity"
+      "category": "public.app-category.productivity",
+      "target": ["zip", "dmg"],
+      "icon": "build/logo.png"
     },
     "win": {
       "target": [

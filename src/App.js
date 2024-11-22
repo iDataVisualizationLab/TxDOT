@@ -1,30 +1,25 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './App.css';
 import { makeStyles } from '@material-ui/core/styles';
-import {AppBar,Typography,Button,Toolbar,Grid,Slide} from '@material-ui/core';
+import { AppBar, Typography, Button, Toolbar, Grid, Slide, IconButton, Menu, MenuItem } from '@material-ui/core';
+import SettingsIcon from '@material-ui/icons/Settings';
 import coverPic from './image/cover.jpg';
-import CRCP from './component/CRCP'
-import TransferFunc from './component/TransferFunc'
+import CRCP from './component/CRCP';
+import TransferFunc from './component/TransferFunc';
 import logo from "./image/logo_g.png";
-import {ThemeProvider} from "@material-ui/styles";
-import {createMuiTheme} from "@material-ui/core/styles";
+import { ThemeProvider } from "@material-ui/styles";
+import { createMuiTheme } from "@material-ui/core/styles";
 import headerPic from './image/Header_EXBD_prnt_fromMac.png';
 import packagejson from '../package.json';
 
 let theme = createMuiTheme({
   palette: {
-    primary: {main:'#14375A'},
-    secondary: {main: '#CC7B29'},
-    // grey: 500,
-
-    text: {primary: '#000000'}
+    primary: { main: '#14375A' },
+    secondary: { main: '#CC7B29' },
+    text: { primary: '#000000' }
   },
   typography: {
-    // fontSize: 16,
-    fontFamily: [
-      'Franklin Gothic Book','Franklin Gothic Demi Cond',
-      'arial'
-    ].join(','),
+    fontFamily: ['Franklin Gothic Book', 'Franklin Gothic Demi Cond', 'arial'].join(','),
   },
 });
 
@@ -37,15 +32,15 @@ const useStyles = makeStyles((theme) => ({
   },
   titleNav: {
     flexGrow: 1,
-    paddingLeft:5,
-    paddingTop:2
+    paddingLeft: 5,
+    paddingTop: 2
   },
   title: {
     color: 'white'
   },
   cover: {
-    width:'100%',
-    position:'fixed',
+    width: '100%',
+    position: 'fixed',
     background: `linear-gradient(0deg,rgba(0,0,0,0) 0,#000 100%), url(${coverPic}) no-repeat center center fixed`,
     backgroundSize: 'cover',
     height: '100vh',
@@ -58,61 +53,90 @@ function App() {
   const [page, setPage] = React.useState('home');
   const [AnalysisPunchouts, setAnalysisPunchouts] = React.useState(0);
   const [AnalysisSlabThickness, setAnalysisSlabThickness] = React.useState(0);
+  const [anchorEl, setAnchorEl] = useState(null); // State to manage the settings menu
+
   const classes = useStyles();
-  const AnalysisPunchoutsFunc = (d)=>d===undefined?AnalysisPunchouts:setAnalysisPunchouts(d);
-  const AnalysisSlabThicknessFunc = (d)=>d===undefined?AnalysisSlabThickness:setAnalysisSlabThickness(d);
+  const AnalysisPunchoutsFunc = (d) => d === undefined ? AnalysisPunchouts : setAnalysisPunchouts(d);
+  const AnalysisSlabThicknessFunc = (d) => d === undefined ? AnalysisSlabThickness : setAnalysisSlabThickness(d);
+
   return (
-      <ThemeProvider theme={theme}>
-    <div >
-      <div className={classes.cover}></div>
-      <AppBar position="static" style={{backgroundImage: `url(${headerPic})`, backgroundSize:'cover'}}>
-        <Toolbar>
-          <img src={logo} alt="description" style={{width:50}}/>
-          <Typography variant="h6" className={classes.titleNav}>
-            TxCRCP-ME Analysis
-          </Typography>
-          <Typography variant="caption">version {packagejson.version}</Typography>
-        </Toolbar>
-      </AppBar>
-      <div className={classes.root}>
-        <Slide direction="up" in={page==='home'} mountOnEnter unmountOnExit>
-          <Grid container spacing={5} alignItems="center" justify="center" direction={"column"} style={{height: 'calc(100vh - 64px)',width:'100%'}}>
-            <Grid item>
-              <Typography variant="h3" className={classes.title}>
-                TxDOT Mechanistic-Empirical CRCP Design System
-              </Typography>
+    <ThemeProvider theme={theme}>
+      <div>
+        <div className={classes.cover}></div>
+        <AppBar position="static" style={{ backgroundImage: `url(${headerPic})`, backgroundSize: 'cover' }}>
+          <Toolbar>
+            <img src={logo} alt="description" style={{ width: 50 }} />
+            <Typography variant="h6" className={classes.titleNav}>
+              TxCRCP-ME Analysis
+            </Typography>
+
+            {/* Settings Icon Button */}
+            <IconButton
+              color="inherit"
+              aria-controls="settings-menu"
+              aria-haspopup="true"
+              onClick={(event) => setAnchorEl(event.currentTarget)} // Open menu
+            >
+              <SettingsIcon />
+            </IconButton>
+
+            {/* Settings Menu */}
+            <Menu
+              id="settings-menu"
+              anchorEl={anchorEl}
+              keepMounted
+              open={Boolean(anchorEl)}
+              onClose={() => setAnchorEl(null)} // Close menu
+            >
+              <MenuItem onClick={() => setPage('TransferFunc')}>Transfer Function</MenuItem>
+              <MenuItem onClick={() => console.log("Help clicked")}>Help</MenuItem>
+              <MenuItem onClick={() => console.log("About clicked")}>About</MenuItem>
+            </Menu>
+          </Toolbar>
+        </AppBar>
+
+        <div className={classes.root}>
+          {/* Home Page */}
+          <Slide direction="up" in={page === 'home'} mountOnEnter unmountOnExit>
+            <Grid container spacing={5} alignItems="center" justify="center" direction={"column"} style={{ height: 'calc(100vh - 64px)', width: '100%' }}>
+              <Grid item>
+                <Typography variant="h3" className={classes.title}>
+                  TxDOT Mechanistic-Empirical CRCP Design System
+                </Typography>
+              </Grid>
+              <Grid container item alignItems="stretch" justify="center" direction={"column"} spacing={3} style={{ width: 'fit-content' }}>
+                <Grid item>
+                  <Button variant="contained" color="primary" style={{ width: '100%' }} onClick={() => setPage('CRCP')}>CRCP Design</Button>
+                </Grid>
+                <Grid item>
+                  <Button variant="contained" style={{ width: '100%' }}>Slab Support</Button>
+                </Grid>
+                <Grid item>
+                  <Button variant="contained" style={{ width: '100%' }}>Product Disclaimer</Button>
+                </Grid>
+              </Grid>
             </Grid>
-            <Grid container item alignItems="stretch" justify="center" direction={"column"} spacing={3} style={{width:'fit-content'}}>
-              <Grid item>
-                <Button variant="contained" color="primary" style={{width:'100%'}} onClick={()=>setPage('CRCP')}>CRCP Design</Button>
-              </Grid>
-              <Grid item>
-                <Button variant="contained" style={{width:'100%'}}>Slab Support</Button>
-              </Grid>
-              <Grid item>
-                <Button variant="contained" style={{width:'100%'}}>Product Disclaimer</Button>
-              </Grid>
-              <Grid item>
-                <Button variant="contained" color="primary" style={{width:'100%'}} onClick={() => { console.log("Setting page to: TransferFunc"); setPage('TransferFunc'); }}> Transfer Function </Button>
-              </Grid>
-            </Grid>
-          </Grid>
-        </Slide>
-        <Slide direction="up" in={page==='CRCP'} mountOnEnter unmountOnExit>
-          <CRCP
-              toMenu={()=>setPage('home')}
+          </Slide>
+
+          {/* CRCP Page */}
+          <Slide direction="up" in={page === 'CRCP'} mountOnEnter unmountOnExit>
+            <CRCP
+              toMenu={() => setPage('home')}
               AnalysisPunchouts={AnalysisPunchoutsFunc}
               AnalysisSlabThickness={AnalysisSlabThicknessFunc}
-          />
-        </Slide>
-        <Slide direction="up" in={page === 'TransferFunc'} mountOnEnter unmountOnExit>
-        <div>
-          <TransferFunc toMenu={() => setPage('home')}/>
+            />
+          </Slide>
+
+          {/* Transfer Function Page */}
+          <Slide direction="up" in={page === 'TransferFunc'} mountOnEnter unmountOnExit>
+            <div>
+              <TransferFunc toMenu={() => setPage('home')} />
+            </div>
+          </Slide>
         </div>
-      </Slide>
+
       </div>
-    </div>
-      </ThemeProvider>
+    </ThemeProvider>
   );
 }
 
