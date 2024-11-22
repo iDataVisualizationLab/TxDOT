@@ -93,10 +93,10 @@
         "nsis"
       ],
       "artifactName": "TxCRCPMEv${version}.exe",
-      "icon": "build/logo.png",
-      "nsis": {
-        "artifactName": "TxCRCPMEv${version}-Setup.exe"
-      }
+      "icon": "build/logo.png"
+    },
+    "nsis": {
+      "artifactName": "TxCRCPMEv${version}-Setup.exe"
     },
     "linux": {
       "target": "AppImage"
