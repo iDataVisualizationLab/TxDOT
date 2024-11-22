@@ -82,8 +82,8 @@
     "compression": "maximum",
     "asar": true,
     "asarUnpack": "**\\*.{node,dll}",
-    "productName": "TxCRCPME",
-    "artifactName": "TxCRCPMEv${version}.exe",
+    "productName": "TxCRCPMEv${version}",
+    // "artifactName": "TxCRCPMEv${version}.exe",
     "mac": {
       "target": ["dmg"],
       "category": "public.app-category.utilities"
@@ -95,9 +95,9 @@
       ],
       "icon": "build/logo.png"
     },
-    "nsis": {
-      "artifactName": "TxCRCPMEv${version}-Setup.exe"
-    },
+    // "nsis": {
+    //   "artifactName": "TxCRCPMEv${version}-Setup.exe"
+    // },
     "linux": {
       "target": "AppImage"
     }
