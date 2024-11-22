@@ -136,21 +136,32 @@ jobs:
           draft: false
           prerelease: false
 
-      - name: Upload Windows Installer 1
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./artifacts/TxCRCPME\ 1.0.0.exe
-          asset_name: TxCRCPME-win-v${{ steps.extract_version.outputs.version }}.exe
-          asset_content_type: application/octet-stream
+      - name: Find All Files Matching Version
+        id: find_files
+        run: |
+          VERSION=${{ steps.extract_version.outputs.version }}
+          # Locate all files matching the version
+          files=($(ls ./artifacts/*${VERSION}*.exe 2>/dev/null || echo ""))
+          if [ ${#files[@]} -eq 0 ]; then
+            echo "Error: No files found matching version ${VERSION}"
+            exit 1
+          fi
+          for file in "${files[@]}"; do
+            echo "file=$file" >> $GITHUB_ENV
+          done
+          echo "Found files: ${files[@]}"
 
-      - name: Upload Windows Installer 2
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./artifacts/TxCRCPME\ Setup\ 1.0.0.exe
-          asset_name: TxCRCPME-Setup-win-v${{ steps.extract_version.outputs.version }}.exe
-          asset_content_type: application/octet-stream
+      - name: Upload All Files
+        run: |
+          for file in ${{ env.files }}; do
+            echo "Uploading $file"
+            filename=$(basename "$file")  # Get the basename of the file
+            echo "Uploading asset with name: $filename"
+            gh release upload ${{ github.ref_name }} "$file" --clobber --name "$filename"
+          done
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   
       # - name: Upload Windows Installer
       #   uses: actions/upload-release-asset@v1
