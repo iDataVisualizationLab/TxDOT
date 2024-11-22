@@ -60,24 +60,17 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        platform: [win, mac]
+        platform: [win, linux]
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '20'
-
-      - name: Install Dependencies
-        run: npm install
 
       - name: Build Electron App
         run: |
           case ${{ matrix.platform }} in
             win) npm run dist -- --win ;;
             mac) npm run dist -- --mac ;;
+            linux) npm run dist -- --linux AppImage ;;
           esac
       - name: Archive Build Outputs
         run: |
@@ -85,6 +78,7 @@ jobs:
           case ${{ matrix.platform }} in
             win) mv dist/*.exe artifacts/ ;;
             mac) mv dist/*.dmg artifacts/ ;;
+            linux) mv dist/*.AppImage artifacts/ ;;
           esac
 
       - name: Upload Build Outputs
@@ -96,6 +90,9 @@ jobs:
   release:
     needs: build-electron
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        platform: [win, linux]
     steps:
       - name: Download Artifacts
         uses: actions/download-artifact@v3
@@ -121,10 +118,18 @@ jobs:
           asset_name: TxCRCPME-win-v${{ github.run_number }}.exe
           asset_content_type: application/octet-stream
 
-      - name: Upload macOS Installer
+      # - name: Upload macOS Installer
+      #   uses: actions/upload-release-asset@v1
+      #   with:
+      #     upload_url: ${{ steps.create_release.outputs.upload_url }}
+      #     asset_path: ./artifacts/*.dmg
+      #     asset_name: TxCRCPME-mac-v${{ github.run_number }}.dmg
+      #     asset_content_type: application/octet-stream
+
+      - name: Upload Linux Installer
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./artifacts/*.dmg
-          asset_name: TxCRCPME-mac-v${{ github.run_number }}.dmg
+          asset_path: ./artifacts/*.AppImage
+          asset_name: TxCRCPME-linux-v${{ github.run_number }}.AppImage
           asset_content_type: application/octet-stream

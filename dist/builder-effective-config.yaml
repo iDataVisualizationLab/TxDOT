@@ -12,6 +12,8 @@ asar: true
 asarUnpack: '**\*.{node,dll}'
 mac:
   category: public.app-category.productivity
+  target:
+    - zip
 win:
   target:
     - portable
