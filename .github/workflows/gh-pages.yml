@@ -134,7 +134,7 @@ jobs:
           VERSION: ${{ env.VERSION }}
         with:
           tag_name: ${{ github.ref_name }}-${{ github.run_id }}
-          release_name: Release v${{ env.VERSION }}
+          release_name: Release v ${{ steps.extract_version.outputs.version }}
           draft: false
           prerelease: false
 
