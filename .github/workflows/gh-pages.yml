@@ -60,7 +60,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        platform: [win, linux]
+        platform: [win]
+        # platform: [win, mac, linux]
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
@@ -92,7 +93,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        platform: [win, linux]
+        platform: [win]
+        # platform: [win, mac, linux]
     steps:
       - name: Download Artifacts
         uses: actions/download-artifact@v3
@@ -126,10 +128,10 @@ jobs:
       #     asset_name: TxCRCPME-mac-v${{ github.run_number }}.dmg
       #     asset_content_type: application/octet-stream
 
-      - name: Upload Linux Installer
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./artifacts/*.AppImage
-          asset_name: TxCRCPME-linux-v${{ github.run_number }}.AppImage
-          asset_content_type: application/octet-stream
+      # - name: Upload Linux Installer
+      #   uses: actions/upload-release-asset@v1
+      #   with:
+      #     upload_url: ${{ steps.create_release.outputs.upload_url }}
+      #     asset_path: ./artifacts/*.AppImage
+      #     asset_name: TxCRCPME-linux-v${{ github.run_number }}.AppImage
+      #     asset_content_type: application/octet-stream
