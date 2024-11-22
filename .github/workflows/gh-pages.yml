@@ -26,12 +26,8 @@ jobs:
           node-version: '20'
       - name: Install dependencies
         run: npm install
-      - name: Build React app
-        run: npm run build:react
-      - name: Bundle the app with Webpack
-        run: npm run build:bundle
-      - name: List files in the build directory
-        run: ls -l ./build  
+      - name: Build app
+        run: npm run build
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
         with:
@@ -48,14 +44,12 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: github-pages
-      - name: List files after download
-        run: ls -l
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
   
-  build-gh-electron:
+  build-electron-win:
     needs: deploy
     runs-on: ubuntu-latest
     strategy:
@@ -107,7 +101,7 @@ jobs:
           echo "VERSION=$VERSION" >> $GITHUB_ENV
 
   release:
-    needs: build-gh-electron
+    needs: build-electron-win
     runs-on: ubuntu-latest
     strategy:
       matrix:
