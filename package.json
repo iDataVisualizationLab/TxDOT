@@ -95,7 +95,7 @@
         "portable",
         "nsis"
       ],
-      "icon": "build/logo.png",
+      "icon": "build/logo.png"
     },
     "nsis": {
       "artifactName": "TxCRCPMEv${version}-Setup.exe", 
