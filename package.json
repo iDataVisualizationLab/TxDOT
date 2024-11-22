@@ -85,7 +85,7 @@
     "productName": "TxCRCPME",
     "artifactName": "TxCRCPMEv${version}.exe",
     "mac": {
-      "target": ["dmg", "zip"],
+      "target": ["zip"],
       "category": "public.app-category.utilities"
     },
     "win": {
