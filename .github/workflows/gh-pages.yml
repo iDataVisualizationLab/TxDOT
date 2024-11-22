@@ -75,10 +75,6 @@ jobs:
           sudo apt install -y wine64 wine32
       - name: Build
         run: npm run build
-      - name: Deploy to GitHub Pages
-        uses: actions/deploy-pages@v1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
       - name: Build Electron App
         run: |
           case ${{ matrix.platform }} in
