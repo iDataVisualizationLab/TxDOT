@@ -93,7 +93,12 @@
         "portable",
         "nsis"
       ],
-      "icon": "build/logo.png"
+      "icon": "build/logo.png",
+      "productName": "TxCRCPME",
+      "artifactName": "TxCRCPMEv${version}.exe",
+      "nsis": {
+        "artifactName": "TxCRCPMEv${version}-Setup.exe"
+      }
     },
     "linux": {
       "target": "AppImage"
