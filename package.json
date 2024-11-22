@@ -84,7 +84,9 @@
     "asarUnpack": "**\\*.{node,dll}",
     "productName": "TxCRCPME",
     "mac": {
-      "target": ["dmg"],
+      "target": [
+        "dmg"
+      ],
       "category": "public.app-category.utilities"
     },
     "win": {
