@@ -77,7 +77,7 @@ jobs:
       - name: Build Electron App
         run: |
           case ${{ matrix.platform }} in
-            win) GH_TOKEN=${{ secrets.GH_TOKEN }} npm run dist -- --win;;
+            win) GH_TOKEN=${{ secrets.GITHUB_TOKEN }} npm run dist -- --win;;
             mac) npm run dist -- --mac ;;
             linux) npm run dist -- --linux AppImage ;;
           esac
