@@ -121,26 +121,28 @@ class TransferFunc extends Component {
     const repoName = 'TxDOT';
     const branch = 'main';
 
-    const getFileSHA = async () => {
+    const getFileSHA = async (filePath) => {
       try {
         const res = await axios.get(
-          `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${filePath}?ref=${branch}`, {
+          `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${filePath}?ref=${branch}`, 
+          {
             headers: {
               Authorization: `token ${token}`,
             },
           }
         );
-        return res.data.sha;
+        return res.data.sha;  // File exists, return its SHA
       } catch (err) {
-        console.warn('File does not exist, creating a new one');
-        return null; // File doesn't exist, so no SHA to pass
+        console.warn(`${filePath} does not exist, creating a new one`);
+        return null;  // File doesn't exist, return null to create a new file
       }
     };
 
     this.setState({
       loading: true
     }); 
-    const sha = await getFileSHA();
+    const shaTransferFuncVar = await getFileSHA(filePath);
+    const shaPackageJson = await getFileSHA('package.json');
     this.setState({
       loading: false
     }); // Reset loading after the request is done
@@ -163,8 +165,9 @@ class TransferFunc extends Component {
     try {
       const response = await axios.put(
         `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${filePath}`, {
-          message: sha ? 'Update TransferFuncVar.js file' : 'Create TransferFuncVar.js file',
+          message: shaTransferFuncVar ? 'Update TransferFuncVar.js file' : 'Create TransferFuncVar.js file',
           content: content,
+          sha: shaTransferFuncVar,
           branch: branch,
         }, {
           headers: {
@@ -177,6 +180,7 @@ class TransferFunc extends Component {
         `https://api.github.com/repos/${repoOwner}/${repoName}/contents/package.json`, {
           message: 'Update package.json version',
           content: contentPackageJson,
+          sha: shaPackageJson,
           branch: branch,
         }, {
           headers: {
@@ -188,6 +192,7 @@ class TransferFunc extends Component {
 
       // Show success alert
       alert('File uploaded successfully!');
+      this.props.toMenu();
     } catch (error) {
       console.error('Error uploading file', error);
 
