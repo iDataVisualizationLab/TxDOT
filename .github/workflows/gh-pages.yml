@@ -105,6 +105,7 @@ jobs:
           VERSION=$(node -p "require('./package.json').version")
           echo "Version extracted: $VERSION"
           echo "::set-output name=version::$VERSION"
+          echo "version=$VERSION" >> $GITHUB_ENV
 
   release:
     needs: build-electron
@@ -125,16 +126,17 @@ jobs:
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ env.version }}
         with:
           tag_name: ${{ github.ref_name }}-${{ github.run_id }}
-          release_name: Release v${{ steps.extract_version.outputs.version }}
+          release_name: Release v${{ env.VERSION }}
           draft: false
           prerelease: false
 
       - name: Find All Files Matching Version
         id: find_files
         run: |
-          VERSION=${{ steps.extract_version.outputs.version }}
+          VERSION=${{ env.version }}
           # Locate all files matching the version
           files=($(ls ./*${VERSION}* 2>/dev/null || echo ""))
           if [ ${#files[@]} -eq 0 ]; then
@@ -145,6 +147,8 @@ jobs:
             echo "file=$file" >> $GITHUB_ENV
           done
           echo "Found files: ${files[@]}"
+        env:
+          VERSION: ${{ env.version }}
 
       - name: Upload All Files
         run: |
@@ -152,10 +156,11 @@ jobs:
             echo "Uploading $file"
             filename=$(basename "$file")  # Get the basename of the file
             echo "Uploading asset with name: $filename"
-            gh release upload ${{ github.ref_name }} "$file" --clobber --name "$filename"
+            gh release upload ${{ steps.create_release.outputs.upload_url }} "$file" --clobber --name "$filename"
           done
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          files: ${{ env.files }}
 
   
       # - name: Upload Windows Installer
