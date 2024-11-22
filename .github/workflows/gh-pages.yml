@@ -118,6 +118,8 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: ${{ matrix.platform }}-builds
+      - name: List files in the build directory
+        run: ls -l  
       - name: List Downloaded Files
         run: |
           echo "Listing downloaded files in the TxDOT directory:"
