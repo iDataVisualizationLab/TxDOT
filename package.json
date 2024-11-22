@@ -87,7 +87,7 @@
     "mac": {
       "category": "public.app-category.productivity",
       "target": [
-        "zip"
+        "dmg"
       ]
     },
     "win": {
