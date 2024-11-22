@@ -151,28 +151,54 @@ jobs:
           file_list=$(IFS=','; echo "${files[*]}")
           echo "file_list=$file_list" >> $GITHUB_ENV
 
-      - name: Debug file list
+      - name: Generate Release Assets
         run: |
           echo "Files to upload: ${{ env.file_list }}"
-          # If needed, you can split this into an array and process each file individually:
           IFS=',' read -r -a file_array <<< "${{ env.file_list }}"
           for file in "${file_array[@]}"; do
+            echo "$file" > asset_files.txt
             echo "Processing file: $file"
           done
         env:
           file_list: ${{ env.file_list }}
 
       - name: Upload Release Assets
-        id: upload-release-asset
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}  # Use the upload URL from the create-release step
-          asset_path: ${{ env.file_list }}  # Adjust the path if necessary
-          asset_name: ${{ env.VERSION }}-asset  # Name of the asset to upload
-          asset_content_type: application/octet-stream
+        run: |
+          IFS=',' read -r -a file_array <<< "${{ env.file_list }}"
+          for file in "${file_array[@]}"; do
+            echo "Uploading $file..."
+            curl -XPOST \
+              -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+              -H "Content-Type: application/octet-stream" \
+              --data-binary @$file \
+              "https://uploads.github.com/repos/iDataVisualizationLab/TxDOT/releases/${{ steps.create_release.outputs.id }}/assets?name=$(basename $file)"
+          done
         env:
-          VERSION: ${{ env.VERSION }}
           file_list: ${{ env.file_list }}
+          
+      # - name: Upload Release Assets
+      #   run: |
+      #     # Loop through the asset files and upload them one by one
+      #     for file in $(cat asset_files.txt); do
+      #       echo "Uploading $file..."
+      #       curl -XPOST \
+      #         -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+      #         -H "Content-Type: application/octet-stream" \
+      #         --data-binary @$file \
+      #         "https://uploads.github.com/repos/iDataVisualizationLab/TxDOT/releases/${{ steps.create_release.outputs.id }}/assets?name=$file"
+      #     done
+
+      # - name: Upload Release Assets
+      #   id: upload-release-asset
+      #   uses: actions/upload-release-asset@v1
+      #   with:
+      #     upload_url: ${{ steps.create_release.outputs.upload_url }}  # Use the upload URL from the create-release step
+      #     asset_path: ${{ env.file_list }}  # Adjust the path if necessary
+      #     asset_name: ${{ env.VERSION }}-asset  # Name of the asset to upload
+      #     asset_content_type: application/octet-stream
+      #   env:
+      #     VERSION: ${{ env.VERSION }}
+      #     file_list: ${{ env.file_list }}
 
   
       # - name: Upload Windows Installer
