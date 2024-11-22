@@ -113,7 +113,7 @@ jobs:
           echo "VERSION=$VERSION" >> $GITHUB_ENV
 
   release:
-    needs: build-electron
+    needs: build-gh-electron
     runs-on: ubuntu-latest
     strategy:
       matrix:
