@@ -1,16 +1,16 @@
+require('dotenv').config();
 const path = require("path");
 const TerserPlugin = require("terser-webpack-plugin");
 const glob = require("glob");
 const { execSync } = require("child_process");
 const webpack = require("webpack");
-const commitHash = (() => {
+const commitHash = process.env.LOCAL_COMMIT_HASH || (() => {
   try {
     return execSync("git rev-parse HEAD").toString().trim();
   } catch (error) {
     return "unknown";
   }
 })();
-process.env.LOCAL_COMMIT_HASH = commitHash;
 module.exports = {
   mode: "production",
   entry: {
