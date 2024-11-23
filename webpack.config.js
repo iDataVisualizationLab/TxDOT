@@ -10,7 +10,7 @@ const commitHash = (() => {
     return "unknown";
   }
 })();
-
+process.env.LOCAL_COMMIT_HASH = commitHash;
 module.exports = {
   mode: "production",
   entry: {
@@ -34,7 +34,7 @@ module.exports = {
   },
   plugins: [
     new webpack.DefinePlugin({
-      process.env.LOCAL_COMMIT_HASH: JSON.stringify(commitHash)
+      "process.env.LOCAL_COMMIT_HASH": JSON.stringify(commitHash)
     }),
   ],
 };
