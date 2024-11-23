@@ -271,112 +271,32 @@ class TransferFunc extends Component {
             </Typography>
             {/* Main Content */}
             <Grid container spacing={4} style={{ marginTop: '40px' }}>
-              {/* Form Section */}
-              <Grid item xs={12} sm={6}>
+                  {/* Formula Section */}
+                  <Grid item xs={12} xl={4}>
+                    <Typography variant="body1" align="center" gutterBottom style={{ color: '#e53935', fontSize: '1.7rem' }}>
+                      <MathJax style={{ fontSize: '1.7rem', textAlign: 'center' }}>
+                        {`\\( (0-6274) \\ PO_{Texas} = \\frac{18.99}{1 + 29.34 \\cdot (FC)^{-1.33}} \\)`}
+                      </MathJax>
+                    </Typography></Grid>
+                  <Grid item xs={12} xl={4}>
+                    <Typography variant="body1" align="center" gutterBottom style={{ fontSize: '1.7rem', color: '#444' }}>
+                      <MathJax style={{ fontSize: '1.7rem', textAlign: 'center' }}>
+                        {`\\( Current \\ PO_{Texas} = \\frac{${TransferFuncVar.A}}{1 + ${TransferFuncVar.B} \\cdot (FC)^{${TransferFuncVar.C}}} \\)`}
+                      </MathJax>
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={12} xl={4}>
                 <Typography variant="body1" align="center" gutterBottom style={{ color: '#1976d2', fontSize: '2rem' }}>
                   <MathJax key={`${A}-${B}-${C}`} style={{ fontSize: '2rem', textAlign: 'center' }}>
                     {`\\( New \\ PO_{Texas} = \\frac{${A}}{1 + ${B} \\cdot (FC)^{${C}}} \\)`}
                   </MathJax>
                 </Typography>
-    
-                <Typography variant="body1" align="center" style={{ fontSize: '1.2rem', marginBottom: '20px', color: '#555' }}>
-                  Update the values of A, B, and C below:
-                </Typography>
-    
-                {/* Input Fields */}
-                {[
-                  { label: 'Value for A', value: A, error: errorA, onChange: (e) => this.setState({ A: e.target.value }) },
-                  { label: 'Value for B', value: B, error: errorB, onChange: (e) => this.setState({ B: e.target.value }) },
-                  { label: 'Value for C', value: C, error: errorC, onChange: (e) => this.setState({ C: e.target.value }) },
-                  { label: 'GitHub Token', value: token, error: errorToken, type: 'password', onChange: (e) => this.setState({ token: e.target.value }) },
-                  { label: 'Version', value: version, error: errorVersion, type: 'text', onChange: (e) => this.setState({ version: e.target.value }) }
-                ].map(({ label, value, error, type = 'number', onChange }, index) => (
-                  <React.Fragment key={index}>
-                    {label === 'GitHub Token' ? (
-      <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
-        <TextField
-          label={label}
-          type={type}
-          variant="outlined"
-          fullWidth
-          value={value}
-          onChange={onChange}
-          error={error}
-          helperText={error ? `Please enter a valid ${label.toLowerCase()}.` : ''}
-          style={{ marginRight: '10px' }}
-        />
-        <Button
-          color="primary"
-          variant="outlined"
-          onClick={this.props.handleHelpClick}
-          style={{ fontSize: '0.875rem', padding: '2px 16px' }}
-        >
-          What is a Token?
-        </Button>
-      </div>
-    ) : (
-      <TextField
-        label={label}
-        type={type}
-        variant="outlined"
-        fullWidth
-        margin="normal"
-        value={value}
-        onChange={onChange}
-        error={error}
-        helperText={error ? `Please enter a valid ${label.toLowerCase()}.` : ''}
-        style={{ fontSize: '1.2rem', marginBottom: '20px' }}
-      />
-    )}
-                  </React.Fragment>
-                ))}
-                {/* Buttons */}
-                <div style={{ display: 'flex', justifyContent: 'center' }}>
-                  <Button
-                    color="secondary"
-                    variant="contained"
-                    onClick={this.props.toMenu}
-                    style={{ marginTop: '20px', fontSize: '1.1rem', borderRadius: '8px', padding: '10px 20px' }}
-                    startIcon={<HomeIcon />}
-                  >
-                    To Main Menu
-                  </Button>
-                  <Button
-                    onClick={this.uploadVar}
-                    variant="contained"
-                    color="primary"
-                    style={{
-                      marginTop: '20px',
-                      marginLeft: '20px',
-                      fontSize: '1.1rem',
-                      borderRadius: '8px',
-                      padding: '10px 20px',
-                    }}
-                    disabled={loading}
-                  >
-                    {loading ? 'Uploading...' : 'Upload Variable to GitHub'}
-                  </Button>
-                </div>
-              </Grid>
-    
+                  </Grid>
+              
               {/* Plot Section */}
-              <Grid item xs={12} sm={6}>
-            <Grid container spacing={4} style={{ marginTop: '40px' }}>
-            {/* Formula Section */}
-            <Grid item xs={12} xl={6}>
-            <Typography variant="body1" align="center" gutterBottom style={{ color: '#e53935', fontSize: '1.7rem' }}>
-              <MathJax style={{ fontSize: '1.7rem', textAlign: 'center' }}>
-                {`\\( (0-6274) \\ PO_{Texas} = \\frac{18.99}{1 + 29.34 \\cdot (FC)^{-1.33}} \\)`}
-              </MathJax>
-            </Typography></Grid>
-            <Grid item xs={12} xl={6}>
-            <Typography variant="body1" align="center" gutterBottom style={{ fontSize: '1.7rem', color: '#444' }}>
-              <MathJax style={{ fontSize: '1.7rem', textAlign: 'center' }}>
-                {`\\( Current \\ PO_{Texas} = \\frac{${TransferFuncVar.A}}{1 + ${TransferFuncVar.B} \\cdot (FC)^{${TransferFuncVar.C}}} \\)`}
-              </MathJax>
-            </Typography>
-            </Grid>
-            </Grid>
+              <Grid item xs={12} sm={8}>
+                <Grid container spacing={4} style={{ marginTop: '40px' }}>
+                </Grid>
                 <Plot
                   data={[
                     { x: FCValues, y: RedPOValues, type: 'scatter', mode: 'lines', name: '0-6274', line: { color: '#e53935' } },
@@ -385,8 +305,8 @@ class TransferFunc extends Component {
                   ]}
                   layout={{
                     autosize: true,
-                    width: 800,
-                    height: 500,
+                    width: 1250,
+                    height: 550,
                     title: 'Transfer Function for TxCRCP-ME',
                     titlefont: { size: 26, family: 'Arial, sans-serif', color: '#333' },
                     xaxis: {
@@ -401,10 +321,138 @@ class TransferFunc extends Component {
                       title: 'Punchout per Lane Mile (PO)',
                       titlefont: { size: 18, color: '#333' },
                     },
+                    legend: {
+                      font: { size: 18, color: '#333' },
+                    },
                     showlegend: true,
                   }}
                 />
               </Grid>
+              {/* Form Section */}
+              <Grid item xs={12} sm={4}>
+
+                <Typography variant="body1" align="center" style={{ fontSize: '1.2rem', marginBottom: '20px', color: '#555' }}>
+                  Update the values of A, B, and C below:
+                </Typography>
+
+                <Grid container spacing={2}>
+                  {/* Row 1: A and C */}
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      label="Value for A"
+                      type="number"
+                      variant="outlined"
+                      fullWidth
+                      margin="normal"
+                      value={A}
+                      onChange={(e) => this.setState({ A: e.target.value })}
+                      error={errorA}
+                      helperText={errorA ? 'Please enter a valid value for A.' : ''}
+                      InputLabelProps={{ style: { fontSize: '1.5rem' } }}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      label="Value for C"
+                      type="number"
+                      variant="outlined"
+                      fullWidth
+                      margin="normal"
+                      value={C}
+                      onChange={(e) => this.setState({ C: e.target.value })}
+                      error={errorC}
+                      helperText={errorC ? 'Please enter a valid value for C.' : ''}
+                      InputLabelProps={{ style: { fontSize: '1.5rem' } }}
+                    />
+                  </Grid>
+
+                  {/* Row 2: B and version */}
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      label="Value for B"
+                      type="number"
+                      variant="outlined"
+                      fullWidth
+                      margin="normal"
+                      value={B}
+                      onChange={(e) => this.setState({ B: e.target.value })}
+                      error={errorB}
+                      helperText={errorB ? 'Please enter a valid value for B.' : ''}
+                      InputLabelProps={{ style: { fontSize: '1.5rem' } }}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      label="Version"
+                      type="text"
+                      variant="outlined"
+                      fullWidth
+                      margin="normal"
+                      value={version}
+                      onChange={(e) => this.setState({ version: e.target.value })}
+                      error={errorVersion}
+                      helperText={errorVersion ? 'Please enter a valid version.' : ''}
+                      InputLabelProps={{ style: { fontSize: '1.5rem' } }}
+                    />
+                  </Grid>
+
+                  {/* Row 3: GitHub Token */}
+                  <Grid item xs={12}>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <TextField
+                        label="GitHub Token"
+                        type="password"
+                        variant="outlined"
+                        fullWidth
+                        value={token}
+                        onChange={(e) => this.setState({ token: e.target.value })}
+                        error={errorToken}
+                        helperText={errorToken ? 'Please enter a valid GitHub token.' : ''}
+                        InputLabelProps={{ style: { fontSize: '1.5rem' } }}
+                        style={{ marginRight: '10px' }}
+                      />
+                      <Button
+                        color="primary"
+                        variant="outlined"
+                        onClick={this.props.handleHelpClick}
+                        style={{ fontSize: '0.875rem', padding: '2px 16px' }}
+                      >
+                        What is a Token?
+                      </Button>
+                    </div>
+                  </Grid>
+
+                  {/* Row 4: Buttons */}
+                  <Grid item xs={12} style={{ display: 'flex', justifyContent: 'center' }}>
+                    <Button
+                      color="secondary"
+                      variant="contained"
+                      onClick={this.props.toMenu}
+                      style={{ marginTop: '20px', fontSize: '1.1rem', borderRadius: '8px', padding: '10px 20px' }}
+                      startIcon={<HomeIcon />}
+                    >
+                      To Main Menu
+                    </Button>
+                    <Button
+                      onClick={this.uploadVar}
+                      variant="contained"
+                      color="primary"
+                      style={{
+                        marginTop: '20px',
+                        marginLeft: '20px',
+                        fontSize: '1.1rem',
+                        borderRadius: '8px',
+                        padding: '10px 20px',
+                      }}
+                      disabled={loading}
+                    >
+                      {loading ? 'Uploading...' : 'Upload Variable to GitHub'}
+                    </Button>
+                  </Grid>
+                </Grid>
+
+              </Grid>
+
             </Grid>
           </Paper>
         </Container>

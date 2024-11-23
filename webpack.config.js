@@ -1,6 +1,15 @@
 const path = require("path");
 const TerserPlugin = require("terser-webpack-plugin");
 const glob = require("glob");
+const { execSync } = require("child_process");
+const webpack = require("webpack");
+const commitHash = (() => {
+  try {
+    return execSync("git rev-parse HEAD").toString().trim();
+  } catch (error) {
+    return "unknown";
+  }
+})();
 
 module.exports = {
   mode: "production",
@@ -22,5 +31,10 @@ module.exports = {
   optimization: {
     minimize: true,
     minimizer: [new TerserPlugin()],
-  }
+  },
+  plugins: [
+    new webpack.DefinePlugin({
+      LOCAL_COMMIT_HASH: JSON.stringify(commitHash),
+    }),
+  ],
 };

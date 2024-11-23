@@ -56,7 +56,8 @@ function App() {
   const [anchorEl, setAnchorEl] = useState(null); // State to manage the settings menu
   const [openAboutModal, setOpenAboutModal] = useState(false); // About modal state
   const [openHelpModal, setOpenHelpModal] = useState(false); // Help modal state
-
+  const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
+  const [isShown, setIsShown] = useState(false);
   const classes = useStyles();
   const AnalysisPunchoutsFunc = (d) => d === undefined ? AnalysisPunchouts : setAnalysisPunchouts(d);
   const AnalysisSlabThicknessFunc = (d) => d === undefined ? AnalysisSlabThickness : setAnalysisSlabThickness(d);
@@ -66,6 +67,38 @@ function App() {
 
   const handleCloseAboutModal = () => setOpenAboutModal(false);
   const handleCloseHelpModal = () => setOpenHelpModal(false);
+  const handleCloseUpdateDialog = () => {setOpenUpdateDialog(false);
+    setIsShown(true);}
+  async function checkForUpdates() {
+    const repo = "iDataVisualizationLab/TxDOT";
+    const branch = "main";
+  
+    try {
+      // Use the GitHub API to get the latest commit
+      const response = await fetch(`https://api.github.com/repos/${repo}/commits/${branch}`);
+      
+      if (!response.ok) {
+        throw new Error(`GitHub API error: ${response.statusText}`);
+      }
+  
+      const data = await response.json();
+      const latestCommitHash = data.sha;
+  
+      // Compare with the local commit hash
+      if (process.env.LOCAL_COMMIT_HASH !== latestCommitHash) {
+        if (!isShown) {
+          setOpenUpdateDialog(true);
+        } else {
+          setOpenUpdateDialog(false);          
+        }
+      } else {
+        console.log("You are using the latest version.");
+      }
+    } catch (error) {
+      console.error("Error checking for updates:", error);
+    }
+  }
+  checkForUpdates();
   return (
     <ThemeProvider theme={theme}>
       <div>
@@ -95,13 +128,31 @@ function App() {
               open={Boolean(anchorEl)}
               onClose={() => setAnchorEl(null)} // Close menu
             >
-              <MenuItem onClick={() => setPage('TransferFunc')}>Transfer Function</MenuItem>
+              <MenuItem onClick={() => {setPage('TransferFunc');checkForUpdates();}}>Transfer Function</MenuItem>
               <MenuItem onClick={handleHelpClick}>Help</MenuItem>
               <MenuItem onClick={handleAboutClick}>About</MenuItem>
             </Menu>
             
           </Toolbar>
         </AppBar>
+        {/* Dialog for Update Information */}
+        <Dialog open={openUpdateDialog} onClose={handleCloseUpdateDialog}>
+        <DialogTitle>Update Available</DialogTitle>
+        <DialogContent>
+          <p>A newer version of this application is available.</p>
+          <p>
+            Please download the latest version from{' '}
+            <a href="https://github.com/iDataVisualizationLab/TxDOT/releases" target="_blank" rel="noopener noreferrer">
+              GitHub Releases
+            </a>.
+          </p>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseUpdateDialog} color="primary">
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
         {/* About Modal */}
         <Dialog open={openAboutModal} onClose={handleCloseAboutModal}>
           <DialogTitle>About</DialogTitle>
@@ -151,7 +202,7 @@ function App() {
               </Grid>
               <Grid container item alignItems="stretch" justify="center" direction={"column"} spacing={3} style={{ width: 'fit-content' }}>
                 <Grid item>
-                  <Button variant="contained" color="primary" style={{ width: '100%' }} onClick={() => setPage('CRCP')}>CRCP Design</Button>
+                  <Button variant="contained" color="primary" style={{ width: '100%' }} onClick={() => {setPage('CRCP');checkForUpdates();}}>CRCP Design</Button>
                 </Grid>
                 <Grid item>
                   <Button variant="contained" style={{ width: '100%' }}>Slab Support</Button>
@@ -166,7 +217,7 @@ function App() {
           {/* CRCP Page */}
           <Slide direction="up" in={page === 'CRCP'} mountOnEnter unmountOnExit>
             <CRCP
-              toMenu={() => setPage('home')}
+              toMenu={() => {setPage('home');checkForUpdates();}}
               AnalysisPunchouts={AnalysisPunchoutsFunc}
               AnalysisSlabThickness={AnalysisSlabThicknessFunc}
             />
@@ -176,7 +227,7 @@ function App() {
           <Slide direction="up" in={page === 'TransferFunc'} mountOnEnter unmountOnExit>
             <div>
               <TransferFunc 
-                toMenu={() => setPage('home')}
+                toMenu={() => {setPage('home');checkForUpdates();}}
                 handleHelpClick = {handleHelpClick} />
             </div>
           </Slide>
