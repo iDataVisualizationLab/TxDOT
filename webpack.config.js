@@ -34,7 +34,7 @@ module.exports = {
   },
   plugins: [
     new webpack.DefinePlugin({
-      LOCAL_COMMIT_HASH: JSON.stringify(commitHash),
+      process.env.LOCAL_COMMIT_HASH: JSON.stringify(commitHash)
     }),
   ],
 };
