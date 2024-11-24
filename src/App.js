@@ -131,27 +131,28 @@ function App() {
               <MenuItem onClick={handleHelpClick}>Help</MenuItem>
               <MenuItem onClick={handleAboutClick}>About</MenuItem>
             </Menu>
-            
+
           </Toolbar>
         </AppBar>
         {/* Dialog for Update Information */}
         <Dialog open={openUpdateDialog} onClose={handleCloseUpdateDialog}>
-        <DialogTitle>Update Available</DialogTitle>
-        <DialogContent>
-          <p>A newer version of this application is available.</p>
-          <p>
-            Please download the latest version from{' '}
-            <a href="https://github.com/iDataVisualizationLab/TxDOT/releases" target="_blank" rel="noopener noreferrer">
-              GitHub Releases
-            </a>.
-          </p>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseUpdateDialog} color="primary">
-            Close
-          </Button>
-        </DialogActions>
-      </Dialog>
+          <DialogTitle>Update: New Transfer Function Available</DialogTitle>
+          <DialogContent>
+            <p>A newer version of the transfer function is now available.</p>
+            <p>
+              Please download the latest version from{' '}
+              <a href="https://github.com/iDataVisualizationLab/TxDOT/releases" target="_blank" rel="noopener noreferrer">
+                GitHub Releases
+              </a>.
+            </p>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseUpdateDialog} color="primary">
+              Close
+            </Button>
+          </DialogActions>
+        </Dialog>
+
         {/* About Modal */}
         <Dialog open={openAboutModal} onClose={handleCloseAboutModal}>
           <DialogTitle>About</DialogTitle>
