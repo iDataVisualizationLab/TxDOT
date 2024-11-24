@@ -291,42 +291,56 @@ class TransferFunc extends Component {
                     {`\\( New \\ PO_{Texas} = \\frac{${A}}{1 + ${B} \\cdot (FC)^{${C}}} \\)`}
                   </MathJax>
                 </Typography>
-                  </Grid>
-              
+              </Grid>
+
               {/* Plot Section */}
-              <Grid item xs={12} sm={8}>
-                <Grid container spacing={4} style={{ marginTop: '40px' }}>
-                </Grid>
-                <Plot
-                  data={[
-                    { x: FCValues, y: RedPOValues, type: 'scatter', mode: 'lines', name: '0-6274', line: { color: '#e53935' } },
-                    { x: FCValues, y: BlackPOValues, type: 'scatter', mode: 'lines', name: 'Current PO', line: { color: 'black' } },
-                    { x: FCValues, y: POValues, type: 'scatter', mode: 'lines', name: 'New PO', line: { color: '#1976d2' } },
-                  ]}
-                  layout={{
-                    autosize: true,
-                    width: 1250,
-                    height: 550,
-                    title: 'Transfer Function for TxCRCP-ME',
-                    titlefont: { size: 26, family: 'Arial, sans-serif', color: '#333' },
-                    xaxis: {
-                      type: 'log',
-                      tickmode: 'array',
-                      tickvals: [1e-3, 1e-2, 1e-1, 1e0, 1e1, 1e2, 1e3],
-                      ticktext: ['1e-3', '1e-2', '1e-1', '1e0', '1e1', '1e2', '1e3'],
-                      title: 'Cumulative Damage (FC)',
-                      titlefont: { size: 18, color: '#333' },
-                    },
-                    yaxis: {
-                      title: 'Punchout per Lane Mile (PO)',
-                      titlefont: { size: 18, color: '#333' },
-                    },
-                    legend: {
-                      font: { size: 18, color: '#333' },
-                    },
-                    showlegend: true,
-                  }}
-                />
+              <Grid item xs={12} sm={8}
+                style={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  width: '100%',
+                  height: 'auto',
+                }}
+              >
+                <div style={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  width: '100%',
+                  height: 'auto', resize: 'both', overflow: 'auto'
+                }}>
+                  <Plot
+                    data={[
+                      { x: FCValues, y: RedPOValues, type: 'scatter', mode: 'lines', name: '0-6274', line: { color: '#e53935' } },
+                      { x: FCValues, y: BlackPOValues, type: 'scatter', mode: 'lines', name: 'Current PO', line: { color: 'black' } },
+                      { x: FCValues, y: POValues, type: 'scatter', mode: 'lines', name: 'New PO', line: { color: '#1976d2' } },
+                    ]}
+                    layout={{
+                      autosize: true,
+                      // width: 1250,
+                      // height: 550,
+                      title: 'Transfer Function for TxCRCP-ME',
+                      titlefont: { size: 26, family: 'Arial, sans-serif', color: '#333' },
+                      xaxis: {
+                        type: 'log',
+                        tickmode: 'array',
+                        tickvals: [1e-3, 1e-2, 1e-1, 1e0, 1e1, 1e2, 1e3],
+                        ticktext: ['1e-3', '1e-2', '1e-1', '1e0', '1e1', '1e2', '1e3'],
+                        title: 'Cumulative Damage (FC)',
+                        titlefont: { size: 18, color: '#333' },
+                      },
+                      yaxis: {
+                        title: 'Punchout per Lane Mile (PO)',
+                        titlefont: { size: 18, color: '#333' },
+                      },
+                      legend: {
+                        font: { size: 18, color: '#333' },
+                      },
+                      showlegend: true,
+                    }}
+                  />
+                </div>
               </Grid>
               {/* Form Section */}
               <Grid item xs={12} sm={4}>
