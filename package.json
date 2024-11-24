@@ -45,7 +45,7 @@
   },
   "scripts": {
     "start": "electron-forge start",
-    "dev2": "react-scripts start",
+    "dev": "react-scripts start",
     "old.build": "npm run build:react && npm run build:bundle",
     "build": "REACT_APP_COMMIT_HASH=$(git rev-parse HEAD) react-scripts build",
     "build-win": "git rev-parse HEAD && cross-env REACT_APP_COMMIT_HASH=$(\"git rev-parse HEAD\") react-scripts build",
@@ -55,7 +55,7 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
     "eject": "react-scripts eject",
-    "dev": "concurrently -k \"BROWSER=none npm start\" \"npm:electron\"",
+    "old.dev": "concurrently -k \"BROWSER=none npm start\" \"npm:electron\"",
     "electron": "wait-on tcp:3000 && electron-forge start",
     "package": "react-scripts build && electron-forge package --asar",
     "make": "electron-forge make",
