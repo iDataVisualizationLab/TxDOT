@@ -12,6 +12,7 @@ import { createMuiTheme } from "@material-ui/core/styles";
 import headerPic from './image/Header_EXBD_prnt_fromMac.png';
 import packagejson from '../package.json';
 
+
 let theme = createMuiTheme({
   palette: {
     primary: { main: '#14375A' },
@@ -72,7 +73,6 @@ function App() {
   async function checkForUpdates() {
     const repo = "iDataVisualizationLab/TxDOT";
     const branch = "main";
-  
     try {
       // Use the GitHub API to get the latest commit
       const response = await fetch(`https://api.github.com/repos/${repo}/commits/${branch}`);
@@ -83,9 +83,8 @@ function App() {
   
       const data = await response.json();
       const latestCommitHash = data.sha;
-      console.log(process.env.LOCAL_COMMIT_HASH, latestCommitHash)
-      // Compare with the local commit hash
-      if (process.env.LOCAL_COMMIT_HASH !== latestCommitHash) {
+      console.log(process.env.REACT_APP_COMMIT_HASH, latestCommitHash)
+      if (process.env.REACT_APP_COMMIT_HASH !== latestCommitHash) {
         if (!isShown) {
           setOpenUpdateDialog(true);
         } else {

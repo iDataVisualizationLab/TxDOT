@@ -1,16 +1,15 @@
-require('dotenv').config();
+
 const path = require("path");
 const TerserPlugin = require("terser-webpack-plugin");
 const glob = require("glob");
-const { execSync } = require("child_process");
 const webpack = require("webpack");
-const commitHash = process.env.LOCAL_COMMIT_HASH || (() => {
-  try {
-    return execSync("git rev-parse HEAD").toString().trim();
-  } catch (error) {
-    return "unknown";
-  }
-})();
+
+const child_process = require("child_process");
+
+function git(command) {
+  return child_process.execSync(`git ${command}`, { encoding: "utf8" }).trim();
+}
+
 module.exports = {
   mode: "production",
   entry: {
@@ -23,7 +22,6 @@ module.exports = {
     rules: [
       {
         test: /\.css$/,
-        exclude: /dist|design/,
         use: ["style-loader", "css-loader"],
       },
     ],
@@ -34,7 +32,11 @@ module.exports = {
   },
   plugins: [
     new webpack.DefinePlugin({
-      "process.env.LOCAL_COMMIT_HASH": JSON.stringify(commitHash)
+      "process.env.GIT_VERSION": JSON.stringify(git("describe --always")),
+      "process.env.GIT_AUTHOR_DATE": JSON.stringify(git("log -1 --format=%aI")),
+      "process.env.LOCAL_COMMIT_HASH": JSON.stringify(git("rev-parse HEAD")),
     }),
   ],
+  
+  
 };
