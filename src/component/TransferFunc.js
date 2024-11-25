@@ -218,29 +218,29 @@ class TransferFunc extends Component {
     }
   };
 
-  calculatePO = (FC, A, B, C) => {
-    return A / (1 + B * Math.pow(FC, C)); // Formula PO = A / (1 + B * (FC)^C)
+  calculatePO = (FD, A, B, C) => {
+    return A / (1 + B * Math.pow(FD, C)); // Formula PO = A / (1 + B * (FD)^C)
   };
 
-  calculateRedPO = (FC) => {
+  calculateRedPO = (FD) => {
     const A_red = 18.99;
     const B_red = 29.34;
     const C_red = -1.33;
-    return this.calculatePO(FC, A_red, B_red, C_red);
+    return this.calculatePO(FD, A_red, B_red, C_red);
   };
 
-  calculateBlackPO = (FC) => {
-    return this.calculatePO(FC, TransferFuncVar.A, TransferFuncVar.B, TransferFuncVar.C);
+  calculateBlackPO = (FD) => {
+    return this.calculatePO(FD, TransferFuncVar.A, TransferFuncVar.B, TransferFuncVar.C);
   };
 
   render() {
     const { A, B, C, token, version, errorA, errorB, errorC, errorToken, errorVersion, loading} = this.state;
   
-    // Generate FC values and PO values
-    const FCValues = Array.from({ length: 1000 }, (_, i) => Math.pow(10, -3 + (i * 6) / 999)); // From 1e-3 to 1e3
-    const POValues = FCValues.map(FC => this.calculatePO(FC, A, B, C)); // New PO values (using dynamic A, B, C)
-    const RedPOValues = FCValues.map(FC => this.calculateRedPO(FC)); // 0-6274
-    const BlackPOValues = FCValues.map(FC => this.calculateBlackPO(FC)); // Current PO value
+    // Generate FD values and PO values
+    const FDValues = Array.from({ length: 1000 }, (_, i) => Math.pow(10, -3 + (i * 6) / 999)); // From 1e-3 to 1e3
+    const POValues = FDValues.map(FD => this.calculatePO(FD, A, B, C)); // New PO values (using dynamic A, B, C)
+    const RedPOValues = FDValues.map(FD => this.calculateRedPO(FD)); // 0-6274
+    const BlackPOValues = FDValues.map(FD => this.calculateBlackPO(FD)); // Current PO value
   
     return (
       <MathJaxContext>
@@ -275,20 +275,20 @@ class TransferFunc extends Component {
                   <Grid item xs={12} xl={4}>
                     <Typography variant="body1" align="center" gutterBottom style={{ color: '#e53935', fontSize: '1.7rem' }}>
                       <MathJax style={{ fontSize: '1.7rem', textAlign: 'center' }}>
-                        {`\\( (0-6274) \\ PO_{Texas} = \\frac{18.99}{1 + 29.34 \\cdot (FC)^{-1.33}} \\)`}
+                        {`\\( (0-6274) \\ PO_{Texas} = \\frac{18.99}{1 + 29.34(FD)^{-1.33}} \\)`}
                       </MathJax>
                     </Typography></Grid>
                   <Grid item xs={12} xl={4}>
                     <Typography variant="body1" align="center" gutterBottom style={{ fontSize: '1.7rem', color: '#444' }}>
                       <MathJax style={{ fontSize: '1.7rem', textAlign: 'center' }}>
-                        {`\\( Current \\ PO_{Texas} = \\frac{${TransferFuncVar.A}}{1 + ${TransferFuncVar.B} \\cdot (FC)^{${TransferFuncVar.C}}} \\)`}
+                        {`\\( Current \\ PO_{Texas} = \\frac{${TransferFuncVar.A}}{1 + ${TransferFuncVar.B}(FD)^{${TransferFuncVar.C}}} \\)`}
                       </MathJax>
                     </Typography>
                   </Grid>
                   <Grid item xs={12} xl={4}>
                 <Typography variant="body1" align="center" gutterBottom style={{ color: '#1976d2', fontSize: '2rem' }}>
                   <MathJax key={`${A}-${B}-${C}`} style={{ fontSize: '2rem', textAlign: 'center' }}>
-                    {`\\( New \\ PO_{Texas} = \\frac{${A}}{1 + ${B} \\cdot (FC)^{${C}}} \\)`}
+                    {`\\( New \\ PO_{Texas} = \\frac{${A}}{1 + ${B}(FD)^{${C}}} \\)`}
                   </MathJax>
                 </Typography>
               </Grid>
@@ -312,9 +312,9 @@ class TransferFunc extends Component {
                 }}>
                   <Plot
                     data={[
-                      { x: FCValues, y: RedPOValues, type: 'scatter', mode: 'lines', name: '0-6274', line: { color: '#e53935' } },
-                      { x: FCValues, y: BlackPOValues, type: 'scatter', mode: 'lines', name: 'Current PO', line: { color: 'black' } },
-                      { x: FCValues, y: POValues, type: 'scatter', mode: 'lines', name: 'New PO', line: { color: '#1976d2' } },
+                      { x: FDValues, y: RedPOValues, type: 'scatter', mode: 'lines', name: '0-6274', line: { color: '#e53935' } },
+                      { x: FDValues, y: BlackPOValues, type: 'scatter', mode: 'lines', name: 'Current PO', line: { color: 'black' } },
+                      { x: FDValues, y: POValues, type: 'scatter', mode: 'lines', name: 'New PO', line: { color: '#1976d2' } },
                     ]}
                     layout={{
                       autosize: true,
@@ -327,7 +327,7 @@ class TransferFunc extends Component {
                         tickmode: 'array',
                         tickvals: [1e-3, 1e-2, 1e-1, 1e0, 1e1, 1e2, 1e3],
                         ticktext: ['1e-3', '1e-2', '1e-1', '1e0', '1e1', '1e2', '1e3'],
-                        title: 'Cumulative Damage (FC)',
+                        title: 'Cumulative Damage (FD)',
                         titlefont: { size: 18, color: '#333' },
                       },
                       yaxis: {
