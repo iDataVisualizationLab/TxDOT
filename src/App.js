@@ -175,21 +175,34 @@ function App() {
         <Dialog open={openHelpModal} onClose={handleCloseHelpModal}>
           <DialogTitle>Help</DialogTitle>
           <DialogContent>
-            <h3>How to Generate a Private Access Token</h3>
+            <h3>How to Generate or Regenerate a Private Access Token</h3>
+
+            <h4>For First-Time Setup:</h4>
             <ol>
               <li>Go to your GitHub account and navigate to <strong>Settings</strong>.</li>
               <li>Under <strong>Developer settings</strong>, select <strong>Personal access tokens</strong>.</li>
               <li>Click <strong>Fine-grained tokens</strong>, then <strong>Generate new token</strong>.</li>
               <li>Enter a descriptive <strong>Name</strong> for the token.</li>
-              <li>Set the <strong>Repository Access</strong> scope to include <strong>iDataVisualizationLab/TxDOT</strong>.</li>
-              <li>Select appropriate permissions (e.g., read/write for releases).</li>
+              <li>Set the <strong>Repository access</strong> scope to include <strong>iDataVisualizationLab/TxDOT</strong>.</li>
+              <li>For <strong>Repository permissions</strong>, select <strong>Contents</strong> (Read and write).</li>
               <li>Click <strong>Generate token</strong> and copy the token for use.</li>
+            </ol>
+
+            <h4>For Subsequent Uses:</h4>
+            <ol>
+              <li>Go to your GitHub account and navigate to <strong>Settings</strong>.</li>
+              <li>Under <strong>Developer settings</strong>, select <strong>Personal access tokens</strong>.</li>
+              <li>Click <strong>Fine-grained tokens</strong>, then select the token you previously created for this project (<strong>TxCRCP-ME</strong>).</li>
+              <li>Click <strong>Regenerate token</strong>, copy the new token, and use it as needed.</li>
             </ol>
           </DialogContent>
           <DialogActions>
             <Button onClick={handleCloseHelpModal} color="primary">Close</Button>
           </DialogActions>
         </Dialog>
+
+
+
 
         <div className={classes.root}>
           {/* Home Page */}
