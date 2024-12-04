@@ -30,3 +30,7 @@ yarn-error.log*
 .idea/misc.xml
 .idea/txDoT.iml
 .idea/vcs.xml
+
+
+/src-tauri/target/release/build
+/src-tauri/target/debug
