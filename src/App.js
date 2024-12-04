@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 import { makeStyles } from '@material-ui/core/styles';
 import { AppBar, Typography, Button, Toolbar, Grid, Slide, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Menu, MenuItem } from '@material-ui/core';
@@ -96,8 +96,10 @@ function App() {
     } catch (error) {
       console.error("Error checking for updates:", error);
     }
-  }
-  checkForUpdates();
+  } 
+  useEffect(() => {
+    checkForUpdates(); // Run after UI has fully loaded.
+  }, []);
   return (
     <ThemeProvider theme={theme}>
       <div>
