@@ -100,8 +100,9 @@ function App() {
   } 
 
   useEffect(() => {
-    checkForUpdates(); 
-  }, []);
+    checkForUpdates();
+  }, [checkForUpdates]);
+  
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
