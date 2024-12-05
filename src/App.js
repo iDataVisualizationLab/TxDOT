@@ -99,10 +99,12 @@ function App() {
     }
   } 
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     checkForUpdates();
-  }, [checkForUpdates]);
-  
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
