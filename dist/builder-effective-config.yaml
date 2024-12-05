@@ -11,15 +11,15 @@ compression: maximum
 asar: true
 asarUnpack: '**\*.{node,dll}'
 productName: TxCRCPME
-artifactName: TxCRCPMEv${version}.exe
 mac:
-  category: public.app-category.productivity
   target:
-    - zip
+    - dmg
+  category: public.app-category.utilities
 win:
   target:
     - portable
     - nsis
+  artifactName: TxCRCPMEv${version}.exe
   icon: build/logo.png
 nsis:
   artifactName: TxCRCPMEv${version}-Setup.exe

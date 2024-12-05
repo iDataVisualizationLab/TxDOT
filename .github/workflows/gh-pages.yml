@@ -98,6 +98,47 @@ jobs:
           echo "VERSION=$VERSION" >> $GITHUB_ENV
 
        
+  build-tauri:
+    needs: deploy
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        platform: [windows-latest]
+    steps:
+      # Step 1: Checkout Code
+      - name: Checkout code
+        uses: actions/checkout@v3
+      # Step 2: Set up Rust
+      - name: Set up Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          profile: minimal
+          components: rustfmt, clippy
+      # Step 3: Install and build
+      - name: Install dependencies
+        run: npm install
+      - name: Build
+        run: npm run build
+      - name: Install Tauri dependencies
+        run: |
+          # Install dependencies for building Tauri apps
+          cargo install tauri-cli
+      # Step 4: Build Tauri App
+      - name: Build Tauri App
+        run: cargo tauri build
+      # Step 5: Archive Build Artifacts
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: app-windows-msi
+          path: src-tauri/target/release/bundle/msi/*
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: app-windows-nsis
+          path: src-tauri/target/release/bundle/nsis/*
+
   build-electron:
     needs: build-electron-win
     runs-on: macos-latest
@@ -109,8 +150,6 @@ jobs:
         uses: actions/checkout@v3
       - name: Install dependencies
         run: npm install
-      - name: Install dmg-license
-        run: npm install dmg-license
       - name: Build
         run: npm run build
       - name: Build Electron App
@@ -136,9 +175,10 @@ jobs:
           path: artifacts
 
   release:
-    needs: build-electron
+    needs:  [build-electron, build-tauri]
     runs-on: ubuntu-latest
     steps:
+      # Electron
       - name: Download win Artifacts
         uses: actions/download-artifact@v3
         with:
@@ -151,6 +191,16 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: linux-builds
+      # Tauri
+      - name: Download Tauri Windows Artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: app-windows-msi
+      - name: Download Tauri Windows Artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: app-windows-nsis
+      # Create a new GitHub release
       - name: Create GitHub Release
         id: create_release
         uses: actions/create-release@v1
@@ -162,31 +212,43 @@ jobs:
           release_name: Release New Version ${{ env.VERSION }}
           draft: false
           prerelease: false
-      - name: Find All Files Matching VERSION
-        id: find_files
-        run: |
-          VERSION=${{ env.VERSION }}
-          files=($(ls ./*${VERSION}* 2>/dev/null || echo ""))
-          if [ ${#files[@]} -eq 0 ]; then
-            echo "Error: No files found matching VERSION ${VERSION}"
-            exit 1
-          fi
-          echo "Found files: ${files[@]}"
-          file_list=$(IFS=','; echo "${files[*]}")
-          echo "file_list=$file_list" >> $GITHUB_ENV
+      # Upload all artifacts to the release
       - name: Upload Release Assets
-        run: |
-          IFS=',' read -r -a file_array <<< "${{ env.file_list }}"
-          for file in "${file_array[@]}"; do
-            echo "Uploading $file..."
-            curl -XPOST \
-              -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-              -H "Content-Type: application/octet-stream" \
-              --data-binary @$file \
-              "https://uploads.github.com/repos/iDataVisualizationLab/TxDOT/releases/${{ steps.create_release.outputs.id }}/assets?name=$(basename $file)"
-          done
+        uses: actions/upload-release-asset@v1
         env:
-          file_list: ${{ env.file_list }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ env.VERSION }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: artifacts/*.*
+          asset_name: ${{ github.ref_name }}-build-${{ matrix.platform }}
+          asset_content_type: application/octet-stream
+
+      # - name: Find All Files Matching VERSION
+      #   id: find_files
+      #   run: |
+      #     VERSION=${{ env.VERSION }}
+      #     files=($(ls ./*${VERSION}* 2>/dev/null || echo ""))
+      #     if [ ${#files[@]} -eq 0 ]; then
+      #       echo "Error: No files found matching VERSION ${VERSION}"
+      #       exit 1
+      #     fi
+      #     echo "Found files: ${files[@]}"
+      #     file_list=$(IFS=','; echo "${files[*]}")
+      #     echo "file_list=$file_list" >> $GITHUB_ENV
+      # - name: Upload Release Assets
+      #   run: |
+      #     IFS=',' read -r -a file_array <<< "${{ env.file_list }}"
+      #     for file in "${file_array[@]}"; do
+      #       echo "Uploading $file..."
+      #       curl -XPOST \
+      #         -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+      #         -H "Content-Type: application/octet-stream" \
+      #         --data-binary @$file \
+      #         "https://uploads.github.com/repos/iDataVisualizationLab/TxDOT/releases/${{ steps.create_release.outputs.id }}/assets?name=$(basename $file)"
+      #     done
+      #   env:
+      #     file_list: ${{ env.file_list }}
 
         
 

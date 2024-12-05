@@ -11,7 +11,7 @@ import { ThemeProvider } from "@material-ui/styles";
 import { createMuiTheme } from "@material-ui/core/styles";
 import headerPic from './image/Header_EXBD_prnt_fromMac.png';
 import packagejson from '../package.json';
-
+import CssBaseline from '@material-ui/core/CssBaseline';
 
 let theme = createMuiTheme({
   palette: {
@@ -40,6 +40,7 @@ const useStyles = makeStyles((theme) => ({
     color: 'white'
   },
   cover: {
+    backgroundColor: '#000',
     width: '100%',
     position: 'fixed',
     background: `linear-gradient(0deg,rgba(0,0,0,0) 0,#000 100%), url(${coverPic}) no-repeat center center fixed`,
@@ -97,11 +98,13 @@ function App() {
       console.error("Error checking for updates:", error);
     }
   } 
+
   useEffect(() => {
-    checkForUpdates(); // Run after UI has fully loaded.
+    checkForUpdates(); 
   }, []);
   return (
     <ThemeProvider theme={theme}>
+      <CssBaseline />
       <div>
         <div className={classes.cover}></div>
         <AppBar position="static" style={{ backgroundImage: `url(${headerPic})`, backgroundSize: 'cover' }}>

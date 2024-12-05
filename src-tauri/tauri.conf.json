@@ -6,8 +6,7 @@
   "build": {
     "frontendDist": "../build",
     "devUrl": "http://localhost:3000",
-    "beforeDevCommand": "npm run dev",
-    "beforeBuildCommand": "npm run build"
+    "beforeDevCommand": "npm run dev"
   },
   "app": {
     "windows": [
@@ -21,7 +20,9 @@
         "minHeight": 600,
         "visible": false,
         "label": "main",
-        "center": true
+        "url": "/index.html",
+        "center": true,
+        "decorations": true
       },
       {
         "resizable": false,
@@ -31,7 +32,7 @@
          "url": "/splashscreen.html",
          "label": "splashscreen",
         "center": true,
-        "visible": true
+        "visible": false
       }
     ],
     "security": {

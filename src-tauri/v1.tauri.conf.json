@@ -1,0 +1,76 @@
+{
+    "build": {
+      "beforeDevCommand": "npm run dev",
+      "beforeBuildCommand": "npm run build:react",
+      "devPath": "http://localhost:1420",
+      "distDir": "../dist",
+      "withGlobalTauri": false
+    },
+    "package": {
+      "productName": "TxCRCPME",
+      "version": "1.0.0"
+    },
+    "tauri": {
+      "allowlist": {
+        "all": false,
+        "shell": {
+          "all": false,
+          "open": true
+        }
+      },
+      "bundle": {
+        "active": true,
+        "icon": [
+          "icons/32x32.png",
+          "icons/128x128.png",
+          "icons/128x128@2x.png",
+          "icons/icon.icns",
+          "icons/icon.ico"
+        ],
+        "identifier": "org.idvl.TxCRCPME",
+        "targets": "all",
+        "publisher": "iDVL",
+        "category": "Education",
+        "shortDescription": "Small app for TxCRCPME",
+        "windows": {
+          "webviewInstallMode": {
+            "type": "embedBootstrapper", "silent": false
+          },
+          "nsis": {
+            "installerIcon": "icons/icon.ico"
+          }
+        }
+      },
+      "security": {
+        "csp": null
+      },
+      "updater": {
+        "active": false
+      },
+      "windows": [
+        {
+          "fullscreen": false,
+          "resizable": true,
+          "title": "TxCRCPME",
+          "width": 1024,
+          "height": 728,
+          "minWidth": 800,
+          "minHeight": 600,
+          "visible": false,
+          "label": "main",
+          "center": true
+        },
+        {
+          "resizable": false,
+          "width": 905,
+          "height": 490,
+           "decorations": false,
+           "url": "/splashscreen.html",
+           "label": "splashscreen",
+          "center": true,
+          "visible": true
+        }
+      ]
+    }
+  }
+  
