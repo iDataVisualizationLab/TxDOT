@@ -124,11 +124,11 @@ jobs:
         run: npm install
       - name: Build
         run: npm run build
-      - name: Build the application
-        run: |
-          cd src-tauri
-          cargo build --release
-          cd ..
+      # - name: Build the application
+      #   run: |
+      #     cd src-tauri
+      #     cargo build --release
+      #     cd ..
       - name: Install Tauri dependencies
         run: |
           # Install dependencies for building Tauri apps
