@@ -135,6 +135,13 @@ jobs:
       # Step 4: Build Tauri App
       - name: Build Tauri App
         run: cargo tauri build
+      # List the contents of the bundle directories to see what was generated
+      - name: List Bundle Artifacts
+        run: |
+          echo "Listing all files in the msi bundle directory:"
+          ls -la src-tauri/target/release/bundle/msi || echo "No msi directory found."
+          echo "Listing all files in the nsis bundle directory:"
+          ls -la src-tauri/target/release/bundle/nsis || echo "No nsis directory found."
       # Step 5: Archive Build Artifacts
       - name: Archive artifacts
         uses: actions/upload-artifact@v3
@@ -194,6 +201,16 @@ jobs:
       # Step 4: Build Tauri App
       - name: Build Tauri App
         run: cargo tauri build
+      # List the contents of the bundle directories to see what was generated
+      - name: List Bundle Artifacts
+        run: |
+          echo "Listing all files in the DEB bundle directory:"
+          ls -la src-tauri/target/release/bundle/deb || echo "No DEB directory found."
+          echo "Listing all files in the RPM bundle directory:"
+          ls -la src-tauri/target/release/bundle/rpm || echo "No RPM directory found."
+          echo "Listing all files in the AppImage bundle directory:"
+          ls -la src-tauri/target/release/bundle/appimage || echo "No AppImage directory found."
+
       # Step 5: Archive Build Artifacts
       - name: Archive artifacts
         uses: actions/upload-artifact@v3
