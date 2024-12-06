@@ -135,24 +135,17 @@ jobs:
       # Step 4: Build Tauri App
       - name: Build Tauri App
         run: cargo tauri build
-      # List the contents of the bundle directories to see what was generated
-      - name: List Bundle Artifacts
-        run: |
-          echo "Listing all files in the msi bundle directory:"
-          ls -la src-tauri/target/release/bundle/msi || echo "No msi directory found."
-          echo "Listing all files in the nsis bundle directory:"
-          ls -la src-tauri/target/release/bundle/nsis || echo "No nsis directory found."
       # Step 5: Archive Build Artifacts
       - name: Archive artifacts
         uses: actions/upload-artifact@v3
         with:
           name: app-windows-msi
-          path: src-tauri/target/release/bundle/msi/*
+          path: src-tauri/target/release/bundle/msi/*.msi
       - name: Archive artifacts
         uses: actions/upload-artifact@v3
         with:
           name: app-windows-nsis
-          path: src-tauri/target/release/bundle/nsis/*
+          path: src-tauri/target/release/bundle/nsis/*.exe
 
 
 
@@ -216,17 +209,17 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: app-linux-deb
-          path: /src-tauri/target/release/bundle/deb/*
+          path: src-tauri/target/release/bundle/deb/*.deb
       - name: Archive artifacts
         uses: actions/upload-artifact@v3
         with:
           name: app-linux-rpm
-          path: /src-tauri/target/release/bundle/rpm/*
+          path: src-tauri/target/release/bundle/rpm/*.rpm
       - name: Archive artifacts
         uses: actions/upload-artifact@v3
         with:
           name: app-linux-appimage
-          path: /src-tauri/target/release/bundle/appimage/*
+          path: src-tauri/target/release/bundle/appimage/*.AppImage
 
   build-electron:
     needs: build-electron-win
