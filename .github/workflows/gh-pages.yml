@@ -98,12 +98,9 @@ jobs:
           echo "VERSION=$VERSION" >> $GITHUB_ENV
 
        
-  build-tauri:
+  build-tauri-win:
     needs: deploy
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        platform: [windows-latest]
+    runs-on: windows-latest
     steps:
       # Step 1: Checkout Code
       - name: Checkout code
@@ -114,38 +111,14 @@ jobs:
         with:
           toolchain: stable
           profile: minimal
-          components: rustfmt, clippy, llvm-tools  # Added llvm-tools as an example
-      - name: Install GDK and dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y \
-            libgtk-3-dev \
-            libsoup-3.0-dev \
-            libjavascriptcoregtk-4.1-dev \
-            libtasn1-dev \
-            libwebkit2gtk-4.1-dev
+          components: rustfmt, clippy, llvm-tools 
 
-      # - name: Build WebKitGTK from source
-      #   run: |
-      #     sudo apt-get update
-      #     sudo apt-get install -y \
-      #       cmake \
-      #       ninja-build \
-      #       libgtk-3-dev \
-      #       libsoup-3.0-dev \
-      #       libglib2.0-dev \
-      #       libwebkit2gtk-4.0-dev \
-      #       gobject-introspection \
-      #       libcairo2-dev \
-      #       libpango1.0-dev
-      #     git clone https://github.com/WebKit/WebKit.git
-      #     cd WebKit
-      #     Tools/Scripts/build-webkit --gtk
-    
-      - name: Set PKG_CONFIG_PATH
+      - name: Install dependencies
         run: |
-          export PKG_CONFIG_PATH="/usr/lib/x86_64-linux-gnu/pkgconfig"  # Adjust this path if necessary
-          echo "PKG_CONFIG_PATH set to $PKG_CONFIG_PATH"
+          choco install -y nsis
+
+      - name: Build the app
+        run: cargo tauri build
       # Step 3: Install and build
       - name: Install dependencies
         run: npm install
@@ -174,6 +147,70 @@ jobs:
         with:
           name: app-windows-nsis
           path: src-tauri/target/release/bundle/nsis/*
+
+
+
+  build-tauri-linux:
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      # Step 1: Checkout Code
+      - name: Checkout code
+        uses: actions/checkout@v3
+      # Step 2: Set up Rust
+      - name: Set up Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          profile: minimal
+          components: rustfmt, clippy, llvm-tools  # Added llvm-tools as an example
+      - name: Install GDK and dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libgtk-3-dev \
+            libsoup-3.0-dev \
+            libjavascriptcoregtk-4.1-dev \
+            libtasn1-dev \
+            libwebkit2gtk-4.1-dev
+    
+      - name: Set PKG_CONFIG_PATH
+        run: |
+          export PKG_CONFIG_PATH="/usr/lib/x86_64-linux-gnu/pkgconfig"  # Adjust this path if necessary
+          echo "PKG_CONFIG_PATH set to $PKG_CONFIG_PATH"
+      # Step 3: Install and build
+      - name: Install dependencies
+        run: npm install
+      - name: Build
+        run: npm run build
+      - name: Build the application
+        run: |
+          cd src-tauri
+          cargo build --release
+          cd ..
+      - name: Install Tauri dependencies
+        run: |
+          # Install dependencies for building Tauri apps
+          cargo install tauri-cli
+      # Step 4: Build Tauri App
+      - name: Build Tauri App
+        run: cargo tauri build
+      # Step 5: Archive Build Artifacts
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: app-linux-deb
+          path: /src-tauri/target/release/bundle/deb/*
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: app-linux-rpm
+          path: /src-tauri/target/release/bundle/rpm/*
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: app-linux-appimage
+          path: /src-tauri/target/release/bundle/appimage/*
 
   build-electron:
     needs: build-electron-win
@@ -211,7 +248,7 @@ jobs:
           path: artifacts
 
   release:
-    needs:  [build-electron, build-tauri]
+    needs:  [build-electron, build-tauri-win, build-tauri-linux]
     runs-on: ubuntu-latest
     steps:
       # Electron
@@ -236,6 +273,19 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: app-windows-nsis
+      # Linux
+      - name: Download Tauri Linux Artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: app-linux-deb
+      - name: Download Tauri Linux Artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: app-linux-rpm
+      - name: Download Tauri Linux Artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: app-linux-appimage
       # Create a new GitHub release
       - name: Create GitHub Release
         id: create_release
@@ -248,45 +298,42 @@ jobs:
           release_name: Release New Version ${{ env.VERSION }}
           draft: false
           prerelease: false
-      # Upload all artifacts to the release
+
+      - name: Find All Files Matching VERSION
+        id: find_files
+        run: |
+          VERSION=${{ env.VERSION }}
+          files=($(ls ./*${VERSION}* 2>/dev/null || echo ""))
+          if [ ${#files[@]} -eq 0 ]; then
+            echo "Error: No files found matching VERSION ${VERSION}"
+            exit 1
+          fi
+          echo "Found files: ${files[@]}"
+          file_list=$(IFS=','; echo "${files[*]}")
+          echo "file_list=$file_list" >> $GITHUB_ENV
+
       - name: Upload Release Assets
-        uses: actions/upload-release-asset@v1
+        run: |
+          IFS=',' read -r -a file_array <<< "${{ env.file_list }}"
+          for file in "${file_array[@]}"; do
+            echo "Uploading $file..."
+            response=$(curl -XPOST \
+              -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+              -H "Content-Type: application/octet-stream" \
+              --data-binary @$file \
+              "https://uploads.github.com/repos/iDataVisualizationLab/TxDOT/releases/${{ steps.create_release.outputs.id }}/assets?name=$(basename $file)" \
+              -w "%{http_code}" -o /dev/null)
+            if [ "$response" -ne 201 ]; then
+              echo "Error uploading $file: HTTP status $response"
+            else
+              echo "$file uploaded successfully."
+            fi
+          done
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          VERSION: ${{ env.VERSION }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: artifacts/*.*
-          asset_name: ${{ github.ref_name }}-build-${{ matrix.platform }}
-          asset_content_type: application/octet-stream
+          file_list: ${{ env.file_list }}
 
-      # - name: Find All Files Matching VERSION
-      #   id: find_files
-      #   run: |
-      #     VERSION=${{ env.VERSION }}
-      #     files=($(ls ./*${VERSION}* 2>/dev/null || echo ""))
-      #     if [ ${#files[@]} -eq 0 ]; then
-      #       echo "Error: No files found matching VERSION ${VERSION}"
-      #       exit 1
-      #     fi
-      #     echo "Found files: ${files[@]}"
-      #     file_list=$(IFS=','; echo "${files[*]}")
-      #     echo "file_list=$file_list" >> $GITHUB_ENV
-      # - name: Upload Release Assets
-      #   run: |
-      #     IFS=',' read -r -a file_array <<< "${{ env.file_list }}"
-      #     for file in "${file_array[@]}"; do
-      #       echo "Uploading $file..."
-      #       curl -XPOST \
-      #         -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-      #         -H "Content-Type: application/octet-stream" \
-      #         --data-binary @$file \
-      #         "https://uploads.github.com/repos/iDataVisualizationLab/TxDOT/releases/${{ steps.create_release.outputs.id }}/assets?name=$(basename $file)"
-      #     done
-      #   env:
-      #     file_list: ${{ env.file_list }}
 
-        
+      
 
 
 
