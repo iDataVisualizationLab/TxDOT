@@ -1,5 +1,5 @@
 
-      export const A = 10.985;
-      export const B = 5;
-      export const C = -1.1;
+      export const A = 10.18;
+      export const B = 62.25;
+      export const C = -1.78;
       
