@@ -84,8 +84,16 @@ function App() {
   
       const data = await response.json();
       const latestCommitHash = data.sha;
-      console.log(process.env.REACT_APP_COMMIT_HASH, latestCommitHash)
-      if (process.env.REACT_APP_COMMIT_HASH !== latestCommitHash) {
+      // console.log(
+      //   "REACT_APP_COMMIT_HASH:", process.env.REACT_APP_COMMIT_HASH, "Type:", typeof process.env.REACT_APP_COMMIT_HASH,
+      //   "latestCommitHash:", latestCommitHash, "Type:", typeof latestCommitHash
+      // );
+      // console.log("Forced string comparison:", String(process.env.REACT_APP_COMMIT_HASH) === String(latestCommitHash));
+      const hash1 = process.env.REACT_APP_COMMIT_HASH.trim();
+      const hash2 = latestCommitHash.trim();
+      // console.log("Trimmed comparison:", hash1 === hash2);
+
+      if (hash1 !== hash2) {
         if (!isShown) {
           setOpenUpdateDialog(true);
         } else {
